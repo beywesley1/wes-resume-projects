@@ -610,7 +610,7 @@ const styles = `
   /* Theme toggle button */
   .theme-toggle {
     position: fixed;
-    top: 24px;
+    top: 72px;
     right: 24px;
     z-index: 1000;
     width: 48px;
