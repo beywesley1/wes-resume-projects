@@ -1777,20 +1777,59 @@ const styles = `
     word-break: break-word;
   }
   
-  .architecture-code-content .comment {
+  .code-highlighted {
+    line-height: 1.6;
+  }
+  
+  .code-comment {
     color: #6a9955;
+    font-style: italic;
   }
   
-  .architecture-code-content .keyword {
-    color: #569cd6;
+  .code-keyword {
+    color: #c586c0;
+    font-weight: 600;
   }
   
-  .architecture-code-content .string {
+  .code-string {
     color: #ce9178;
   }
   
-  .architecture-code-content .resource {
+  .code-attr {
+    color: #9cdcfe;
+  }
+  
+  .code-bool {
+    color: #569cd6;
+    font-weight: 600;
+  }
+  
+  .code-ref {
     color: #4ec9b0;
+  }
+  
+  [data-theme="light"] .code-comment {
+    color: #008000;
+  }
+  
+  [data-theme="light"] .code-keyword {
+    color: #af00db;
+  }
+  
+  [data-theme="light"] .code-string {
+    color: #a31515;
+  }
+  
+  [data-theme="light"] .code-attr {
+    color: #001080;
+  }
+  
+  [data-theme="light"] .code-bool {
+    color: #0000ff;
+  }
+  
+  [data-theme="light"] .code-ref {
+    color: #267f99;
   }
   
   .arch-features {
@@ -2353,21 +2392,7 @@ export default function App() {
             </a>
           </div>
           
-          {/* Certifications */}
-          <div className="certs-grid">
-            {CONFIG.certifications.map((cert, i) => (
-              <div key={i} className={`cert-badge ${cert.status}`}>
-                <span className="cert-icon">{cert.icon}</span>
-                <div className="cert-info">
-                  <h4>{cert.name}</h4>
-                  <span className="cert-status">
-                    {cert.status === 'certified' ? '✓ Certified' : '◐ In Progress'}
-                  </span>
-                </div>
-              </div>
-            ))}
           </div>
-        </div>
       </section>
       
       {/* Stats Bar */}
@@ -2607,40 +2632,37 @@ export default function App() {
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Terraform</span>
               </div>
               <div className="architecture-code-content">
-                <pre>{`# Cloudflare DNS -> CloudFront -> S3
-# Domain: beyops.com
-
-# S3 Bucket for static website hosting
-resource "aws_s3_bucket" "website" {
-  bucket = "beyops.com"
-}
-
-# CloudFront Distribution with ACM SSL
-resource "aws_cloudfront_distribution" "website" {
-  enabled             = true
-  aliases             = ["beyops.com", "www.beyops.com"]
-  default_root_object = "index.html"
-  
-  origin {
-    domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
-    origin_id                = "S3-beyops"
-    origin_access_control_id = aws_cloudfront_origin_access_control.website.id
-  }
-  
-  viewer_certificate {
-    acm_certificate_arn = aws_acm_certificate.website.arn
-    ssl_support_method  = "sni-only"
-  }
-}
-
-# Cloudflare DNS pointing to CloudFront
-resource "cloudflare_record" "apex" {
-  zone_id = var.cloudflare_zone_id
-  name    = "@"
-  content = aws_cloudfront_distribution.website.domain_name
-  type    = "CNAME"
-  proxied = false  # Use CloudFront SSL
-}`}</pre>
+                <pre className="code-highlighted">
+                  <span className="code-comment"># Cloudflare DNS → CloudFront → S3</span>{'\n'}
+                  <span className="code-comment"># Domain: beyops.com</span>{'\n\n'}
+                  <span className="code-comment"># S3 Bucket for static website hosting</span>{'\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">bucket</span> = <span className="code-string">"beyops.com"</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># CloudFront Distribution with ACM SSL</span>{'\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_cloudfront_distribution"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">enabled</span>             = <span className="code-bool">true</span>{'\n'}
+                  {'  '}<span className="code-attr">aliases</span>             = [<span className="code-string">"beyops.com"</span>, <span className="code-string">"www.beyops.com"</span>]{'\n'}
+                  {'  '}<span className="code-attr">default_root_object</span> = <span className="code-string">"index.html"</span>{'\n\n'}
+                  {'  '}<span className="code-keyword">origin</span> {'{\n'}
+                  {'    '}<span className="code-attr">domain_name</span>              = <span className="code-ref">aws_s3_bucket.website.bucket_regional_domain_name</span>{'\n'}
+                  {'    '}<span className="code-attr">origin_id</span>                = <span className="code-string">"S3-beyops"</span>{'\n'}
+                  {'    '}<span className="code-attr">origin_access_control_id</span> = <span className="code-ref">aws_cloudfront_origin_access_control.website.id</span>{'\n'}
+                  {'  }\n\n'}
+                  {'  '}<span className="code-keyword">viewer_certificate</span> {'{\n'}
+                  {'    '}<span className="code-attr">acm_certificate_arn</span> = <span className="code-ref">aws_acm_certificate.website.arn</span>{'\n'}
+                  {'    '}<span className="code-attr">ssl_support_method</span>  = <span className="code-string">"sni-only"</span>{'\n'}
+                  {'  }\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># Cloudflare DNS pointing to CloudFront</span>{'\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"cloudflare_record"</span> <span className="code-string">"apex"</span> {'{\n'}
+                  {'  '}<span className="code-attr">zone_id</span> = <span className="code-ref">var.cloudflare_zone_id</span>{'\n'}
+                  {'  '}<span className="code-attr">name</span>    = <span className="code-string">"@"</span>{'\n'}
+                  {'  '}<span className="code-attr">content</span> = <span className="code-ref">aws_cloudfront_distribution.website.domain_name</span>{'\n'}
+                  {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
+                  {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>  <span className="code-comment"># Use CloudFront SSL</span>{'\n'}
+                  {'}'}
+                </pre>
               </div>
             </div>
           </div>
