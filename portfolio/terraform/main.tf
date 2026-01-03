@@ -18,7 +18,7 @@ terraform {
     }
   }
   
-  # Terraform Cloud backend - update organization name
+  # Terraform Cloud backend
   cloud {
     organization = "wes-resume-projects"
     
