@@ -75,6 +75,25 @@ const CONFIG = {
   // Career Timeline
   career: [
     {
+      title: "Cloud Engineer",
+      company: "ThinkStack",
+      location: "Remote",
+      period: "2022 – 2024",
+      icon: "☁️",
+      technologies: ["AWS", "Terraform", "Terraform Cloud", "GitHub Actions", "Python", "Lambda", "FortiGate", "ECS", "RDS"],
+      highlights: [
+        "Managed 70+ AWS accounts across 2 AWS Organizations as part of a 4-person cloud engineering team supporting managed services clients in the financial sector",
+        "Developed 30+ reusable Terraform modules standardizing infrastructure provisioning for EC2, RDS, S3, ECS, VPC, and networking components across multi-tenant environments",
+        "Implemented CI/CD pipelines using Terraform Cloud and GitHub Actions for automated infrastructure deployments with state management and policy enforcement",
+        "Resolved 500+ client escalation tickets involving AWS infrastructure troubleshooting, performance issues, and architectural guidance",
+        "Built automated solutions using AWS Lambda and Python to streamline operational tasks and reduce manual intervention",
+        "Deployed and managed FortiGate firewalls and AWS Network Firewalls, implementing security controls for client environments",
+        "Conducted disaster recovery testing for clients, validating backup procedures and RTO/RPO requirements",
+        "Performed cost optimization assessments and remediations, identifying savings opportunities across compute, storage, and data transfer",
+        "Administered core AWS services including EC2, EBS, S3, CloudFront, Route53, Redshift, RDS, ELB, ECS, ACM, and Systems Manager",
+      ],
+    },
+    {
       title: "Information Systems Technician",
       company: "Naval Special Warfare, SEAL Team 7 / TACCOMM-1",
       location: "San Diego, CA",
