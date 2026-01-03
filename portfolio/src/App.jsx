@@ -4594,65 +4594,6 @@ export default function App() {
         </div>
       </section>
       
-      {/* GitHub Profile Section */}
-      <section className="section" style={{ background: 'var(--bg-secondary)' }}>
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">// Open Source</p>
-            <h2 className="section-title">GitHub Activity</h2>
-          </div>
-          
-          {/* Profile Stats */}
-          <div className="github-stats-grid" style={{ marginBottom: '24px' }}>
-            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ fontSize: '32px' }}>📦</div>
-              <div>
-                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  {loading ? '...' : stats?.public_repos || 0}
-                </div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Public Repos</div>
-              </div>
-            </div>
-            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ fontSize: '32px' }}>👥</div>
-              <div>
-                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  {loading ? '...' : stats?.followers || 0}
-                </div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Followers</div>
-              </div>
-            </div>
-            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ fontSize: '32px', color: '#22c55e' }}>++</div>
-              <div>
-                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #22c55e, #4ade80)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  {loading ? '...' : linesOfCode.added.toLocaleString()}
-                </div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Added</div>
-              </div>
-            </div>
-            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ fontSize: '32px', color: '#ef4444' }}>--</div>
-              <div>
-                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #ef4444, #f87171)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  {loading ? '...' : linesOfCode.deleted.toLocaleString()}
-                </div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Deleted</div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Contribution Calendar */}
-          <div className="github-contribution-graph">
-            <img 
-              src={`https://ghchart.rshah.org/3b82f6/${CONFIG.github}`}
-              alt="GitHub Contribution Graph"
-              style={{ width: '100%', height: 'auto' }}
-            />
-          </div>
-        </div>
-      </section>
-      
       {/* Skills Section with Progress Bars */}
       <section className="section">
         <div className="container">
