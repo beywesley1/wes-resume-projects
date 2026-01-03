@@ -2752,36 +2752,11 @@ export default function App() {
               </div>
               <div className="architecture-code-content" style={{ maxHeight: '500px', overflowY: 'auto' }}>
                 <pre className="code-highlighted">
-                  <span className="code-comment"># ============================================================================</span>{'\n'}
-                  <span className="code-comment"># PORTFOLIO WEBSITE INFRASTRUCTURE</span>{'\n'}
-                  <span className="code-comment"># S3 + CloudFront + Cloudflare DNS + ACM</span>{'\n'}
-                  <span className="code-comment"># Domain: beyops.com</span>{'\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
-                  <span className="code-keyword">terraform</span> {'{\n'}
-                  {'  '}<span className="code-attr">required_version</span> = <span className="code-string">"&gt;= 1.5.0"</span>{'\n\n'}
-                  {'  '}<span className="code-keyword">required_providers</span> {'{\n'}
-                  {'    '}<span className="code-keyword">aws</span> = {'{\n'}
-                  {'      '}<span className="code-attr">source</span>  = <span className="code-string">"hashicorp/aws"</span>{'\n'}
-                  {'      '}<span className="code-attr">version</span> = <span className="code-string">"~&gt; 5.0"</span>{'\n'}
-                  {'    }\n'}
-                  {'    '}<span className="code-keyword">cloudflare</span> = {'{\n'}
-                  {'      '}<span className="code-attr">source</span>  = <span className="code-string">"cloudflare/cloudflare"</span>{'\n'}
-                  {'      '}<span className="code-attr">version</span> = <span className="code-string">"~&gt; 4.0"</span>{'\n'}
-                  {'    }\n'}
-                  {'  }\n\n'}
-                  {'  '}<span className="code-keyword">cloud</span> {'{\n'}
-                  {'    '}<span className="code-attr">organization</span> = <span className="code-string">"wes-resume-projects"</span>{'\n'}
-                  {'    '}<span className="code-keyword">workspaces</span> {'{\n'}
-                  {'      '}<span className="code-attr">name</span> = <span className="code-string">"wes-portfolio"</span>{'\n'}
-                  {'    }\n'}
-                  {'  }\n'}
-                  {'}\n\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n'}
-                  <span className="code-comment"># S3 BUCKET - Website Content</span>{'\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-comment"># S3 bucket stores the React build files</span>{'\n'}
                   <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket"</span> <span className="code-string">"website"</span> {'{\n'}
-                  {'  '}<span className="code-attr">bucket</span> = <span className="code-ref">var.domain_name</span>{'\n'}
+                  {'  '}<span className="code-attr">bucket</span> = <span className="code-string">"beyops.com"</span>{'\n'}
                   {'}\n\n'}
+                  <span className="code-comment"># Block all public access - CloudFront handles delivery</span>{'\n'}
                   <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket_public_access_block"</span> <span className="code-string">"website"</span> {'{\n'}
                   {'  '}<span className="code-attr">bucket</span>                  = <span className="code-ref">aws_s3_bucket.website.id</span>{'\n'}
                   {'  '}<span className="code-attr">block_public_acls</span>       = <span className="code-bool">true</span>{'\n'}
@@ -2789,79 +2764,48 @@ export default function App() {
                   {'  '}<span className="code-attr">ignore_public_acls</span>      = <span className="code-bool">true</span>{'\n'}
                   {'  '}<span className="code-attr">restrict_public_buckets</span> = <span className="code-bool">true</span>{'\n'}
                   {'}\n\n'}
-                  <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket_versioning"</span> <span className="code-string">"website"</span> {'{\n'}
-                  {'  '}<span className="code-attr">bucket</span> = <span className="code-ref">aws_s3_bucket.website.id</span>{'\n'}
-                  {'  '}<span className="code-keyword">versioning_configuration</span> {'{\n'}
-                  {'    '}<span className="code-attr">status</span> = <span className="code-string">"Enabled"</span>{'\n'}
-                  {'  }\n'}
-                  {'}\n\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n'}
-                  <span className="code-comment"># CLOUDFRONT ORIGIN ACCESS CONTROL</span>{'\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-comment"># OAC allows CloudFront to securely access private S3</span>{'\n'}
                   <span className="code-keyword">resource</span> <span className="code-string">"aws_cloudfront_origin_access_control"</span> <span className="code-string">"website"</span> {'{\n'}
-                  {'  '}<span className="code-attr">name</span>                              = <span className="code-string">"$&#123;var.domain_name&#125;-oac"</span>{'\n'}
+                  {'  '}<span className="code-attr">name</span>                              = <span className="code-string">"beyops-oac"</span>{'\n'}
                   {'  '}<span className="code-attr">origin_access_control_origin_type</span> = <span className="code-string">"s3"</span>{'\n'}
                   {'  '}<span className="code-attr">signing_behavior</span>                  = <span className="code-string">"always"</span>{'\n'}
                   {'  '}<span className="code-attr">signing_protocol</span>                  = <span className="code-string">"sigv4"</span>{'\n'}
                   {'}\n\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n'}
-                  <span className="code-comment"># ACM CERTIFICATE</span>{'\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-comment"># SSL certificate for HTTPS (must be in us-east-1)</span>{'\n'}
                   <span className="code-keyword">resource</span> <span className="code-string">"aws_acm_certificate"</span> <span className="code-string">"website"</span> {'{\n'}
-                  {'  '}<span className="code-attr">provider</span>          = <span className="code-ref">aws.us_east_1</span>{'\n'}
-                  {'  '}<span className="code-attr">domain_name</span>       = <span className="code-ref">var.domain_name</span>{'\n'}
-                  {'  '}<span className="code-attr">validation_method</span> = <span className="code-string">"DNS"</span>{'\n'}
-                  {'  '}<span className="code-attr">subject_alternative_names</span> = [<span className="code-string">"www.$&#123;var.domain_name&#125;"</span>]{'\n\n'}
-                  {'  '}<span className="code-keyword">lifecycle</span> {'{\n'}
-                  {'    '}<span className="code-attr">create_before_destroy</span> = <span className="code-bool">true</span>{'\n'}
-                  {'  }\n'}
+                  {'  '}<span className="code-attr">provider</span>                  = <span className="code-ref">aws.us_east_1</span>{'\n'}
+                  {'  '}<span className="code-attr">domain_name</span>               = <span className="code-string">"beyops.com"</span>{'\n'}
+                  {'  '}<span className="code-attr">subject_alternative_names</span> = [<span className="code-string">"www.beyops.com"</span>]{'\n'}
+                  {'  '}<span className="code-attr">validation_method</span>         = <span className="code-string">"DNS"</span>{'\n'}
                   {'}\n\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n'}
-                  <span className="code-comment"># CLOUDFRONT DISTRIBUTION</span>{'\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-comment"># CDN for global edge caching and SSL termination</span>{'\n'}
                   <span className="code-keyword">resource</span> <span className="code-string">"aws_cloudfront_distribution"</span> <span className="code-string">"website"</span> {'{\n'}
                   {'  '}<span className="code-attr">enabled</span>             = <span className="code-bool">true</span>{'\n'}
-                  {'  '}<span className="code-attr">is_ipv6_enabled</span>     = <span className="code-bool">true</span>{'\n'}
                   {'  '}<span className="code-attr">default_root_object</span> = <span className="code-string">"index.html"</span>{'\n'}
-                  {'  '}<span className="code-attr">aliases</span>             = [<span className="code-ref">var.domain_name</span>, <span className="code-string">"www.$&#123;var.domain_name&#125;"</span>]{'\n'}
-                  {'  '}<span className="code-attr">price_class</span>         = <span className="code-string">"PriceClass_100"</span>{'\n\n'}
+                  {'  '}<span className="code-attr">aliases</span>             = [<span className="code-string">"beyops.com"</span>, <span className="code-string">"www.beyops.com"</span>]{'\n\n'}
                   {'  '}<span className="code-keyword">origin</span> {'{\n'}
                   {'    '}<span className="code-attr">domain_name</span>              = <span className="code-ref">aws_s3_bucket.website.bucket_regional_domain_name</span>{'\n'}
-                  {'    '}<span className="code-attr">origin_id</span>                = <span className="code-string">"S3-$&#123;var.domain_name&#125;"</span>{'\n'}
                   {'    '}<span className="code-attr">origin_access_control_id</span> = <span className="code-ref">aws_cloudfront_origin_access_control.website.id</span>{'\n'}
                   {'  }\n\n'}
                   {'  '}<span className="code-keyword">default_cache_behavior</span> {'{\n'}
-                  {'    '}<span className="code-attr">allowed_methods</span>        = [<span className="code-string">"GET"</span>, <span className="code-string">"HEAD"</span>, <span className="code-string">"OPTIONS"</span>]{'\n'}
-                  {'    '}<span className="code-attr">cached_methods</span>         = [<span className="code-string">"GET"</span>, <span className="code-string">"HEAD"</span>]{'\n'}
-                  {'    '}<span className="code-attr">target_origin_id</span>       = <span className="code-string">"S3-$&#123;var.domain_name&#125;"</span>{'\n'}
                   {'    '}<span className="code-attr">viewer_protocol_policy</span> = <span className="code-string">"redirect-to-https"</span>{'\n'}
                   {'    '}<span className="code-attr">compress</span>               = <span className="code-bool">true</span>{'\n'}
-                  {'    '}<span className="code-attr">cache_policy_id</span>        = <span className="code-string">"658327ea-f89d-4fab-a63d-7e88639e58f6"</span>{'\n'}
                   {'  }\n\n'}
+                  {'  '}<span className="code-comment"># SPA routing - serve index.html for all paths</span>{'\n'}
                   {'  '}<span className="code-keyword">custom_error_response</span> {'{\n'}
                   {'    '}<span className="code-attr">error_code</span>         = <span className="code-number">403</span>{'\n'}
                   {'    '}<span className="code-attr">response_code</span>      = <span className="code-number">200</span>{'\n'}
                   {'    '}<span className="code-attr">response_page_path</span> = <span className="code-string">"/index.html"</span>{'\n'}
                   {'  }\n\n'}
                   {'  '}<span className="code-keyword">viewer_certificate</span> {'{\n'}
-                  {'    '}<span className="code-attr">acm_certificate_arn</span>      = <span className="code-ref">aws_acm_certificate.website.arn</span>{'\n'}
-                  {'    '}<span className="code-attr">ssl_support_method</span>       = <span className="code-string">"sni-only"</span>{'\n'}
-                  {'    '}<span className="code-attr">minimum_protocol_version</span> = <span className="code-string">"TLSv1.2_2021"</span>{'\n'}
+                  {'    '}<span className="code-attr">acm_certificate_arn</span> = <span className="code-ref">aws_acm_certificate.website.arn</span>{'\n'}
+                  {'    '}<span className="code-attr">ssl_support_method</span>  = <span className="code-string">"sni-only"</span>{'\n'}
                   {'  }\n'}
                   {'}\n\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n'}
-                  <span className="code-comment"># CLOUDFLARE DNS RECORDS</span>{'\n'}
-                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-comment"># DNS records point domain to CloudFront</span>{'\n'}
                   <span className="code-keyword">resource</span> <span className="code-string">"cloudflare_record"</span> <span className="code-string">"apex"</span> {'{\n'}
                   {'  '}<span className="code-attr">zone_id</span> = <span className="code-ref">var.cloudflare_zone_id</span>{'\n'}
                   {'  '}<span className="code-attr">name</span>    = <span className="code-string">"@"</span>{'\n'}
-                  {'  '}<span className="code-attr">content</span> = <span className="code-ref">aws_cloudfront_distribution.website.domain_name</span>{'\n'}
-                  {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
-                  {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>  <span className="code-comment"># Use CloudFront SSL</span>{'\n'}
-                  {'}\n\n'}
-                  <span className="code-keyword">resource</span> <span className="code-string">"cloudflare_record"</span> <span className="code-string">"www"</span> {'{\n'}
-                  {'  '}<span className="code-attr">zone_id</span> = <span className="code-ref">var.cloudflare_zone_id</span>{'\n'}
-                  {'  '}<span className="code-attr">name</span>    = <span className="code-string">"www"</span>{'\n'}
                   {'  '}<span className="code-attr">content</span> = <span className="code-ref">aws_cloudfront_distribution.website.domain_name</span>{'\n'}
                   {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
                   {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>{'\n'}
