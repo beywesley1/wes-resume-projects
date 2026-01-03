@@ -290,6 +290,65 @@ echo "Current disk usage:"
 docker system df`,
     },
   ],
+  awscli: [
+    {
+      title: "List EC2 Instances",
+      description: "List all EC2 instances with key details",
+      code: `# List EC2 instances with Name, ID, State, Type
+aws ec2 describe-instances \\
+    --query 'Reservations[].Instances[].[Tags[?Key==\`Name\`].Value|[0],InstanceId,State.Name,InstanceType]' \\
+    --output table`,
+    },
+    {
+      title: "S3 Bucket Size",
+      description: "Get total size of an S3 bucket",
+      code: `# Get S3 bucket size in human-readable format
+BUCKET="your-bucket-name"
+aws s3 ls s3://$BUCKET --recursive --summarize | tail -2`,
+    },
+    {
+      title: "Assume IAM Role",
+      description: "Assume an IAM role and export credentials",
+      code: `# Assume role and export credentials
+ROLE_ARN="arn:aws:iam::123456789012:role/YourRole"
+CREDS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name "MySession")
+
+export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
+export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
+export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')`,
+    },
+  ],
+  azurecli: [
+    {
+      title: "List VMs",
+      description: "List all Azure VMs with details",
+      code: `# List all VMs with resource group, name, and state
+az vm list \\
+    --query '[].{Name:name, ResourceGroup:resourceGroup, Size:hardwareProfile.vmSize}' \\
+    --output table`,
+    },
+    {
+      title: "Get Storage Account Keys",
+      description: "Retrieve storage account access keys",
+      code: `# Get storage account keys
+RESOURCE_GROUP="your-rg"
+STORAGE_ACCOUNT="yourstorageaccount"
+
+az storage account keys list \\
+    --resource-group $RESOURCE_GROUP \\
+    --account-name $STORAGE_ACCOUNT \\
+    --output table`,
+    },
+    {
+      title: "Create Resource Group",
+      description: "Create a new Azure resource group",
+      code: `# Create resource group
+az group create \\
+    --name "my-resource-group" \\
+    --location "eastus" \\
+    --tags Environment=Dev Project=MyProject`,
+    },
+  ],
   terraform: [
     {
       title: "S3 Static Website",
@@ -654,7 +713,96 @@ const styles = `
   
   .nav-tab.coming-soon:hover {
     background: transparent;
+  }
+  
+  /* Scripts Page Styles */
+  .scripts-page {
+    position: relative;
+    z-index: 1;
+    padding: 40px 0 80px;
+    min-height: calc(100vh - 60px);
+  }
+  
+  .scripts-page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .scripts-page-header h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .scripts-page-header p {
     color: var(--text-secondary);
+    font-size: 16px;
+  }
+  
+  .scripts-category-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  
+  .category-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .category-tab:hover {
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+  
+  .category-tab.active {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-blue);
+  }
+  
+  .category-tab svg {
+    flex-shrink: 0;
+  }
+  
+  .scripts-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+  }
+  
+  @media (max-width: 600px) {
+    .scripts-category-tabs {
+      gap: 8px;
+    }
+    
+    .category-tab {
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+    
+    .category-tab svg {
+      width: 14px;
+      height: 14px;
+    }
   }
   
   @media (max-width: 600px) {
@@ -2716,7 +2864,9 @@ function TechIcon({ name }) {
 // ============================================================================
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState('home');
   const [activeTab, setActiveTab] = useState('powershell');
+  const [scriptTab, setScriptTab] = useState('powershell');
   const [theme, setTheme] = useState('dark');
   const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
   const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
@@ -2806,14 +2956,14 @@ export default function App() {
       {/* Navigation Header */}
       <header className="nav-header">
         <div className="nav-container">
-          <a href="/" className="nav-logo">
+          <button onClick={() => setCurrentPage('home')} className="nav-logo">
             <span>&lt;</span>beyops<span>/&gt;</span>
-          </a>
+          </button>
           <nav className="nav-tabs">
-            <a href="/" className="nav-tab active">Home</a>
-            <a href="#" className="nav-tab coming-soon" title="Coming Soon">Scripts</a>
-            <a href="#" className="nav-tab coming-soon" title="Coming Soon">Terraform Modules</a>
-            <a href="#" className="nav-tab coming-soon" title="Coming Soon">Diagrams</a>
+            <button onClick={() => setCurrentPage('home')} className={`nav-tab ${currentPage === 'home' ? 'active' : ''}`}>Home</button>
+            <button onClick={() => setCurrentPage('scripts')} className={`nav-tab ${currentPage === 'scripts' ? 'active' : ''}`}>Scripts</button>
+            <button className="nav-tab coming-soon" title="Coming Soon">Terraform Modules</button>
+            <button className="nav-tab coming-soon" title="Coming Soon">Diagrams</button>
           </nav>
         </div>
       </header>
@@ -2838,6 +2988,99 @@ export default function App() {
         <div className="noise-overlay" />
       </div>
       
+      {/* Scripts Page */}
+      {currentPage === 'scripts' && (
+        <div className="scripts-page">
+          <div className="container">
+            <div className="scripts-page-header">
+              <h1>Scripts Library</h1>
+              <p>A collection of useful scripts for cloud engineering and DevOps automation</p>
+            </div>
+            
+            <div className="scripts-category-tabs">
+              <button 
+                className={`category-tab ${scriptTab === 'powershell' ? 'active' : ''}`}
+                onClick={() => setScriptTab('powershell')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.181 2.974c.568 0 .923.463.792 1.035l-3.659 15.982c-.13.572-.697 1.035-1.265 1.035H.819c-.568 0-.923-.463-.792-1.035L3.686 4.009c.13-.572.697-1.035 1.265-1.035h18.23zM6.497 16.239l.917-1.107-3.283-2.576 3.283-2.576-.917-1.107-4.2 3.683 4.2 3.683zm4.503.761l1.2-.3-2.4-9.6-1.2.3 2.4 9.6zm6.5-.761l4.2-3.683-4.2-3.683-.917 1.107 3.283 2.576-3.283 2.576.917 1.107z"/>
+                </svg>
+                PowerShell
+              </button>
+              <button 
+                className={`category-tab ${scriptTab === 'bash' ? 'active' : ''}`}
+                onClick={() => setScriptTab('bash')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21.038 4.9l-7.577-4.498c-.567-.337-1.348-.337-1.915 0L4.005 4.9c-.567.337-.91.96-.91 1.56v8.988c0 .6.343 1.223.91 1.56l7.541 4.498c.567.337 1.348.337 1.915 0l7.577-4.498c.567-.337.91-.96.91-1.56V6.46c0-.6-.343-1.223-.91-1.56zM12 17.75l-5.5-3.25v-6.5L12 4.75l5.5 3.25v6.5L12 17.75z"/>
+                </svg>
+                Bash
+              </button>
+              <button 
+                className={`category-tab ${scriptTab === 'awscli' ? 'active' : ''}`}
+                onClick={() => setScriptTab('awscli')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF9900">
+                  <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586z"/>
+                </svg>
+                AWS CLI
+              </button>
+              <button 
+                className={`category-tab ${scriptTab === 'azurecli' ? 'active' : ''}`}
+                onClick={() => setScriptTab('azurecli')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#0078D4">
+                  <path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/>
+                </svg>
+                Azure CLI
+              </button>
+            </div>
+            
+            <div className="scripts-grid">
+              {SCRIPTS[scriptTab]?.map((script, index) => {
+                const scriptId = `${scriptTab}-${index}`;
+                return (
+                  <div key={scriptId} className="script-card">
+                    <div className="script-header">
+                      <div>
+                        <h3 className="script-title">{script.title}</h3>
+                        <p className="script-description">{script.description}</p>
+                      </div>
+                      <button
+                        className={`copy-btn ${copiedId === scriptId ? 'copied' : ''}`}
+                        onClick={() => copy(script.code, scriptId)}
+                      >
+                        {copiedId === scriptId ? (
+                          <>✓ Copied</>
+                        ) : (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            Copy
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    <div className="script-code">
+                      <pre>{script.code}</pre>
+                    </div>
+                  </div>
+                );
+              }) || (
+                <div className="scripts-empty">
+                  <p>No scripts available for this category yet.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Home Page Content */}
+      {currentPage === 'home' && (
+      <>
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
@@ -3405,72 +3648,6 @@ export default function App() {
         </div>
       </section>
       
-      {/* Scripts Library Section */}
-      <section className="section">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">// Toolbox</p>
-            <h2 className="section-title">Scripts Library</h2>
-          </div>
-          
-          <div className="scripts-tabs">
-            <button
-              className={`tab-btn ${activeTab === 'powershell' ? 'active' : ''}`}
-              onClick={() => setActiveTab('powershell')}
-            >
-              PowerShell
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'bash' ? 'active' : ''}`}
-              onClick={() => setActiveTab('bash')}
-            >
-              Bash
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'terraform' ? 'active' : ''}`}
-              onClick={() => setActiveTab('terraform')}
-            >
-              Terraform
-            </button>
-          </div>
-          
-          <div className="scripts-grid">
-            {SCRIPTS[activeTab].map((script, index) => {
-              const scriptId = `${activeTab}-${index}`;
-              return (
-                <div key={scriptId} className="script-card">
-                  <div className="script-header">
-                    <div>
-                      <h3 className="script-title">{script.title}</h3>
-                      <p className="script-description">{script.description}</p>
-                    </div>
-                    <button
-                      className={`copy-btn ${copiedId === scriptId ? 'copied' : ''}`}
-                      onClick={() => copy(script.code, scriptId)}
-                    >
-                      {copiedId === scriptId ? (
-                        <>✓ Copied</>
-                      ) : (
-                        <>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                          </svg>
-                          Copy
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  <div className="script-code">
-                    <pre>{script.code}</pre>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-      
       {/* Contact Section */}
       <section className="section" style={{ background: 'var(--bg-secondary)' }} ref={contactRef}>
         <div className={`container scroll-animate ${contactVisible ? 'visible' : ''}`}>
@@ -3584,6 +3761,8 @@ export default function App() {
           <p>Built with React • Deployed with Terraform • Hosted on AWS</p>
         </div>
       </footer>
+      </>
+      )}
       </div>
     </>
   );
