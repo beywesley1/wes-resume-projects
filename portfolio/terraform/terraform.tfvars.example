@@ -1,0 +1,13 @@
+# ============================================================================
+# TERRAFORM VARIABLES
+# Copy this file to terraform.tfvars and update values
+# ============================================================================
+
+# AWS region for resources
+aws_region = "us-east-1"
+
+# Your domain name (must already exist in Route53)
+domain_name = "yourdomain.com"
+
+# Create www.yourdomain.com redirect to yourdomain.com
+create_www_redirect = true
