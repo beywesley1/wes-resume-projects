@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { TERRAFORM_MODULES, TF_PROVIDERS, TF_SUBCATEGORY_ICONS, getTfSubcategories, getTfModuleIcon, highlightTerraform } from './terraformData';
 
 // ============================================================================
 // CONFIGURATION - Edit these values
@@ -562,19 +563,19 @@ const SUBCATEGORY_ICONS = {
 const getScriptIcon = (script) => {
   // Check for specific technology icons based on tags or subcategory
   if (script.tags.includes('aws') || script.subcategory === 'AWS' || script.subcategory === 'EC2' || script.subcategory === 'S3' || script.subcategory === 'IAM') {
-    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#FF9900"><path d="M7.163 6.688c0 .352.039.64.109.848.078.207.176.434.305.68a.435.435 0 0 1 .07.227c0 .098-.059.196-.184.293l-.61.406a.466.466 0 0 1-.254.09c-.098 0-.195-.047-.293-.133a3.013 3.013 0 0 1-.351-.457 7.249 7.249 0 0 1-.301-.574c-.762.898-1.719 1.348-2.871 1.348-.82 0-1.473-.234-1.95-.703-.48-.469-.723-1.094-.723-1.875 0-.828.293-1.5.886-2.012.594-.512 1.383-.766 2.383-.766.332 0 .672.027 1.027.074.356.047.723.121 1.106.215v-.715c0-.742-.156-1.262-.46-1.562-.31-.3-.837-.45-1.587-.45-.34 0-.691.04-1.054.125a7.77 7.77 0 0 0-1.055.332 2.606 2.606 0 0 1-.32.125.556.556 0 0 1-.145.027c-.129 0-.192-.093-.192-.285V5.04c0-.149.02-.262.067-.332a.69.69 0 0 1 .273-.207c.34-.176.75-.324 1.23-.442a5.9 5.9 0 0 1 1.524-.183c1.16 0 2.008.262 2.555.789.54.527.813 1.328.813 2.402v3.164h.004z"/></svg>`;
+    return `<svg width="22" height="22" viewBox="0 0 304 182" fill="#FF9900"><path d="M86.4 66.4c0 3.7.4 6.7 1.1 8.9.8 2.2 1.8 4.6 3.2 7.2.5.8.7 1.6.7 2.3 0 1-.6 2-1.9 3l-6.3 4.2c-.9.6-1.8.9-2.6.9-1 0-2-.5-3-1.4-1.4-1.5-2.6-3.1-3.6-4.7-1-1.7-2-3.6-3.1-5.9-7.8 9.2-17.6 13.8-29.4 13.8-8.4 0-15.1-2.4-20-7.2-4.9-4.8-7.4-11.2-7.4-19.2 0-8.5 3-15.4 9.1-20.6 6.1-5.2 14.2-7.8 24.5-7.8 3.4 0 6.9.3 10.6.8 3.7.5 7.5 1.3 11.5 2.2v-7.3c0-7.6-1.6-12.9-4.7-16-3.2-3.1-8.6-4.6-16.3-4.6-3.5 0-7.1.4-10.8 1.3-3.7.9-7.3 2-10.8 3.4-1.6.7-2.8 1.1-3.5 1.3-.7.2-1.2.3-1.5.3-1.3 0-2-.9-2-2.8v-4.9c0-1.5.2-2.6.7-3.3.5-.7 1.4-1.4 2.8-2.1 3.5-1.8 7.7-3.3 12.6-4.5 4.9-1.3 10.1-1.9 15.6-1.9 11.9 0 20.6 2.7 26.2 8.1 5.5 5.4 8.3 13.6 8.3 24.6v32.4zM45.8 81.6c3.3 0 6.7-.6 10.3-1.8 3.6-1.2 6.8-3.4 9.5-6.4 1.6-1.9 2.8-4 3.4-6.4.6-2.4 1-5.3 1-8.7v-4.2c-2.9-.7-6-1.3-9.2-1.7-3.2-.4-6.3-.6-9.4-.6-6.7 0-11.6 1.3-14.9 4-3.3 2.7-4.9 6.5-4.9 11.5 0 4.7 1.2 8.2 3.7 10.6 2.4 2.5 5.9 3.7 10.5 3.7zm80.3 10.8c-1.7 0-2.9-.3-3.7-1-.8-.6-1.5-2-2.1-3.9L96.7 10.2c-.6-2-.9-3.3-.9-4 0-1.6.8-2.5 2.4-2.5h9.8c1.8 0 3.1.3 3.8 1 .8.6 1.4 2 2 3.9l16.8 66.2 15.6-66.2c.5-2 1.1-3.3 1.9-3.9.8-.6 2.1-1 3.9-1h8c1.8 0 3.1.3 3.9 1 .8.6 1.5 2 1.9 3.9l15.8 67 17.3-67c.6-2 1.3-3.3 2-3.9.8-.6 2.1-1 3.8-1h9.3c1.6 0 2.5.8 2.5 2.5 0 .5-.1 1-.2 1.6-.1.6-.3 1.4-.7 2.5l-24.1 77.3c-.6 2-1.3 3.3-2.1 3.9-.8.6-2.1 1-3.7 1h-8.5c-1.8 0-3.1-.3-3.9-1-.8-.7-1.5-2-1.9-4L156 23l-15.4 64.4c-.5 2-1.1 3.3-1.9 4-.8.7-2.2 1-3.9 1h-8.7zm128.5 2.7c-5.2 0-10.4-.6-15.4-1.8-5-1.2-8.9-2.5-11.5-4-1.6-.9-2.7-1.9-3.1-2.8-.4-.9-.6-1.9-.6-2.8v-5.1c0-1.9.7-2.8 2.1-2.8.5 0 1.1.1 1.6.2.5.1 1.3.4 2.1.7 2.8 1.3 5.9 2.3 9.2 3 3.4.7 6.7 1 10.1 1 5.4 0 9.5-.9 12.4-2.8 2.9-1.9 4.4-4.6 4.4-8.2 0-2.4-.8-4.4-2.3-6.1-1.5-1.7-4.4-3.2-8.6-4.7l-12.3-3.8c-6.2-2-10.8-4.9-13.7-8.8-2.9-3.9-4.3-8.2-4.3-12.9 0-3.7.8-7 2.4-9.8 1.6-2.8 3.7-5.3 6.4-7.3 2.7-2 5.8-3.6 9.3-4.6 3.5-1.1 7.2-1.6 11.2-1.6 2 0 4.1.1 6.1.4 2.1.3 4 .6 5.9 1.1 1.8.5 3.5 1 5.1 1.6 1.6.6 2.8 1.2 3.7 1.8 1.2.8 2.1 1.6 2.6 2.4.5.8.7 1.8.7 3.1v4.7c0 1.9-.7 2.9-2.1 2.9-.7 0-1.9-.3-3.4-1-5-2.3-10.6-3.4-16.8-3.4-4.9 0-8.7.7-11.4 2.2-2.7 1.5-4.1 3.8-4.1 7 0 2.4.9 4.5 2.6 6.2 1.7 1.7 5 3.4 9.7 5l12 3.8c6.1 1.9 10.5 4.7 13.2 8.2 2.7 3.5 4 7.6 4 12.1 0 3.8-.8 7.3-2.3 10.3-1.6 3.1-3.7 5.7-6.4 8-2.7 2.3-6 4-9.8 5.2-4 1.4-8.2 2-12.8 2z"/></svg>`;
   }
   if (script.tags.includes('azure') || script.subcategory === 'Azure / Entra ID' || script.subcategory === 'Compute' || script.subcategory === 'Storage' || script.subcategory === 'Resource Groups') {
-    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`;
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`;
   }
   if (script.tags.includes('docker') || script.subcategory === 'Docker') {
-    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#2496ED"><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.12a.186.186 0 0 0-.185.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185z"/></svg>`;
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="#2496ED"><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.12a.186.186 0 0 0-.185.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185m15.08-2.715h2.118a.186.186 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186"/></svg>`;
   }
   if (script.tags.includes('active-directory') || script.subcategory === 'Active Directory') {
-    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#0078D4"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h5.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 10.621 4H22.5A1.5 1.5 0 0 1 24 5.5v15a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 20.5v-17z"/></svg>`;
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h5.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 10.621 4H22.5A1.5 1.5 0 0 1 24 5.5v15a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 20.5v-17z"/></svg>`;
   }
   if (script.tags.includes('entra-id') || script.tags.includes('azure-ad')) {
-    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`;
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`;
   }
   // Default - return category icon
   return CATEGORIES[script.category]?.icon || '';
@@ -3720,11 +3721,18 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [activeTab, setActiveTab] = useState('powershell');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState('newest');
+  const [sortOrder, setSortOrder] = useState('a-z');
   const [expandedScript, setExpandedScript] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState(['powershell']);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  // Terraform page state
+  const [tfSearchQuery, setTfSearchQuery] = useState('');
+  const [tfSortOrder, setTfSortOrder] = useState('az');
+  const [expandedModule, setExpandedModule] = useState(null);
+  const [expandedProviders, setExpandedProviders] = useState(['aws']);
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [selectedTfSubcategory, setSelectedTfSubcategory] = useState(null);
   const [theme, setTheme] = useState('dark');
   const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
   const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
@@ -3769,6 +3777,48 @@ export default function App() {
     
     return scripts;
   }, [selectedCategory, selectedSubcategory, searchQuery, sortOrder]);
+  
+  // Filter and sort Terraform modules
+  const filteredModules = useMemo(() => {
+    let modules = [...TERRAFORM_MODULES];
+    
+    // Filter by provider and subcategory
+    if (selectedProvider && selectedTfSubcategory) {
+      modules = modules.filter(m => m.provider === selectedProvider && m.subcategory === selectedTfSubcategory);
+    } else if (selectedProvider) {
+      modules = modules.filter(m => m.provider === selectedProvider);
+    }
+    
+    // Filter by search query
+    if (tfSearchQuery.trim()) {
+      const query = tfSearchQuery.toLowerCase();
+      modules = modules.filter(m => 
+        m.title.toLowerCase().includes(query) ||
+        m.description.toLowerCase().includes(query) ||
+        m.tags.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+    
+    // Sort
+    switch (tfSortOrder) {
+      case 'newest':
+        modules.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+        break;
+      case 'oldest':
+        modules.sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+        break;
+      case 'az':
+        modules.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'za':
+        modules.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      default:
+        modules.sort((a, b) => a.title.localeCompare(b.title));
+    }
+    
+    return modules;
+  }, [selectedProvider, selectedTfSubcategory, tfSearchQuery, tfSortOrder]);
   
   // Scroll animation refs
   const [skillsRef, skillsVisible] = useScrollAnimation();
@@ -3860,7 +3910,7 @@ export default function App() {
           <nav className="nav-tabs">
             <button onClick={() => setCurrentPage('home')} className={`nav-tab ${currentPage === 'home' ? 'active' : ''}`}>Home</button>
             <button onClick={() => setCurrentPage('scripts')} className={`nav-tab ${currentPage === 'scripts' ? 'active' : ''}`}>Scripts</button>
-            <button className="nav-tab coming-soon" title="Coming Soon">Terraform Modules</button>
+            <button onClick={() => setCurrentPage('terraform')} className={`nav-tab ${currentPage === 'terraform' ? 'active' : ''}`}>Terraform Modules</button>
             <button className="nav-tab coming-soon" title="Coming Soon">Diagrams</button>
           </nav>
         </div>
@@ -4041,6 +4091,177 @@ export default function App() {
                 ) : (
                   <div className="scripts-empty">
                     <p>No scripts found matching your criteria.</p>
+                  </div>
+                )}
+              </div>
+            </main>
+          </div>
+        </div>
+      )}
+      
+      {/* Terraform Modules Page */}
+      {currentPage === 'terraform' && (
+        <div className="scripts-page">
+          <div className="scripts-layout">
+            {/* Sidebar */}
+            <aside className="scripts-sidebar">
+              <div className="sidebar-search">
+                <input 
+                  type="text" 
+                  placeholder="Search modules..." 
+                  value={tfSearchQuery}
+                  onChange={(e) => setTfSearchQuery(e.target.value)}
+                />
+              </div>
+              
+              <div className="sidebar-categories">
+                {/* All Modules Option */}
+                <div 
+                  className={`sidebar-all-scripts ${!selectedProvider ? 'active' : ''}`}
+                  onClick={() => {
+                    setSelectedProvider(null);
+                    setSelectedTfSubcategory(null);
+                  }}
+                >
+                  <span className="sidebar-all-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                  </span>
+                  <span>All Modules</span>
+                  <span className="sidebar-count">{TERRAFORM_MODULES.length}</span>
+                </div>
+                
+                {Object.entries(TF_PROVIDERS).map(([providerKey, provider]) => {
+                  const providerModules = TERRAFORM_MODULES.filter(m => m.provider === providerKey);
+                  const subcategories = getTfSubcategories(providerKey);
+                  const isExpanded = expandedProviders.includes(providerKey);
+                  
+                  return (
+                    <div key={providerKey} className="sidebar-category">
+                      <div 
+                        className={`sidebar-category-header ${selectedProvider === providerKey && !selectedTfSubcategory ? 'active' : ''}`}
+                        onClick={() => {
+                          if (isExpanded) {
+                            setExpandedProviders(expandedProviders.filter(c => c !== providerKey));
+                          } else {
+                            setExpandedProviders([...expandedProviders, providerKey]);
+                          }
+                          setSelectedProvider(providerKey);
+                          setSelectedTfSubcategory(null);
+                        }}
+                      >
+                        <span className="sidebar-category-icon" dangerouslySetInnerHTML={{ __html: provider.icon }} />
+                        <span className="sidebar-category-label">{provider.label}</span>
+                        <span className="sidebar-count">{providerModules.length}</span>
+                        <span className={`sidebar-chevron ${isExpanded ? 'expanded' : ''}`}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M9 18l6-6-6-6"/>
+                          </svg>
+                        </span>
+                      </div>
+                      
+                      {isExpanded && (
+                        <div className="sidebar-subcategories">
+                          {subcategories.map(sub => {
+                            const subCount = providerModules.filter(m => m.subcategory === sub).length;
+                            return (
+                              <div 
+                                key={sub}
+                                className={`sidebar-subcategory ${selectedProvider === providerKey && selectedTfSubcategory === sub ? 'active' : ''}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedProvider(providerKey);
+                                  setSelectedTfSubcategory(sub);
+                                }}
+                              >
+                                <span className="subcategory-label">
+                                  <span className="subcategory-icon" dangerouslySetInnerHTML={{ __html: TF_SUBCATEGORY_ICONS[sub] || '' }} />
+                                  {sub}
+                                </span>
+                                <span className="sidebar-count">{subCount}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </aside>
+            
+            {/* Main Content */}
+            <main className="scripts-main">
+              <div className="scripts-main-header">
+                <div>
+                  <h3 className="scripts-main-title">
+                    {selectedTfSubcategory ? `${TF_PROVIDERS[selectedProvider]?.label} → ${selectedTfSubcategory}` : selectedProvider ? TF_PROVIDERS[selectedProvider]?.label : 'All Modules'}
+                  </h3>
+                  <span className="scripts-main-count">{filteredModules.length} module{filteredModules.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="scripts-sort">
+                  <select value={tfSortOrder} onChange={(e) => setTfSortOrder(e.target.value)}>
+                    <option value="az">A → Z</option>
+                    <option value="za">Z → A</option>
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="scripts-list">
+                {filteredModules.length > 0 ? (
+                  filteredModules.map((module) => (
+                    <div 
+                      key={module.id} 
+                      className={`script-item ${expandedModule === module.id ? 'expanded' : ''}`}
+                    >
+                      <div 
+                        className="script-item-header"
+                        onClick={() => setExpandedModule(expandedModule === module.id ? null : module.id)}
+                      >
+                        <div className="script-item-info">
+                          <h4 className="script-item-title">
+                            <span className="script-item-icon" dangerouslySetInnerHTML={{ __html: getTfModuleIcon(module) }} />
+                            {module.title}
+                          </h4>
+                          <p className="script-item-description">{module.description}</p>
+                        </div>
+                        <div className="script-item-toggle">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M6 9l6 6 6-6"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="script-item-content">
+                        <div className="script-item-code-wrapper">
+                          <div className="script-item-code-header">
+                            <div className="script-item-tags">
+                              {module.tags.map(tag => (
+                                <span key={tag} className="script-tag">{tag}</span>
+                              ))}
+                            </div>
+                            <button 
+                              className={`copy-btn ${copiedId === module.id ? 'copied' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                copy(module.code, module.id);
+                              }}
+                            >
+                              {copiedId === module.id ? '✓ Copied' : 'Copy'}
+                            </button>
+                          </div>
+                          <div className="script-item-code">
+                            <pre dangerouslySetInnerHTML={{ __html: highlightTerraform(module.code) }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="scripts-empty">
+                    <p>No modules found matching your criteria.</p>
                   </div>
                 )}
               </div>
