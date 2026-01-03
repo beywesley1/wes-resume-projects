@@ -421,6 +421,7 @@ const styles = `
   
   :root {
     --bg-primary: #050508;
+    --bg-primary-rgb: 5, 5, 8;
     --bg-secondary: #0a0a10;
     --bg-tertiary: #101018;
     --bg-card: #0c0c14;
@@ -442,6 +443,7 @@ const styles = `
   /* Light mode variables */
   [data-theme="light"] {
     --bg-primary: #f8fafc;
+    --bg-primary-rgb: 248, 250, 252;
     --bg-secondary: #f1f5f9;
     --bg-tertiary: #e2e8f0;
     --bg-card: #ffffff;
@@ -579,6 +581,114 @@ const styles = `
   
   .theme-toggle:hover svg {
     transform: rotate(15deg);
+  }
+  
+  /* Navigation Header */
+  .nav-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(var(--bg-primary-rgb), 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .nav-logo span {
+    color: var(--accent-blue);
+  }
+  
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .nav-tab {
+    padding: 8px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+  
+  .nav-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+  }
+  
+  .nav-tab.active {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+  
+  .nav-tab.coming-soon {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .nav-tab.coming-soon:hover {
+    background: transparent;
+    color: var(--text-secondary);
+  }
+  
+  @media (max-width: 600px) {
+    .nav-header {
+      padding: 0 16px;
+    }
+    
+    .nav-container {
+      height: 52px;
+    }
+    
+    .nav-logo {
+      font-size: 16px;
+    }
+    
+    .nav-tabs {
+      gap: 4px;
+    }
+    
+    .nav-tab {
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+  }
+  
+  /* Add padding to body for fixed header */
+  .app-content {
+    padding-top: 60px;
+  }
+  
+  @media (max-width: 600px) {
+    .app-content {
+      padding-top: 52px;
+    }
   }
   
   * {
@@ -964,28 +1074,28 @@ const styles = `
   
   /* Section Styles */
   .section {
-    padding: 100px 0;
+    padding: 48px 0;
   }
   
   @media (max-width: 768px) {
     .section {
-      padding: 60px 0;
+      padding: 36px 0;
     }
   }
   
   @media (max-width: 480px) {
     .section {
-      padding: 40px 0;
+      padding: 24px 0;
     }
   }
   
   .section-header {
-    margin-bottom: 48px;
+    margin-bottom: 32px;
   }
   
   @media (max-width: 480px) {
     .section-header {
-      margin-bottom: 32px;
+      margin-bottom: 20px;
     }
   }
   
@@ -2693,6 +2803,22 @@ export default function App() {
         )}
       </button>
       
+      {/* Navigation Header */}
+      <header className="nav-header">
+        <div className="nav-container">
+          <a href="/" className="nav-logo">
+            <span>&lt;</span>beyops<span>/&gt;</span>
+          </a>
+          <nav className="nav-tabs">
+            <a href="/" className="nav-tab active">Home</a>
+            <a href="#" className="nav-tab coming-soon" title="Coming Soon">Scripts</a>
+            <a href="#" className="nav-tab coming-soon" title="Coming Soon">Terraform Modules</a>
+            <a href="#" className="nav-tab coming-soon" title="Coming Soon">Diagrams</a>
+          </nav>
+        </div>
+      </header>
+      
+      <div className="app-content">
       {/* SVG Gradient Definition for circular progress */}
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <defs>
@@ -3458,6 +3584,7 @@ export default function App() {
           <p>Built with React • Deployed with Terraform • Hosted on AWS</p>
         </div>
       </footer>
+      </div>
     </>
   );
 }
