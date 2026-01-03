@@ -5,13 +5,13 @@ import React, { useState, useEffect } from 'react';
 // ============================================================================
 const CONFIG = {
   name: "Wes",
-  title: "Cloud Engineer",
+  title: "Cloud Engineer / DevOps Specialist",
   subtitle: "AWS | Azure | Terraform | Infrastructure as Code",
   github: "beywesley1",
   workGithub: "", // Add your work GitHub username here to show work account stats
   email: "your.email@example.com", // Update with your email
   linkedin: "https://linkedin.com/in/yourprofile", // Update with your LinkedIn
-  yearsExperience: 5, // Adjust to your actual years
+  yearsExperience: 16, // Started in IT in 2009 in the Navy
   resumeUrl: "/resume.pdf",
   
   // Legacy certifications for hero section badges
@@ -63,6 +63,84 @@ const CONFIG = {
     automation: ["PowerShell", "Bash", "Python", "GitHub Actions"],
     platforms: ["Windows Server", "Linux", "Active Directory", "Entra ID"],
   },
+  
+  // Career Timeline
+  career: [
+    {
+      title: "Information Systems Technician",
+      company: "Naval Special Warfare, SEAL Team 7 / TACCOMM-1",
+      location: "San Diego, CA",
+      period: "2018 – 2022",
+      icon: "🔱",
+      technologies: ["Harris HF/SHF/SATCOM", "Tactical Radios", "ROVER Video", "Blue Force Tracker", "Mobile SATCOM", "COMSEC/EKMS"],
+      highlights: [
+        "SEAL Team 7 - Deployed Communications:",
+        "Deployed as sole Communications Technician embedded with SEAL platoon, providing full-spectrum tactical communications support in austere environments",
+        "Managed, configured, and maintained tactical communications suite including handheld radios, Harris HF/SHF/SATCOM systems, ROVER video receivers, Blue Force Trackers, and mobile satellite systems",
+        "Responsible for all EKMS equipment and cryptographic keying material supporting classified platoon operations",
+        "Completed U.S. Army Airborne School; performed static line jumps in support of NSW operations",
+        "TACCOMM-1 - Training Coordinator:",
+        "Served as Primary Training Coordinator for the command, developing and delivering curriculum for NSW support personnel",
+        "Trained personnel on tactical communications equipment operation, troubleshooting, and field maintenance",
+        "Instructed multi-equipment movement planning and coordination for deployed operations",
+        "Prepared personnel for U.S. Army Airborne School, ensuring physical and procedural readiness",
+      ],
+    },
+    {
+      title: "Information Systems Technician",
+      company: "U.S. Navy, USS Mount Whitney (LCC-20)",
+      location: "Gaeta, Italy",
+      period: "2015 – 2018",
+      icon: "📡",
+      technologies: ["HF/UHF/SHF/EHF Radio", "SATCOM", "Blade Servers", "Microsoft Exchange", "COMSEC/EKMS", "CUDIXS"],
+      highlights: [
+        "Served as Radio Watchfloor Supervisor directing real-time communications operations aboard the 6th Fleet flagship, supervising 12 sailors across multiple watch sections",
+        "Processed 1,000+ operational messages weekly via CUDIXS and shipboard message traffic systems supporting U.S. Naval Forces Europe and NATO command staff",
+        "Operated and maintained HF, UHF, SHF, EHF, and SATCOM systems ensuring uninterrupted communications for fleet operations across Europe and Africa",
+        "Served as Work Center Supervisor for 3M program, managing preventive and corrective maintenance schedules ensuring material readiness of all communications and IT systems",
+        "Managed 70+ pieces of cryptographic equipment and keying material in accordance with COMSEC protocols",
+        "Led installation of blade server infrastructure for NIPR/SIPR network services, modernizing shipboard IT capabilities",
+        "Administered Microsoft Exchange Server supporting ship's company and embarked staff communications",
+        "Provided direct communications support for Baltic Operations, NATO exercises, and multiple multinational naval engagements",
+        "Successfully completed INSURV inspection with communications systems fully operational",
+        "Awarded Navy Achievement Medal for sustained superior performance",
+      ],
+    },
+    {
+      title: "Information Systems Technician",
+      company: "Navy Recruiting Command (CNRC)",
+      location: "Millington, TN",
+      period: "2012 – 2015",
+      icon: "🎖️",
+      technologies: ["Windows Server", "Cisco Switches/Routers", "VTC Equipment", "COMSEC/EKMS", "Recruiting Applications"],
+      highlights: [
+        "Provided direct IT support to the Commander, Navy Recruiting Command (Rear Admiral), coordinating and executing 10+ VTCs weekly for flag-level meetings, command briefings, and inter-agency coordination",
+        "Managed and maintained conference room AV systems supporting VIP visits, command presentations, and senior leadership engagements",
+        "Resolved 1,000+ helpdesk tickets over three years, supporting enterprise recruiting applications used by field recruiters nationwide",
+        "Troubleshot and resolved on-site hardware, software, and network issues for headquarters staff and military personnel",
+        "Awarded Navy Achievement Medal for exceptional performance and dedication to mission success",
+        "Recognized as Sailor of the Quarter three times; received multiple Letters of Commendation from command leadership",
+      ],
+    },
+    {
+      title: "Information Systems Technician",
+      company: "U.S. Navy, USS George Washington (CVN-73)",
+      location: "Yokosuka, Japan",
+      period: "2009 – 2012",
+      icon: "⚓",
+      technologies: ["Windows Server", "UNIX/Linux", "Active Directory", "COMSEC/EKMS", "LRSAT Phone System", "Exchange Server"],
+      highlights: [
+        "Served as Watch Supervisor overseeing IT operations across classified (TS/SCI) and unclassified networks supporting 5,000+ crew members on a forward-deployed nuclear aircraft carrier",
+        "Administered 15 Unix/Linux and Windows servers, managing Active Directory, domain controllers, Group Policy, and Exchange Server for ship-wide communications",
+        "Provided direct IT support for 7 major operations and joint exercises throughout the Western Pacific",
+        "Resolved 700+ IT incidents across multiple security enclaves, maintaining operational readiness during deployments and port visits",
+        "Provisioned and managed 200+ user accounts, security groups, and access permissions in compliance with DoD security requirements",
+        "Operated Navy Message Traffic System on TS/SCI network, ensuring timely processing of critical fleet communications",
+        "Maintained cryptographic systems and keying material in accordance with COMSEC protocols",
+        "Contributed to successful completion of 3 annual command inspections with zero critical findings in IT systems",
+      ],
+    },
+  ],
 };
 
 // ============================================================================
@@ -916,8 +994,20 @@ const styles = `
   /* Progress Bar Skills */
   .skills-progress-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  
+  @media (max-width: 1200px) {
+    .skills-progress-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .skills-progress-grid {
+      grid-template-columns: 1fr;
+    }
   }
   
   .skill-progress-category {
@@ -1156,6 +1246,193 @@ const styles = `
     display: block;
   }
   
+  /* Language Bar for Repos */
+  .repo-languages {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  
+  .repo-language-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+    margin-bottom: 8px;
+  }
+  
+  .repo-language-segment {
+    height: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .repo-language-segment:hover {
+    filter: brightness(1.2);
+  }
+  
+  .repo-language-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-size: 11px;
+  }
+  
+  .repo-language-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+  }
+  
+  .repo-language-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  
+  .repo-language-name {
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  
+  .repo-language-percent {
+    color: var(--text-muted);
+  }
+  
+  /* Career Timeline */
+  .career-timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+  
+  .career-timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+  }
+  
+  .career-item {
+    position: relative;
+    margin-bottom: 48px;
+  }
+  
+  .career-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .career-marker {
+    position: absolute;
+    left: -40px;
+    top: 0;
+    width: 26px;
+    height: 26px;
+    background: var(--bg-primary);
+    border: 2px solid var(--accent-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 1;
+  }
+  
+  .career-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s ease;
+  }
+  
+  .career-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateX(4px);
+  }
+  
+  .career-header {
+    margin-bottom: 20px;
+  }
+  
+  .career-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  
+  .career-company {
+    font-size: 16px;
+    color: var(--accent-cyan);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  
+  .career-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  
+  .career-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .career-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .career-highlights li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  
+  .career-highlights li:last-child {
+    margin-bottom: 0;
+  }
+  
+  .career-highlights li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent-blue);
+    font-size: 12px;
+  }
+  
+  .career-technologies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .career-tech-tag {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    padding: 4px 10px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 4px;
+    color: var(--accent-cyan);
+  }
+  
   /* Contact Section */
   .contact-links {
     display: flex;
@@ -1254,14 +1531,32 @@ function useGitHubStats(username) {
       try {
         // Fetch user data
         const userRes = await fetch(`https://api.github.com/users/${username}`);
+        if (!userRes.ok) {
+          console.warn('GitHub API rate limited or user not found');
+          setLoading(false);
+          return;
+        }
         const userData = await userRes.json();
         
         // Fetch all repos for stats calculation
         const allReposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
         const allReposData = await allReposRes.json();
         
-        // Get top 6 repos for display
-        const displayRepos = allReposData.slice(0, 6);
+        // Get top 6 repos for display and fetch their languages
+        const displayReposRaw = allReposData.slice(0, 6);
+        
+        // Fetch languages for each display repo
+        const displayRepos = await Promise.all(
+          displayReposRaw.map(async (repo) => {
+            try {
+              const langRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/languages`);
+              const langData = await langRes.json();
+              return { ...repo, languages: langData };
+            } catch (e) {
+              return { ...repo, languages: {} };
+            }
+          })
+        );
         
         setStats({
           publicRepos: userData.public_repos,
@@ -1440,20 +1735,16 @@ export default function App() {
             <div className="stat-label">Years Experience</div>
           </div>
           <div className="stat-card">
-            <div className="stat-value">
-              {loading ? '...' : stats?.publicRepos || '—'}
-            </div>
-            <div className="stat-label">GitHub Repos</div>
+            <div className="stat-value">200+</div>
+            <div className="stat-label">GitHub Repos Managed</div>
           </div>
           <div className="stat-card">
-            <div className="stat-value">
-              {CONFIG.certifications.filter(c => c.status === 'certified').length}
-            </div>
+            <div className="stat-value">10</div>
             <div className="stat-label">Certifications</div>
           </div>
           <div className="stat-card">
-            <div className="stat-value">∞</div>
-            <div className="stat-label">Terraform Plans</div>
+            <div className="stat-value">2,000+</div>
+            <div className="stat-label">Terraform Runs</div>
           </div>
         </div>
       </section>
@@ -1526,6 +1817,46 @@ export default function App() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Career Timeline Section */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <p className="section-label">// Experience</p>
+            <h2 className="section-title">Career Timeline</h2>
+          </div>
+          
+          <div className="career-timeline">
+            {CONFIG.career.map((job, i) => (
+              <div key={i} className="career-item">
+                <div className="career-marker">{job.icon}</div>
+                <div className="career-card">
+                  <div className="career-header">
+                    <h3 className="career-title">{job.title}</h3>
+                    <div className="career-company">{job.company}</div>
+                    <div className="career-meta">
+                      <span>📍 {job.location}</span>
+                      <span>📅 {job.period}</span>
+                    </div>
+                  </div>
+                  {job.technologies && job.technologies.length > 0 && (
+                    <div className="career-technologies">
+                      {job.technologies.map((tech, k) => (
+                        <span key={k} className="career-tech-tag">{tech}</span>
+                      ))}
+                    </div>
+                  )}
+                  <ul className="career-highlights">
+                    {job.highlights.map((highlight, j) => (
+                      <li key={j}>{highlight}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1604,18 +1935,46 @@ export default function App() {
                     {repo.description || 'No description available'}
                   </p>
                   <div className="repo-stats">
-                    {repo.language && (
-                      <span className="repo-language">
-                        <span
-                          className="language-dot"
-                          style={{ background: languageColors[repo.language] || languageColors.default }}
-                        />
-                        {repo.language}
-                      </span>
-                    )}
                     <span className="repo-stat">⭐ {repo.stargazers_count}</span>
                     <span className="repo-stat">🔀 {repo.forks_count}</span>
                   </div>
+                  
+                  {/* Language breakdown bar */}
+                  {repo.languages && Object.keys(repo.languages).length > 0 && (() => {
+                    const total = Object.values(repo.languages).reduce((a, b) => a + b, 0);
+                    const sortedLangs = Object.entries(repo.languages)
+                      .sort((a, b) => b[1] - a[1])
+                      .slice(0, 6);
+                    return (
+                      <div className="repo-languages">
+                        <div className="repo-language-bar">
+                          {sortedLangs.map(([lang, bytes]) => (
+                            <div
+                              key={lang}
+                              className="repo-language-segment"
+                              style={{
+                                width: `${(bytes / total) * 100}%`,
+                                background: languageColors[lang] || languageColors.default,
+                              }}
+                              title={`${lang}: ${((bytes / total) * 100).toFixed(1)}%`}
+                            />
+                          ))}
+                        </div>
+                        <div className="repo-language-list">
+                          {sortedLangs.map(([lang, bytes]) => (
+                            <span key={lang} className="repo-language-item">
+                              <span
+                                className="repo-language-dot"
+                                style={{ background: languageColors[lang] || languageColors.default }}
+                              />
+                              <span className="repo-language-name">{lang}</span>
+                              <span className="repo-language-percent">{((bytes / total) * 100).toFixed(1)}%</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </a>
               ))
             ) : (
