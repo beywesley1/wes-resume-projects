@@ -7,17 +7,56 @@ const CONFIG = {
   name: "Wes",
   title: "Cloud Engineer",
   subtitle: "AWS | Azure | Terraform | Infrastructure as Code",
-  github: "YOUR_GITHUB_USERNAME", // Replace with your GitHub username
-  email: "your.email@example.com",
-  linkedin: "https://linkedin.com/in/yourprofile",
+  github: "beywesley1",
+  workGithub: "", // Add your work GitHub username here to show work account stats
+  email: "your.email@example.com", // Update with your email
+  linkedin: "https://linkedin.com/in/yourprofile", // Update with your LinkedIn
   yearsExperience: 5, // Adjust to your actual years
   resumeUrl: "/resume.pdf",
   
+  // Legacy certifications for hero section badges
   certifications: [
     { name: "AWS SAP-C02", icon: "☁️", status: "certified" },
     { name: "AZ-104", icon: "🔷", status: "in-progress" },
   ],
   
+  // Credly badges - paste your Credly badge URLs here
+  // Get the embed URL from Credly: Share Badge > Embed Code > copy the data-share-badge-id
+  credlyBadges: [
+    { id: "a3966b13-05a6-4606-896d-b081b9c8d661", name: "AWS Solutions Architect Professional" },
+    { id: "a3ebb6eb-001c-4e30-9b32-6dc32cbf4a58", name: "AWS SysOps Administrator Associate" },
+    { id: "54e88ce4-f14b-43ca-9b75-a42b4de7780a", name: "AWS Solutions Architect Associate" },
+    { id: "d677cf10-a791-4dbb-9b75-5e9415a2ad03", name: "CompTIA Security+" },
+    { id: "564bab1c-138c-4e07-88f4-9151bce7328f", name: "HashiCorp Terraform Associate" },
+  ],
+  
+  // Skills with proficiency percentages (0-100)
+  skillsWithProgress: {
+    cloud: [
+      { name: "AWS", level: 90 },
+      { name: "Azure", level: 75 },
+      { name: "GCP", level: 40 },
+    ],
+    iac: [
+      { name: "Terraform", level: 85 },
+      { name: "CloudFormation", level: 70 },
+      { name: "Pulumi", level: 50 },
+    ],
+    automation: [
+      { name: "PowerShell", level: 90 },
+      { name: "Bash", level: 80 },
+      { name: "Python", level: 70 },
+      { name: "GitHub Actions", level: 75 },
+    ],
+    platforms: [
+      { name: "Windows Server", level: 85 },
+      { name: "Linux", level: 80 },
+      { name: "Active Directory", level: 90 },
+      { name: "Entra ID", level: 75 },
+    ],
+  },
+  
+  // Legacy skills array for simple display
   skills: {
     cloud: ["AWS", "Azure", "CloudFormation", "ARM Templates"],
     iac: ["Terraform", "Terragrunt", "Pulumi"],
@@ -227,12 +266,12 @@ const styles = `
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
   
   :root {
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #12121a;
-    --bg-tertiary: #1a1a24;
-    --bg-card: #16161f;
-    --border: #2a2a3a;
-    --border-hover: #3a3a4a;
+    --bg-primary: #050508;
+    --bg-secondary: #0a0a10;
+    --bg-tertiary: #101018;
+    --bg-card: #0c0c14;
+    --border: #1a1a2e;
+    --border-hover: #2a2a4a;
     --text-primary: #e4e4e7;
     --text-secondary: #a1a1aa;
     --text-muted: #71717a;
@@ -260,16 +299,110 @@ const styles = `
     overflow-x: hidden;
   }
   
-  /* Grid Background */
-  .grid-bg {
+  /* Abstract Animated Background */
+  .abstract-bg {
     position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    background: radial-gradient(ellipse at 50% 0%, #0a1628 0%, #050508 50%, #000 100%);
+  }
+  
+  .abstract-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  .abstract-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 70% 70%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+      radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+    animation: float 25s ease-in-out infinite reverse;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2%, 2%) rotate(1deg); }
+    50% { transform: translate(-1%, 3%) rotate(-1deg); }
+    75% { transform: translate(-2%, -1%) rotate(0.5deg); }
+  }
+  
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: orb-float 15s ease-in-out infinite;
+  }
+  
+  .orb-1 {
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(6, 182, 212, 0.2));
+    top: -200px;
+    right: -200px;
+    animation-delay: 0s;
+  }
+  
+  .orb-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.15));
+    bottom: -100px;
+    left: -100px;
+    animation-delay: -5s;
+  }
+  
+  .orb-3 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(16, 185, 129, 0.1));
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -10s;
+  }
+  
+  @keyframes orb-float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+  }
+  
+  /* Grid overlay */
+  .grid-overlay {
+    position: absolute;
     inset: 0;
     background-image: 
       linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    pointer-events: none;
-    z-index: 0;
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+  }
+  
+  /* Noise texture overlay */
+  .noise-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
   
   .container {
@@ -720,6 +853,309 @@ const styles = `
     color: var(--accent-orange);
   }
   
+  /* Credly Badges Section */
+  .credly-section {
+    padding: 80px 0;
+    background: var(--bg-secondary);
+  }
+  
+  .credly-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .credly-badge-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .credly-badge-wrapper:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+  }
+  
+  .credly-placeholder {
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-card);
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .credly-placeholder h4 {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+  
+  .credly-placeholder p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .credly-placeholder code {
+    background: var(--bg-tertiary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  
+  /* Progress Bar Skills */
+  .skills-progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+  }
+  
+  .skill-progress-category {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+  
+  .skill-progress-category h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .skill-progress-category h3 span {
+    font-size: 24px;
+  }
+  
+  .skill-progress-item {
+    margin-bottom: 20px;
+  }
+  
+  .skill-progress-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .skill-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .skill-progress-name {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  
+  .skill-progress-percent {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-cyan);
+  }
+  
+  .skill-progress-bar {
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .skill-progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+    transition: width 1s ease-out;
+    position: relative;
+  }
+  
+  .skill-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer-bar 2s infinite;
+  }
+  
+  @keyframes shimmer-bar {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  /* Circular Progress Widget */
+  .circular-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+  .circular-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .circular-progress {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+  
+  .circular-progress svg {
+    transform: rotate(-90deg);
+    width: 120px;
+    height: 120px;
+  }
+  
+  .circular-progress .bg {
+    fill: none;
+    stroke: var(--bg-tertiary);
+    stroke-width: 8;
+  }
+  
+  .circular-progress .progress {
+    fill: none;
+    stroke: url(#gradient);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1.5s ease-out;
+  }
+  
+  .circular-progress .value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .circular-stat-label {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  
+  /* GitHub Activity Section */
+  .github-activity-section {
+    padding: 80px 0;
+  }
+  
+  .github-accounts {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  
+  .github-account {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  
+  .github-account-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .github-account-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .github-account-header .account-type {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--text-muted);
+  }
+  
+  .github-account-header .account-type.personal {
+    color: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  
+  .github-account-header .account-type.work {
+    color: var(--accent-purple);
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.1);
+  }
+  
+  .github-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .github-stat-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .github-stat-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+  }
+  
+  .github-stat-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .github-contribution-graph {
+    margin-top: 20px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 16px;
+  }
+  
+  .github-contribution-graph img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
   /* Contact Section */
   .contact-links {
     display: flex;
@@ -806,6 +1242,7 @@ function useGitHubStats(username) {
   const [stats, setStats] = useState(null);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [linesOfCode, setLinesOfCode] = useState({ added: 0, deleted: 0 });
   
   useEffect(() => {
     if (!username || username === 'YOUR_GITHUB_USERNAME') {
@@ -819,15 +1256,48 @@ function useGitHubStats(username) {
         const userRes = await fetch(`https://api.github.com/users/${username}`);
         const userData = await userRes.json();
         
-        // Fetch repos
-        const reposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
-        const reposData = await reposRes.json();
+        // Fetch all repos for stats calculation
+        const allReposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+        const allReposData = await allReposRes.json();
+        
+        // Get top 6 repos for display
+        const displayRepos = allReposData.slice(0, 6);
         
         setStats({
           publicRepos: userData.public_repos,
           followers: userData.followers,
         });
-        setRepos(reposData);
+        setRepos(displayRepos);
+        
+        // Fetch lines of code from repo languages (approximation based on repo sizes)
+        let totalAdded = 0;
+        let totalDeleted = 0;
+        
+        // Fetch contributor stats for each repo to get lines added/deleted
+        const statsPromises = allReposData.slice(0, 10).map(async (repo) => {
+          try {
+            const statsRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/stats/contributors`);
+            if (statsRes.ok) {
+              const statsData = await statsRes.json();
+              if (Array.isArray(statsData)) {
+                // Find the user's contributions
+                const userStats = statsData.find(c => c.author?.login?.toLowerCase() === username.toLowerCase());
+                if (userStats && userStats.weeks) {
+                  userStats.weeks.forEach(week => {
+                    totalAdded += week.a || 0;
+                    totalDeleted += week.d || 0;
+                  });
+                }
+              }
+            }
+          } catch (e) {
+            // Silently fail for individual repos
+          }
+        });
+        
+        await Promise.all(statsPromises);
+        setLinesOfCode({ added: totalAdded, deleted: totalDeleted });
+        
       } catch (error) {
         console.error('Error fetching GitHub data:', error);
       } finally {
@@ -838,7 +1308,7 @@ function useGitHubStats(username) {
     fetchData();
   }, [username]);
   
-  return { stats, repos, loading };
+  return { stats, repos, loading, linesOfCode };
 }
 
 // Copy to clipboard hook
@@ -877,13 +1347,44 @@ const languageColors = {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('powershell');
-  const { stats, repos, loading } = useGitHubStats(CONFIG.github);
+  const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
+  
+  // Load Credly embed script when badges are configured
+  useEffect(() => {
+    if (CONFIG.credlyBadges.length > 0) {
+      const script = document.createElement('script');
+      script.src = '//cdn.credly.com/assets/utilities/embed.js';
+      script.async = true;
+      document.body.appendChild(script);
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, []);
   
   return (
     <>
       <style>{styles}</style>
-      <div className="grid-bg" />
+      
+      {/* SVG Gradient Definition for circular progress */}
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="var(--accent-blue)" />
+            <stop offset="100%" stopColor="var(--accent-cyan)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      
+      {/* Abstract Animated Background */}
+      <div className="abstract-bg">
+        <div className="orb orb-1" />
+        <div className="orb orb-2" />
+        <div className="orb orb-3" />
+        <div className="grid-overlay" />
+        <div className="noise-overlay" />
+      </div>
       
       {/* Hero Section */}
       <section className="hero">
@@ -957,48 +1458,112 @@ export default function App() {
         </div>
       </section>
       
-      {/* Skills Section */}
+      {/* Skills Section with Progress Bars */}
       <section className="section">
         <div className="container">
           <div className="section-header">
             <p className="section-label">// Expertise</p>
-            <h2 className="section-title">Skills & Technologies</h2>
+            <h2 className="section-title">Skills & Proficiency</h2>
           </div>
           
-          <div className="skills-grid">
-            <div className="skill-category">
+          <div className="skills-progress-grid">
+            <div className="skill-progress-category">
               <h3><span>☁️</span> Cloud Platforms</h3>
-              <div className="skill-tags">
-                {CONFIG.skills.cloud.map((skill, i) => (
-                  <span key={i} className="skill-tag">{skill}</span>
-                ))}
-              </div>
+              {CONFIG.skillsWithProgress.cloud.map((skill, i) => (
+                <div key={i} className="skill-progress-item">
+                  <div className="skill-progress-header">
+                    <span className="skill-progress-name">{skill.name}</span>
+                    <span className="skill-progress-percent">{skill.level}%</span>
+                  </div>
+                  <div className="skill-progress-bar">
+                    <div className="skill-progress-fill" style={{ width: `${skill.level}%` }} />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="skill-category">
+            
+            <div className="skill-progress-category">
               <h3><span>🏗️</span> Infrastructure as Code</h3>
-              <div className="skill-tags">
-                {CONFIG.skills.iac.map((skill, i) => (
-                  <span key={i} className="skill-tag">{skill}</span>
-                ))}
-              </div>
+              {CONFIG.skillsWithProgress.iac.map((skill, i) => (
+                <div key={i} className="skill-progress-item">
+                  <div className="skill-progress-header">
+                    <span className="skill-progress-name">{skill.name}</span>
+                    <span className="skill-progress-percent">{skill.level}%</span>
+                  </div>
+                  <div className="skill-progress-bar">
+                    <div className="skill-progress-fill" style={{ width: `${skill.level}%` }} />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="skill-category">
+            
+            <div className="skill-progress-category">
               <h3><span>⚙️</span> Automation</h3>
-              <div className="skill-tags">
-                {CONFIG.skills.automation.map((skill, i) => (
-                  <span key={i} className="skill-tag">{skill}</span>
-                ))}
-              </div>
+              {CONFIG.skillsWithProgress.automation.map((skill, i) => (
+                <div key={i} className="skill-progress-item">
+                  <div className="skill-progress-header">
+                    <span className="skill-progress-name">{skill.name}</span>
+                    <span className="skill-progress-percent">{skill.level}%</span>
+                  </div>
+                  <div className="skill-progress-bar">
+                    <div className="skill-progress-fill" style={{ width: `${skill.level}%` }} />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="skill-category">
+            
+            <div className="skill-progress-category">
               <h3><span>🖥️</span> Platforms</h3>
-              <div className="skill-tags">
-                {CONFIG.skills.platforms.map((skill, i) => (
-                  <span key={i} className="skill-tag">{skill}</span>
-                ))}
-              </div>
+              {CONFIG.skillsWithProgress.platforms.map((skill, i) => (
+                <div key={i} className="skill-progress-item">
+                  <div className="skill-progress-header">
+                    <span className="skill-progress-name">{skill.name}</span>
+                    <span className="skill-progress-percent">{skill.level}%</span>
+                  </div>
+                  <div className="skill-progress-bar">
+                    <div className="skill-progress-fill" style={{ width: `${skill.level}%` }} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
+      </section>
+      
+      {/* Credly Certifications Section */}
+      <section className="credly-section">
+        <div className="container">
+          <div className="section-header">
+            <p className="section-label">// Verified Credentials</p>
+            <h2 className="section-title">Certifications</h2>
+          </div>
+          
+          {CONFIG.credlyBadges.length > 0 ? (
+            <div className="credly-grid">
+              {CONFIG.credlyBadges.map((badge, i) => (
+                <div key={i} className="credly-badge-wrapper">
+                  <div 
+                    data-iframe-width="150" 
+                    data-iframe-height="270" 
+                    data-share-badge-id={badge.id}
+                    data-share-badge-host="https://www.credly.com"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="credly-placeholder">
+              <h4>🏆 Add Your Credly Badges</h4>
+              <p>
+                To display your certifications, add your Credly badge IDs to the <code>credlyBadges</code> array in the CONFIG section.
+                <br /><br />
+                <strong>How to find your badge ID:</strong><br />
+                1. Go to your Credly profile<br />
+                2. Click on a badge → Share → Get embed code<br />
+                3. Copy the <code>data-share-badge-id</code> value
+              </p>
+            </div>
+          )}
         </div>
       </section>
       
@@ -1057,6 +1622,105 @@ export default function App() {
               <p style={{ color: 'var(--text-muted)' }}>
                 Configure your GitHub username in CONFIG to display repos
               </p>
+            )}
+          </div>
+          
+          {/* GitHub Activity Stats - below repos */}
+          <div className="github-accounts" style={{ marginTop: '48px' }}>
+            <div className="github-account">
+              <div className="github-account-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                <h3>@{CONFIG.github}</h3>
+                <span className="account-type personal">Personal</span>
+              </div>
+              
+              {/* Stats from API */}
+              <div className="github-stats-grid" style={{ marginBottom: '20px' }}>
+                <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ fontSize: '32px' }}>📦</div>
+                  <div>
+                    <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-cyan))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      {loading ? '...' : stats?.publicRepos || 0}
+                    </div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Public Repos</div>
+                  </div>
+                </div>
+                <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ fontSize: '32px' }}>👥</div>
+                  <div>
+                    <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-cyan))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      {loading ? '...' : stats?.followers || 0}
+                    </div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Followers</div>
+                  </div>
+                </div>
+                <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ fontSize: '32px' }}>⭐</div>
+                  <div>
+                    <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-cyan))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      {loading ? '...' : repos.reduce((acc, repo) => acc + repo.stargazers_count, 0)}
+                    </div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Stars</div>
+                  </div>
+                </div>
+                <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ fontSize: '32px' }}>🔀</div>
+                  <div>
+                    <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-cyan))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      {loading ? '...' : repos.reduce((acc, repo) => acc + repo.forks_count, 0)}
+                    </div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Forks</div>
+                  </div>
+                </div>
+                <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ fontSize: '32px', color: '#22c55e' }}>++</div>
+                  <div>
+                    <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #22c55e, #4ade80)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      {loading ? '...' : linesOfCode.added.toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Added</div>
+                  </div>
+                </div>
+                <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ fontSize: '32px', color: '#ef4444' }}>--</div>
+                  <div>
+                    <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #ef4444, #f87171)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      {loading ? '...' : linesOfCode.deleted.toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Deleted</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="github-contribution-graph">
+                <img 
+                  src={`https://ghchart.rshah.org/3b82f6/${CONFIG.github}`}
+                  alt="GitHub Contribution Graph"
+                  style={{ width: '100%', height: 'auto' }}
+                />
+              </div>
+            </div>
+            
+            {CONFIG.workGithub && (
+              <div className="github-account">
+                <div className="github-account-header">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                  <h3>@{CONFIG.workGithub}</h3>
+                  <span className="account-type work">Work</span>
+                </div>
+                
+                <div className="github-contribution-graph">
+                  <img 
+                    src={`https://ghchart.rshah.org/8b5cf6/${CONFIG.workGithub}`}
+                    alt="GitHub Contribution Graph"
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>
