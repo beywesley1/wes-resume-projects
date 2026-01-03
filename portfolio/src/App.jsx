@@ -191,22 +191,60 @@ const CONFIG = {
 // ============================================================================
 // SCRIPTS LIBRARY - Add your commonly used scripts here
 // ============================================================================
-const SCRIPTS = {
-  powershell: [
-    {
-      title: "Get AD User Details",
-      description: "Retrieve detailed Active Directory user information",
-      code: `# Get AD User with all properties
+const SCRIPTS_DATA = [
+  // PowerShell - Active Directory
+  {
+    id: "ps-ad-001",
+    title: "Get AD User Details",
+    description: "Retrieve detailed Active Directory user information",
+    category: "powershell",
+    subcategory: "Active Directory",
+    tags: ["active-directory", "user-management", "audit"],
+    dateAdded: "2025-01-01",
+    code: `# Get AD User Details
+# Retrieves comprehensive user info from Active Directory
+# Includes: name, email, department, manager, login history
+# Usage: Run script and enter username when prompted
+
 $username = Read-Host "Enter username"
 Get-ADUser -Identity $username -Properties * | 
     Select-Object Name, EmailAddress, Department, Title, Manager, 
                   Created, LastLogonDate, PasswordLastSet |
     Format-List`,
-    },
-    {
-      title: "Check MFA Status",
-      description: "Check MFA registration status for Azure AD users",
-      code: `# Requires Microsoft.Graph module
+  },
+  {
+    id: "ps-ad-002",
+    title: "Bulk AD Group Members",
+    description: "Export all members of an AD group to CSV",
+    category: "powershell",
+    subcategory: "Active Directory",
+    tags: ["active-directory", "groups", "export"],
+    dateAdded: "2025-01-02",
+    code: `# Export AD Group Members to CSV
+# Recursively gets all members of an AD group
+# Exports to CSV with display name, username, email, department
+# Output: Creates CSV file in current directory
+
+$groupName = Read-Host "Enter group name"
+Get-ADGroupMember -Identity $groupName -Recursive |
+    Get-ADUser -Properties DisplayName, EmailAddress, Department |
+    Select-Object DisplayName, SamAccountName, EmailAddress, Department |
+    Export-Csv -Path ".\\$groupName-members.csv" -NoTypeInformation`,
+  },
+  // PowerShell - Azure / Entra ID
+  {
+    id: "ps-azure-001",
+    title: "Check MFA Status",
+    description: "Check MFA registration status for Azure AD users",
+    category: "powershell",
+    subcategory: "Azure / Entra ID",
+    tags: ["azure-ad", "mfa", "security", "authentication"],
+    dateAdded: "2025-01-01",
+    code: `# Check MFA Status for All Users
+# Requires: Microsoft.Graph PowerShell module
+# Lists all users with their MFA enrollment status
+# Output: User name, MFA enabled (true/false), method count
+
 Connect-MgGraph -Scopes "UserAuthenticationMethod.Read.All"
 
 $users = Get-MgUser -All
@@ -218,11 +256,42 @@ foreach ($user in $users) {
         Methods = $methods.Count
     }
 }`,
-    },
-    {
-      title: "AWS SSM Session",
-      description: "Start SSM session to EC2 instance",
-      code: `# Start SSM session with AWS CLI
+  },
+  {
+    id: "ps-azure-002",
+    title: "Get Entra ID Sign-In Logs",
+    description: "Retrieve recent sign-in logs from Entra ID",
+    category: "powershell",
+    subcategory: "Azure / Entra ID",
+    tags: ["entra-id", "sign-in", "audit", "security"],
+    dateAdded: "2025-01-03",
+    code: `# Get Entra ID Sign-In Logs
+# Requires: Microsoft.Graph PowerShell module
+# Retrieves last 100 sign-in events for security auditing
+# Shows: timestamp, user, app, IP address, status
+
+Connect-MgGraph -Scopes "AuditLog.Read.All"
+
+Get-MgAuditLogSignIn -Top 100 |
+    Select-Object CreatedDateTime, UserPrincipalName, 
+                  AppDisplayName, IPAddress, 
+                  @{N='Status';E={$_.Status.ErrorCode}} |
+    Format-Table -AutoSize`,
+  },
+  // PowerShell - AWS
+  {
+    id: "ps-aws-001",
+    title: "AWS SSM Session",
+    description: "Start SSM session to EC2 instance",
+    category: "powershell",
+    subcategory: "AWS",
+    tags: ["aws", "ssm", "ec2", "remote-access"],
+    dateAdded: "2025-01-02",
+    code: `# Start AWS SSM Session
+# Connects to EC2 instance via Systems Manager (no SSH needed)
+# Requires: AWS CLI installed, SSM agent on instance
+# Usage: Enter instance ID and optional AWS profile
+
 $instanceId = Read-Host "Enter Instance ID"
 $profile = Read-Host "Enter AWS Profile (default: default)"
 if ([string]::IsNullOrEmpty($profile)) { $profile = "default" }
@@ -230,14 +299,21 @@ if ([string]::IsNullOrEmpty($profile)) { $profile = "default" }
 aws ssm start-session \`
     --target $instanceId \`
     --profile $profile`,
-    },
-  ],
-  bash: [
-    {
-      title: "EC2 Instance Report",
-      description: "List all EC2 instances across regions",
-      code: `#!/bin/bash
-# List EC2 instances across all regions
+  },
+  // Bash - AWS
+  {
+    id: "bash-aws-001",
+    title: "EC2 Instance Report",
+    description: "List all EC2 instances across regions",
+    category: "bash",
+    subcategory: "AWS",
+    tags: ["aws", "ec2", "reporting", "multi-region"],
+    dateAdded: "2025-01-01",
+    code: `#!/bin/bash
+# EC2 Instance Report - All Regions
+# Loops through all AWS regions and lists EC2 instances
+# Shows: Instance ID, State, Type, Name tag
+# Useful for multi-region inventory audits
 
 for region in $(aws ec2 describe-regions --query 'Regions[].RegionName' --output text); do
     echo "=== Region: $region ==="
@@ -246,12 +322,20 @@ for region in $(aws ec2 describe-regions --query 'Regions[].RegionName' --output
         --query 'Reservations[].Instances[].[InstanceId,State.Name,InstanceType,Tags[?Key==\`Name\`].Value|[0]]' \\
         --output table
 done`,
-    },
-    {
-      title: "Terraform Init with Backend",
-      description: "Initialize Terraform with S3 backend configuration",
-      code: `#!/bin/bash
-# Initialize Terraform with S3 backend
+  },
+  {
+    id: "bash-aws-002",
+    title: "Terraform Init with Backend",
+    description: "Initialize Terraform with S3 backend configuration",
+    category: "bash",
+    subcategory: "AWS",
+    tags: ["terraform", "s3", "backend", "infrastructure"],
+    dateAdded: "2025-01-01",
+    code: `#!/bin/bash
+# Terraform Init with S3 Backend
+# Initializes Terraform with remote state in S3
+# Uses DynamoDB for state locking to prevent conflicts
+# Update variables below before running
 
 BUCKET="your-terraform-state-bucket"
 KEY="path/to/state/terraform.tfstate"
@@ -264,12 +348,21 @@ terraform init \\
     -backend-config="region=$REGION" \\
     -backend-config="dynamodb_table=$DYNAMODB_TABLE" \\
     -backend-config="encrypt=true"`,
-    },
-    {
-      title: "Docker Cleanup",
-      description: "Clean up unused Docker resources",
-      code: `#!/bin/bash
-# Docker system cleanup
+  },
+  // Bash - Docker
+  {
+    id: "bash-docker-001",
+    title: "Docker Cleanup",
+    description: "Clean up unused Docker resources",
+    category: "bash",
+    subcategory: "Docker",
+    tags: ["docker", "cleanup", "containers", "devops"],
+    dateAdded: "2025-01-02",
+    code: `#!/bin/bash
+# Docker Full Cleanup Script
+# Stops all containers and removes unused resources
+# Cleans: containers, images, volumes, networks
+# WARNING: This will remove ALL unused Docker resources
 
 echo "Stopping all containers..."
 docker stop $(docker ps -aq) 2>/dev/null
@@ -288,49 +381,114 @@ docker network prune -f
 
 echo "Current disk usage:"
 docker system df`,
-    },
-  ],
-  awscli: [
-    {
-      title: "List EC2 Instances",
-      description: "List all EC2 instances with key details",
-      code: `# List EC2 instances with Name, ID, State, Type
+  },
+  {
+    id: "bash-docker-002",
+    title: "Docker Logs Tail",
+    description: "Tail logs from all running containers",
+    category: "bash",
+    subcategory: "Docker",
+    tags: ["docker", "logs", "debugging"],
+    dateAdded: "2025-01-03",
+    code: `#!/bin/bash
+# Docker Container Log Viewer
+# Tails logs from a container with timestamps
+# Usage: ./script.sh [container_name]
+# Default: Uses first running container if none specified
+
+CONTAINER=\${1:-$(docker ps --format '{{.Names}}' | head -1)}
+echo "Tailing logs for: $CONTAINER"
+
+docker logs -f --tail 100 --timestamps "$CONTAINER"`,
+  },
+  // AWS CLI - EC2
+  {
+    id: "aws-ec2-001",
+    title: "List EC2 Instances",
+    description: "List all EC2 instances with key details",
+    category: "awscli",
+    subcategory: "EC2",
+    tags: ["aws", "ec2", "inventory", "reporting"],
+    dateAdded: "2025-01-02",
+    code: `# List EC2 Instances - Table Format
+# Displays all EC2 instances in current region
+# Shows: Name, Instance ID, State, Instance Type
+# Add --region flag to query different region
+
 aws ec2 describe-instances \\
     --query 'Reservations[].Instances[].[Tags[?Key==\`Name\`].Value|[0],InstanceId,State.Name,InstanceType]' \\
     --output table`,
-    },
-    {
-      title: "S3 Bucket Size",
-      description: "Get total size of an S3 bucket",
-      code: `# Get S3 bucket size in human-readable format
+  },
+  // AWS CLI - S3
+  {
+    id: "aws-s3-001",
+    title: "S3 Bucket Size",
+    description: "Get total size of an S3 bucket",
+    category: "awscli",
+    subcategory: "S3",
+    tags: ["aws", "s3", "storage", "reporting"],
+    dateAdded: "2025-01-02",
+    code: `# Get S3 Bucket Total Size
+# Calculates total size of all objects in a bucket
+# Output: Total objects count and total size
+# Replace BUCKET variable with your bucket name
+
 BUCKET="your-bucket-name"
 aws s3 ls s3://$BUCKET --recursive --summarize | tail -2`,
-    },
-    {
-      title: "Assume IAM Role",
-      description: "Assume an IAM role and export credentials",
-      code: `# Assume role and export credentials
+  },
+  // AWS CLI - IAM
+  {
+    id: "aws-iam-001",
+    title: "Assume IAM Role",
+    description: "Assume an IAM role and export credentials",
+    category: "awscli",
+    subcategory: "IAM",
+    tags: ["aws", "iam", "security", "credentials"],
+    dateAdded: "2025-01-03",
+    code: `# Assume IAM Role and Export Credentials
+# Assumes a role and sets environment variables
+# Requires: jq installed for JSON parsing
+# Credentials valid for 1 hour by default
+
 ROLE_ARN="arn:aws:iam::123456789012:role/YourRole"
 CREDS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name "MySession")
 
 export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
 export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
 export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')`,
-    },
-  ],
-  azurecli: [
-    {
-      title: "List VMs",
-      description: "List all Azure VMs with details",
-      code: `# List all VMs with resource group, name, and state
+  },
+  // Azure CLI - Compute
+  {
+    id: "az-compute-001",
+    title: "List VMs",
+    description: "List all Azure VMs with details",
+    category: "azurecli",
+    subcategory: "Compute",
+    tags: ["azure", "vm", "inventory", "reporting"],
+    dateAdded: "2025-01-02",
+    code: `# List All Azure Virtual Machines
+# Displays VMs across all resource groups
+# Shows: VM Name, Resource Group, VM Size
+# Requires: az login first
+
 az vm list \\
     --query '[].{Name:name, ResourceGroup:resourceGroup, Size:hardwareProfile.vmSize}' \\
     --output table`,
-    },
-    {
-      title: "Get Storage Account Keys",
-      description: "Retrieve storage account access keys",
-      code: `# Get storage account keys
+  },
+  // Azure CLI - Storage
+  {
+    id: "az-storage-001",
+    title: "Get Storage Account Keys",
+    description: "Retrieve storage account access keys",
+    category: "azurecli",
+    subcategory: "Storage",
+    tags: ["azure", "storage", "security", "credentials"],
+    dateAdded: "2025-01-02",
+    code: `# Get Azure Storage Account Access Keys
+# Retrieves both primary and secondary access keys
+# Update RESOURCE_GROUP and STORAGE_ACCOUNT variables
+# Keys can be used for Blob, Queue, Table, File access
+
 RESOURCE_GROUP="your-rg"
 STORAGE_ACCOUNT="yourstorageaccount"
 
@@ -338,107 +496,125 @@ az storage account keys list \\
     --resource-group $RESOURCE_GROUP \\
     --account-name $STORAGE_ACCOUNT \\
     --output table`,
-    },
-    {
-      title: "Create Resource Group",
-      description: "Create a new Azure resource group",
-      code: `# Create resource group
+  },
+  // Azure CLI - Resource Groups
+  {
+    id: "az-rg-001",
+    title: "Create Resource Group",
+    description: "Create a new Azure resource group",
+    category: "azurecli",
+    subcategory: "Resource Groups",
+    tags: ["azure", "resource-group", "infrastructure"],
+    dateAdded: "2025-01-03",
+    code: `# Create Azure Resource Group
+# Creates a new resource group with tags
+# Resource groups are containers for Azure resources
+# Tags help with cost tracking and organization
+
 az group create \\
     --name "my-resource-group" \\
     --location "eastus" \\
     --tags Environment=Dev Project=MyProject`,
-    },
-  ],
-  terraform: [
-    {
-      title: "S3 Static Website",
-      description: "S3 bucket configured for static website hosting",
-      code: `resource "aws_s3_bucket" "website" {
-  bucket = var.bucket_name
-}
+  },
+];
 
-resource "aws_s3_bucket_website_configuration" "website" {
-  bucket = aws_s3_bucket.website.id
+// Category configuration with icons
+const CATEGORIES = {
+  powershell: {
+    label: "PowerShell",
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.181 2.974c.568 0 .923.463.792 1.035l-3.659 15.982c-.13.572-.697 1.035-1.265 1.035H.819c-.568 0-.923-.463-.792-1.035L3.686 4.009c.13-.572.697-1.035 1.265-1.035h18.23zM6.497 16.239l.917-1.107-3.283-2.576 3.283-2.576-.917-1.107-4.2 3.683 4.2 3.683zm4.503.761l1.2-.3-2.4-9.6-1.2.3 2.4 9.6zm6.5-.761l4.2-3.683-4.2-3.683-.917 1.107 3.283 2.576-3.283 2.576.917 1.107z"/></svg>`,
+  },
+  bash: {
+    label: "Bash",
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.038 4.9l-7.577-4.498c-.567-.337-1.348-.337-1.915 0L4.005 4.9c-.567.337-.91.96-.91 1.56v8.988c0 .6.343 1.223.91 1.56l7.541 4.498c.567.337 1.348.337 1.915 0l7.577-4.498c.567-.337.91-.96.91-1.56V6.46c0-.6-.343-1.223-.91-1.56zM12 17.75l-5.5-3.25v-6.5L12 4.75l5.5 3.25v6.5L12 17.75z"/></svg>`,
+  },
+  awscli: {
+    label: "AWS CLI",
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="#FF9900"><path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586z"/></svg>`,
+  },
+  azurecli: {
+    label: "Azure CLI",
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`,
+  },
+};
 
-  index_document {
-    suffix = "index.html"
+// Get subcategories for a category
+const getSubcategories = (category) => {
+  const scripts = SCRIPTS_DATA.filter(s => s.category === category);
+  return [...new Set(scripts.map(s => s.subcategory))].sort();
+};
+
+// Subcategory icons mapping
+const SUBCATEGORY_ICONS = {
+  "Active Directory": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h5.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 10.621 4H22.5A1.5 1.5 0 0 1 24 5.5v15a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 20.5v-17z"/></svg>`,
+  "Azure / Entra ID": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`,
+  "AWS": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9900"><path d="M7.163 6.688c0 .352.039.64.109.848.078.207.176.434.305.68a.435.435 0 0 1 .07.227c0 .098-.059.196-.184.293l-.61.406a.466.466 0 0 1-.254.09c-.098 0-.195-.047-.293-.133a3.013 3.013 0 0 1-.351-.457 7.249 7.249 0 0 1-.301-.574c-.762.898-1.719 1.348-2.871 1.348-.82 0-1.473-.234-1.95-.703-.48-.469-.723-1.094-.723-1.875 0-.828.293-1.5.886-2.012.594-.512 1.383-.766 2.383-.766.332 0 .672.027 1.027.074.356.047.723.121 1.106.215v-.715c0-.742-.156-1.262-.46-1.562-.31-.3-.837-.45-1.587-.45-.34 0-.691.04-1.054.125a7.77 7.77 0 0 0-1.055.332 2.606 2.606 0 0 1-.32.125.556.556 0 0 1-.145.027c-.129 0-.192-.093-.192-.285V5.04c0-.149.02-.262.067-.332a.69.69 0 0 1 .273-.207c.34-.176.75-.324 1.23-.442a5.9 5.9 0 0 1 1.524-.183c1.16 0 2.008.262 2.555.789.54.527.813 1.328.813 2.402v3.164h.004zm-3.965 1.48c.32 0 .652-.058.996-.175.344-.118.649-.336.906-.637.156-.187.27-.394.332-.625.063-.23.098-.508.098-.832v-.402a8.149 8.149 0 0 0-.883-.168 7.233 7.233 0 0 0-.902-.059c-.652 0-1.13.125-1.445.383-.316.258-.469.621-.469 1.094 0 .445.114.777.348 1.004.227.234.559.347.996.347l.023.07zm7.836 1.055c-.164 0-.273-.027-.34-.086-.066-.051-.125-.168-.175-.324l-1.965-6.465a1.553 1.553 0 0 1-.078-.34c0-.136.066-.21.199-.21h.918c.172 0 .29.026.348.085.066.051.117.168.168.325l1.406 5.535 1.305-5.535c.043-.164.094-.274.16-.325.066-.05.191-.085.355-.085h.75c.172 0 .29.035.356.085.066.051.125.168.16.325l1.32 5.605 1.446-5.605c.05-.164.109-.274.168-.325.066-.05.183-.085.347-.085h.871c.133 0 .207.067.207.21 0 .044-.008.087-.016.137a1.26 1.26 0 0 1-.062.21l-2.016 6.466c-.05.164-.11.273-.176.324-.066.051-.183.086-.34.086h-.808c-.172 0-.29-.035-.356-.094-.066-.058-.125-.168-.16-.332l-1.297-5.394-1.29 5.387c-.042.17-.093.28-.16.339-.065.058-.19.093-.355.093h-.808l.023.004z"/></svg>`,
+  "Docker": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#2496ED"><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.12a.186.186 0 0 0-.185.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 0 0-.75.748 11.376 11.376 0 0 0 .692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 0 0 3.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288z"/></svg>`,
+  "EC2": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9900"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
+  "S3": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#569A31"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
+  "IAM": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#DD344C"><path d="M12 2C9.243 2 7 4.243 7 7v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7c0-2.757-2.243-5-5-5zm0 2c1.654 0 3 1.346 3 3v3H9V7c0-1.654 1.346-3 3-3zm0 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>`,
+  "Compute": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v2H8V8zm0 4h8v2H8v-2z"/></svg>`,
+  "Storage": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4"><path d="M2 4c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2 0v4h16V4H4zm-2 8c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4zm2 0v4h16v-4H4zm-2 8c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4zm2 0v4h16v-4H4z"/></svg>`,
+  "Resource Groups": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm8-2h8v8h-8v-8zm2 2v4h4v-4h-4z"/></svg>`,
+};
+
+// Get icon for a script based on its tags/subcategory
+const getScriptIcon = (script) => {
+  // Check for specific technology icons based on tags or subcategory
+  if (script.tags.includes('aws') || script.subcategory === 'AWS' || script.subcategory === 'EC2' || script.subcategory === 'S3' || script.subcategory === 'IAM') {
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#FF9900"><path d="M7.163 6.688c0 .352.039.64.109.848.078.207.176.434.305.68a.435.435 0 0 1 .07.227c0 .098-.059.196-.184.293l-.61.406a.466.466 0 0 1-.254.09c-.098 0-.195-.047-.293-.133a3.013 3.013 0 0 1-.351-.457 7.249 7.249 0 0 1-.301-.574c-.762.898-1.719 1.348-2.871 1.348-.82 0-1.473-.234-1.95-.703-.48-.469-.723-1.094-.723-1.875 0-.828.293-1.5.886-2.012.594-.512 1.383-.766 2.383-.766.332 0 .672.027 1.027.074.356.047.723.121 1.106.215v-.715c0-.742-.156-1.262-.46-1.562-.31-.3-.837-.45-1.587-.45-.34 0-.691.04-1.054.125a7.77 7.77 0 0 0-1.055.332 2.606 2.606 0 0 1-.32.125.556.556 0 0 1-.145.027c-.129 0-.192-.093-.192-.285V5.04c0-.149.02-.262.067-.332a.69.69 0 0 1 .273-.207c.34-.176.75-.324 1.23-.442a5.9 5.9 0 0 1 1.524-.183c1.16 0 2.008.262 2.555.789.54.527.813 1.328.813 2.402v3.164h.004z"/></svg>`;
   }
-
-  error_document {
-    key = "error.html"
+  if (script.tags.includes('azure') || script.subcategory === 'Azure / Entra ID' || script.subcategory === 'Compute' || script.subcategory === 'Storage' || script.subcategory === 'Resource Groups') {
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`;
   }
-}
+  if (script.tags.includes('docker') || script.subcategory === 'Docker') {
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#2496ED"><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.12a.186.186 0 0 0-.185.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185z"/></svg>`;
+  }
+  if (script.tags.includes('active-directory') || script.subcategory === 'Active Directory') {
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#0078D4"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h5.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 10.621 4H22.5A1.5 1.5 0 0 1 24 5.5v15a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 20.5v-17z"/></svg>`;
+  }
+  if (script.tags.includes('entra-id') || script.tags.includes('azure-ad')) {
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`;
+  }
+  // Default - return category icon
+  return CATEGORIES[script.category]?.icon || '';
+};
 
-resource "aws_s3_bucket_public_access_block" "website" {
-  bucket = aws_s3_bucket.website.id
-
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
-}
-
-resource "aws_s3_bucket_policy" "website" {
-  bucket = aws_s3_bucket.website.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Sid       = "PublicReadGetObject"
-      Effect    = "Allow"
-      Principal = "*"
-      Action    = "s3:GetObject"
-      Resource  = "\${aws_s3_bucket.website.arn}/*"
-    }]
-  })
-}`,
-    },
-    {
-      title: "CloudFront Distribution",
-      description: "CloudFront CDN for S3 static website",
-      code: `resource "aws_cloudfront_distribution" "website" {
-  enabled             = true
-  is_ipv6_enabled     = true
-  default_root_object = "index.html"
-  aliases             = [var.domain_name]
+// Syntax highlighting function for code
+const highlightCode = (code, category) => {
+  let highlighted = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
   
-  origin {
-    domain_name = aws_s3_bucket.website.bucket_regional_domain_name
-    origin_id   = "S3-\${var.bucket_name}"
-    
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.website.cloudfront_access_identity_path
-    }
-  }
+  // Comments (# for shell/powershell, // for others)
+  highlighted = highlighted.replace(/(#[^\n]*)/g, '<span class="comment">$1</span>');
   
-  default_cache_behavior {
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "S3-\${var.bucket_name}"
-    viewer_protocol_policy = "redirect-to-https"
-    compress               = true
-    
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-  }
+  // Strings (double and single quotes)
+  highlighted = highlighted.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="string">$1</span>');
+  highlighted = highlighted.replace(/('(?:[^'\\]|\\.)*')/g, '<span class="string">$1</span>');
   
-  restrictions {
-    geo_restriction {
-      restriction_type = "none"
-    }
-  }
+  // Variables ($var for PowerShell/Bash, ${var})
+  highlighted = highlighted.replace(/(\$\{?[\w_]+\}?)/g, '<span class="variable">$1</span>');
   
-  viewer_certificate {
-    acm_certificate_arn      = var.acm_certificate_arn
-    ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.2_2021"
-  }
-}`,
-    },
-  ],
+  // Keywords
+  const keywords = ['if', 'else', 'elseif', 'for', 'foreach', 'while', 'do', 'function', 'return', 'export', 'then', 'fi', 'done', 'in', 'case', 'esac'];
+  keywords.forEach(kw => {
+    const regex = new RegExp(`\\b(${kw})\\b`, 'g');
+    highlighted = highlighted.replace(regex, '<span class="keyword">$1</span>');
+  });
+  
+  // Common commands
+  const commands = ['aws', 'az', 'docker', 'terraform', 'git', 'echo', 'Get-ADUser', 'Get-ADGroupMember', 'Connect-MgGraph', 'Get-MgUser', 'Get-MgAuditLogSignIn', 'Select-Object', 'Format-List', 'Format-Table', 'Export-Csv', 'Read-Host'];
+  commands.forEach(cmd => {
+    const regex = new RegExp(`\\b(${cmd})\\b`, 'g');
+    highlighted = highlighted.replace(regex, '<span class="command">$1</span>');
+  });
+  
+  // Numbers
+  highlighted = highlighted.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+  
+  return highlighted;
 };
 
 // ============================================================================
@@ -726,77 +902,679 @@ const styles = `
   .scripts-page {
     position: relative;
     z-index: 1;
-    padding: 40px 0 80px;
     min-height: calc(100vh - 60px);
   }
   
-  .scripts-page-header {
-    text-align: center;
-    margin-bottom: 40px;
+  .scripts-layout {
+    display: flex;
+    gap: 0;
+    min-height: calc(100vh - 60px);
   }
   
-  .scripts-page-header h1 {
-    font-size: clamp(28px, 4vw, 40px);
+  /* Sidebar */
+  .scripts-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    position: sticky;
+    top: 60px;
+  }
+  
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .sidebar-header h2 {
+    font-size: 18px;
     font-weight: 700;
-    margin-bottom: 12px;
-    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-blue) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin: 0 0 4px 0;
+    color: var(--text-primary);
   }
   
-  .scripts-page-header p {
-    color: var(--text-secondary);
-    font-size: 16px;
+  .sidebar-header p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0;
   }
   
-  .scripts-category-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
+  .sidebar-search {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
   }
   
-  .category-tab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
+  .sidebar-search input {
+    width: 100%;
+    padding: 10px 12px;
     font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text-secondary);
+    font-size: 13px;
+    color: var(--text-primary);
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
+    outline: none;
+  }
+  
+  .sidebar-search input:focus {
+    border-color: var(--accent-blue);
+  }
+  
+  .sidebar-search input::placeholder {
+    color: var(--text-muted);
+  }
+  
+  .sidebar-categories {
+    padding: 8px 0;
+  }
+  
+  .sidebar-all-scripts {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.2s ease;
+  }
+  
+  .sidebar-all-scripts:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .sidebar-all-scripts.active {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-blue);
+  }
+  
+  .sidebar-category {
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .sidebar-category:last-child {
+    border-bottom: none;
+  }
+  
+  .sidebar-category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .sidebar-category-header:hover {
+    background: var(--bg-tertiary);
+  }
+  
+  .sidebar-category.expanded .sidebar-category-header {
+    background: var(--bg-tertiary);
+  }
+  
+  .sidebar-category-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .sidebar-category-label svg {
+    flex-shrink: 0;
+  }
+  
+  .sidebar-category-toggle {
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+  }
+  
+  .sidebar-category.expanded .sidebar-category-toggle {
+    transform: rotate(180deg);
+  }
+  
+  .sidebar-subcategories {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .sidebar-category.expanded .sidebar-subcategories {
+    max-height: 500px;
+  }
+  
+  .sidebar-subcategory {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px 10px 36px;
+    font-size: 13px;
+    color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
   }
   
-  .category-tab:hover {
-    color: var(--text-primary);
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
+  .sidebar-subcategory-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   
-  .category-tab.active {
-    color: var(--accent-blue);
+  .sidebar-subcategory-label svg {
+    flex-shrink: 0;
+  }
+  
+  .sidebar-subcategory:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .sidebar-subcategory.active {
     background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-blue);
+  }
+  
+  .sidebar-subcategory-count {
+    font-size: 11px;
+    padding: 2px 8px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    color: var(--text-muted);
+  }
+  
+  .sidebar-subcategory.active .sidebar-subcategory-count {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--accent-blue);
+  }
+  
+  /* Main Content */
+  .scripts-main {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+  }
+  
+  .scripts-main-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .scripts-main-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  
+  .scripts-main-count {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  
+  .scripts-sort select {
+    padding: 8px 32px 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  
+  /* Script List */
+  .scripts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .script-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  
+  .script-item:hover {
+    border-color: var(--border-hover);
+  }
+  
+  .script-item.expanded {
     border-color: var(--accent-blue);
   }
   
-  .category-tab svg {
+  .script-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    cursor: pointer;
+    gap: 12px;
+  }
+  
+  .script-item-header:hover {
+    background: var(--bg-tertiary);
+  }
+  
+  .script-item-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .script-item-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 6px 0;
+  }
+  
+  .script-item-icon {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
   }
+  
+  .script-item-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .script-item-description {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .script-item-toggle {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+  
+  .script-item.expanded .script-item-toggle {
+    background: var(--accent-blue);
+    color: #fff;
+    transform: rotate(180deg);
+  }
+  
+  .script-item-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .script-item.expanded .script-item-content {
+    max-height: 500px;
+  }
+  
+  .script-item-code-wrapper {
+    padding: 0 16px 16px;
+  }
+  
+  .script-item-code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .script-item-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  
+  .script-item-tag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 2px 6px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-blue);
+    border-radius: 4px;
+  }
+  
+  .script-item-code {
+    background: var(--bg-primary);
+    border-radius: 8px;
+    padding: 14px;
+    overflow-x: auto;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .script-item-code pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  
+  /* Syntax highlighting for code */
+  .script-item-code .comment { color: #6a9955; font-style: italic; }
+  .script-item-code .keyword { color: #569cd6; }
+  .script-item-code .string { color: #ce9178; }
+  .script-item-code .variable { color: #9cdcfe; }
+  .script-item-code .function { color: #dcdcaa; }
+  .script-item-code .number { color: #b5cea8; }
+  .script-item-code .operator { color: #d4d4d4; }
+  .script-item-code .command { color: #4ec9b0; }
+  
+  [data-theme="light"] .script-item-code .comment { color: #008000; }
+  [data-theme="light"] .script-item-code .keyword { color: #0000ff; }
+  [data-theme="light"] .script-item-code .string { color: #a31515; }
+  [data-theme="light"] .script-item-code .variable { color: #001080; }
+  [data-theme="light"] .script-item-code .function { color: #795e26; }
+  [data-theme="light"] .script-item-code .number { color: #098658; }
+  [data-theme="light"] .script-item-code .command { color: #267f99; }
   
   .scripts-empty {
     text-align: center;
     padding: 60px 20px;
     color: var(--text-muted);
-    grid-column: 1 / -1;
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .scripts-layout {
+      flex-direction: column;
+    }
+    
+    .scripts-sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      top: 0;
+      max-height: 50vh;
+    }
+    
+    .scripts-main {
+      height: auto;
+      min-height: 50vh;
+    }
+  }
+  
+  /* Search and Sort Controls */
+  .scripts-controls {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .search-wrapper {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  
+  .search-wrapper svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+  
+  .search-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .search-input::placeholder {
+    color: var(--text-muted);
+  }
+  
+  .sort-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .sort-wrapper label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  
+  .sort-select {
+    padding: 12px 36px 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: all 0.2s ease;
+  }
+  
+  .sort-select:focus {
+    border-color: var(--accent-blue);
+  }
+  
+  .scripts-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 8px 0;
+  }
+  
+  /* Collapsible Script Cards */
+  .script-card-collapsed {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  
+  .script-card-collapsed:hover {
+    border-color: var(--border-hover);
+  }
+  
+  .script-card-collapsed.expanded {
+    border-color: var(--accent-blue);
+  }
+  
+  .script-card-header {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  
+  .script-card-header:hover {
+    background: var(--bg-tertiary);
+  }
+  
+  .script-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .script-card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .script-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  
+  .script-card-category {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    padding: 3px 8px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  
+  .script-card-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 8px 0;
+  }
+  
+  .script-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .script-tag {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    padding: 2px 8px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-blue);
+    border-radius: 4px;
+  }
+  
+  .script-card-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+  
+  .script-card-collapsed.expanded .script-card-toggle {
+    background: var(--accent-blue);
+    color: #fff;
+    transform: rotate(180deg);
+  }
+  
+  .script-card-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .script-card-collapsed.expanded .script-card-content {
+    max-height: 600px;
+  }
+  
+  .script-card-code-wrapper {
+    padding: 0 20px 16px;
+  }
+  
+  .script-card-code-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+  
+  .script-card-code {
+    background: var(--bg-primary);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+  }
+  
+  .script-card-code pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
   }
   
   @media (max-width: 600px) {
+    .scripts-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .search-wrapper {
+      min-width: 100%;
+    }
+    
+    .sort-wrapper {
+      justify-content: space-between;
+    }
+    
+    .script-card-header {
+      padding: 14px 16px;
+    }
+    
+    .script-card-title {
+      font-size: 14px;
+    }
+    
+    .script-card-tags {
+      display: none;
+    }
+    
     .scripts-category-tabs {
       gap: 8px;
     }
@@ -1535,6 +2313,74 @@ const styles = `
   
   .cert-badge.in-progress .cert-status {
     color: var(--accent-orange);
+  }
+  
+  /* Repos Section */
+  .repos-section {
+    padding: 48px 0;
+    background: var(--bg-secondary);
+  }
+  
+  .github-repos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  
+  .repo-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
+  }
+  
+  .repo-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+  
+  .repo-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .repo-description {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  
+  .repo-stats {
+    display: flex;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  
+  .repo-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .repo-language {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .language-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
   }
   
   /* Credly Badges Section */
@@ -2873,11 +3719,56 @@ function TechIcon({ name }) {
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [activeTab, setActiveTab] = useState('powershell');
-  const [scriptTab, setScriptTab] = useState('powershell');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState('newest');
+  const [expandedScript, setExpandedScript] = useState(null);
+  const [expandedCategories, setExpandedCategories] = useState(['powershell']);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [theme, setTheme] = useState('dark');
   const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
   const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
+  
+  // Filter and sort scripts
+  const filteredScripts = React.useMemo(() => {
+    let scripts = [...SCRIPTS_DATA];
+    
+    // Filter by category and subcategory
+    if (selectedCategory && selectedSubcategory) {
+      scripts = scripts.filter(s => s.category === selectedCategory && s.subcategory === selectedSubcategory);
+    }
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      scripts = scripts.filter(s => 
+        s.title.toLowerCase().includes(query) ||
+        s.description.toLowerCase().includes(query) ||
+        s.tags.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+    
+    // Sort
+    switch (sortOrder) {
+      case 'newest':
+        scripts.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+        break;
+      case 'oldest':
+        scripts.sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+        break;
+      case 'a-z':
+        scripts.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'z-a':
+        scripts.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      default:
+        break;
+    }
+    
+    return scripts;
+  }, [selectedCategory, selectedSubcategory, searchQuery, sortOrder]);
   
   // Scroll animation refs
   const [skillsRef, skillsVisible] = useScrollAnimation();
@@ -2998,89 +3889,162 @@ export default function App() {
       {/* Scripts Page */}
       {currentPage === 'scripts' && (
         <div className="scripts-page">
-          <div className="container">
-            <div className="scripts-page-header">
-              <h1>Scripts Library</h1>
-              <p>A collection of useful scripts for cloud engineering and DevOps automation</p>
-            </div>
-            
-            <div className="scripts-category-tabs">
-              <button 
-                className={`category-tab ${scriptTab === 'powershell' ? 'active' : ''}`}
-                onClick={() => setScriptTab('powershell')}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.181 2.974c.568 0 .923.463.792 1.035l-3.659 15.982c-.13.572-.697 1.035-1.265 1.035H.819c-.568 0-.923-.463-.792-1.035L3.686 4.009c.13-.572.697-1.035 1.265-1.035h18.23zM6.497 16.239l.917-1.107-3.283-2.576 3.283-2.576-.917-1.107-4.2 3.683 4.2 3.683zm4.503.761l1.2-.3-2.4-9.6-1.2.3 2.4 9.6zm6.5-.761l4.2-3.683-4.2-3.683-.917 1.107 3.283 2.576-3.283 2.576.917 1.107z"/>
-                </svg>
-                PowerShell
-              </button>
-              <button 
-                className={`category-tab ${scriptTab === 'bash' ? 'active' : ''}`}
-                onClick={() => setScriptTab('bash')}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21.038 4.9l-7.577-4.498c-.567-.337-1.348-.337-1.915 0L4.005 4.9c-.567.337-.91.96-.91 1.56v8.988c0 .6.343 1.223.91 1.56l7.541 4.498c.567.337 1.348.337 1.915 0l7.577-4.498c.567-.337.91-.96.91-1.56V6.46c0-.6-.343-1.223-.91-1.56zM12 17.75l-5.5-3.25v-6.5L12 4.75l5.5 3.25v6.5L12 17.75z"/>
-                </svg>
-                Bash
-              </button>
-              <button 
-                className={`category-tab ${scriptTab === 'awscli' ? 'active' : ''}`}
-                onClick={() => setScriptTab('awscli')}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF9900">
-                  <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586z"/>
-                </svg>
-                AWS CLI
-              </button>
-              <button 
-                className={`category-tab ${scriptTab === 'azurecli' ? 'active' : ''}`}
-                onClick={() => setScriptTab('azurecli')}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#0078D4">
-                  <path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/>
-                </svg>
-                Azure CLI
-              </button>
-            </div>
-            
-            <div className="scripts-grid">
-              {SCRIPTS[scriptTab]?.map((script, index) => {
-                const scriptId = `${scriptTab}-${index}`;
-                return (
-                  <div key={scriptId} className="script-card">
-                    <div className="script-header">
-                      <div>
-                        <h3 className="script-title">{script.title}</h3>
-                        <p className="script-description">{script.description}</p>
-                      </div>
-                      <button
-                        className={`copy-btn ${copiedId === scriptId ? 'copied' : ''}`}
-                        onClick={() => copy(script.code, scriptId)}
-                      >
-                        {copiedId === scriptId ? (
-                          <>✓ Copied</>
-                        ) : (
-                          <>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                            </svg>
-                            Copy
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <div className="script-code">
-                      <pre>{script.code}</pre>
-                    </div>
-                  </div>
-                );
-              }) || (
-                <div className="scripts-empty">
-                  <p>No scripts available for this category yet.</p>
+          <div className="scripts-layout">
+            {/* Sidebar */}
+            <aside className="scripts-sidebar">
+              <div className="sidebar-header">
+                <h2>Scripts Library</h2>
+                <p>{SCRIPTS_DATA.length} scripts available</p>
+              </div>
+              
+              <div className="sidebar-search">
+                <input
+                  type="text"
+                  placeholder="Search scripts..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              
+              <div className="sidebar-categories">
+                {/* All Scripts Option */}
+                <div 
+                  className={`sidebar-all-scripts ${selectedCategory === null && selectedSubcategory === null ? 'active' : ''}`}
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setSelectedSubcategory(null);
+                  }}
+                >
+                  <span>All Scripts</span>
+                  <span className="sidebar-subcategory-count">{SCRIPTS_DATA.length}</span>
                 </div>
-              )}
-            </div>
+                
+                {Object.entries(CATEGORIES).map(([catKey, catConfig]) => {
+                  const subcats = getSubcategories(catKey);
+                  const isExpanded = expandedCategories.includes(catKey);
+                  
+                  return (
+                    <div key={catKey} className={`sidebar-category ${isExpanded ? 'expanded' : ''}`}>
+                      <div 
+                        className="sidebar-category-header"
+                        onClick={() => {
+                          if (isExpanded) {
+                            setExpandedCategories(expandedCategories.filter(c => c !== catKey));
+                          } else {
+                            setExpandedCategories([...expandedCategories, catKey]);
+                          }
+                        }}
+                      >
+                        <span className="sidebar-category-label" dangerouslySetInnerHTML={{ __html: catConfig.icon + catConfig.label }} />
+                        <svg className="sidebar-category-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      </div>
+                      <div className="sidebar-subcategories">
+                        {subcats.map(subcat => {
+                          const count = SCRIPTS_DATA.filter(s => s.category === catKey && s.subcategory === subcat).length;
+                          const isActive = selectedCategory === catKey && selectedSubcategory === subcat;
+                          const subcatIcon = SUBCATEGORY_ICONS[subcat] || '';
+                          
+                          return (
+                            <div 
+                              key={subcat}
+                              className={`sidebar-subcategory ${isActive ? 'active' : ''}`}
+                              onClick={() => {
+                                setSelectedCategory(catKey);
+                                setSelectedSubcategory(subcat);
+                              }}
+                            >
+                              <span className="sidebar-subcategory-label">
+                                {subcatIcon && <span dangerouslySetInnerHTML={{ __html: subcatIcon }} />}
+                                {subcat}
+                              </span>
+                              <span className="sidebar-subcategory-count">{count}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </aside>
+            
+            {/* Main Content */}
+            <main className="scripts-main">
+              <div className="scripts-main-header">
+                <div>
+                  <h3 className="scripts-main-title">
+                    {selectedSubcategory ? `${CATEGORIES[selectedCategory]?.label} → ${selectedSubcategory}` : 'All Scripts'}
+                  </h3>
+                  <span className="scripts-main-count">{filteredScripts.length} script{filteredScripts.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="scripts-sort">
+                  <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="a-z">A → Z</option>
+                    <option value="z-a">Z → A</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="scripts-list">
+                {filteredScripts.length > 0 ? (
+                  filteredScripts.map((script) => (
+                    <div 
+                      key={script.id} 
+                      className={`script-item ${expandedScript === script.id ? 'expanded' : ''}`}
+                    >
+                      <div 
+                        className="script-item-header"
+                        onClick={() => setExpandedScript(expandedScript === script.id ? null : script.id)}
+                      >
+                        <div className="script-item-info">
+                          <h4 className="script-item-title">
+                            <span className="script-item-icon" dangerouslySetInnerHTML={{ __html: getScriptIcon(script) }} />
+                            {script.title}
+                          </h4>
+                          <p className="script-item-description">{script.description}</p>
+                        </div>
+                        <div className="script-item-toggle">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M6 9l6 6 6-6"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="script-item-content">
+                        <div className="script-item-code-wrapper">
+                          <div className="script-item-code-header">
+                            <div className="script-item-tags">
+                              {script.tags.slice(0, 3).map((tag) => (
+                                <span key={tag} className="script-item-tag">{tag}</span>
+                              ))}
+                            </div>
+                            <button
+                              className={`copy-btn ${copiedId === script.id ? 'copied' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                copy(script.code, script.id);
+                              }}
+                            >
+                              {copiedId === script.id ? '✓ Copied' : 'Copy'}
+                            </button>
+                          </div>
+                          <div className="script-item-code">
+                            <pre dangerouslySetInnerHTML={{ __html: highlightCode(script.code, script.category) }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="scripts-empty">
+                    <p>No scripts found matching your criteria.</p>
+                  </div>
+                )}
+              </div>
+            </main>
           </div>
         </div>
       )}
