@@ -75,6 +75,24 @@ const CONFIG = {
   // Career Timeline
   career: [
     {
+      title: "Lead DevOps Engineer",
+      company: "Netcov",
+      location: "Remote",
+      period: "2024 – Present",
+      icon: "🚀",
+      technologies: ["Terraform", "AWS", "Azure", "Cloudflare", "GitHub Actions", "Kubernetes", "Docker", "Python", "Lambda"],
+      highlights: [
+        "Own all Terraform infrastructure as code for the organization, developing and maintaining modules for AWS, Azure, and Cloudflare",
+        "Lead and mentor 1 DevOps engineer, establishing IaC standards and best practices across the team",
+        "Architect cloud solutions translating business requirements into scalable, cost-effective infrastructure designs",
+        "Build and maintain CI/CD pipelines using GitHub Actions for automated infrastructure and application deployments",
+        "Manage container orchestration with Kubernetes and Docker, supporting containerized workloads across environments",
+        "Develop AWS Lambda functions using Python to automate operational workflows and integrate cloud services",
+        "Manage AWS Organization structure, implementing account governance and security guardrails",
+        "Optimize and refactor Terraform codebases, improving maintainability and enforcing consistency",
+      ],
+    },
+    {
       title: "Cloud Engineer",
       company: "ThinkStack",
       location: "Remote",
