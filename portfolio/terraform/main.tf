@@ -1,6 +1,7 @@
 # ============================================================================
 # PORTFOLIO WEBSITE INFRASTRUCTURE
-# S3 + CloudFront + Route53 + ACM
+# S3 + CloudFront + Cloudflare DNS + ACM
+# Domain: beyops.com
 # ============================================================================
 
 terraform {
@@ -11,16 +12,20 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4.0"
+    }
   }
   
-  # UNCOMMENT after running bootstrap and update with your bucket name
-  # backend "s3" {
-  #   bucket         = "portfolio-terraform-state-XXXXXXXX"
-  #   key            = "portfolio/terraform.tfstate"
-  #   region         = "us-east-1"
-  #   dynamodb_table = "portfolio-terraform-locks"
-  #   encrypt        = true
-  # }
+  # Terraform Cloud backend - update organization name
+  cloud {
+    organization = "wes-resume-projects"
+    
+    workspaces {
+      name = "wes-portfolio"
+    }
+  }
 }
 
 # ============================================================================
@@ -53,6 +58,11 @@ provider "aws" {
   }
 }
 
+# Cloudflare provider for DNS management
+provider "cloudflare" {
+  # API token set via CLOUDFLARE_API_TOKEN environment variable
+}
+
 # ============================================================================
 # VARIABLES
 # ============================================================================
@@ -64,8 +74,15 @@ variable "aws_region" {
 }
 
 variable "domain_name" {
-  description = "Domain name for the website (e.g., example.com)"
+  description = "Domain name for the website"
   type        = string
+  default     = "beyops.com"
+}
+
+variable "cloudflare_zone_id" {
+  description = "Cloudflare Zone ID for the domain"
+  type        = string
+  # Set this in Terraform Cloud as a variable
 }
 
 variable "create_www_redirect" {
@@ -74,14 +91,7 @@ variable "create_www_redirect" {
   default     = true
 }
 
-# ============================================================================
-# DATA SOURCES
-# ============================================================================
 
-data "aws_route53_zone" "main" {
-  name         = var.domain_name
-  private_zone = false
-}
 
 # ============================================================================
 # S3 BUCKET - Website Content
@@ -173,7 +183,8 @@ resource "aws_acm_certificate" "website" {
   }
 }
 
-resource "aws_route53_record" "cert_validation" {
+# Create DNS validation records in Cloudflare
+resource "cloudflare_record" "cert_validation" {
   for_each = {
     for dvo in aws_acm_certificate.website.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -182,18 +193,20 @@ resource "aws_route53_record" "cert_validation" {
     }
   }
 
-  allow_overwrite = true
-  name            = each.value.name
-  records         = [each.value.record]
-  ttl             = 60
-  type            = each.value.type
-  zone_id         = data.aws_route53_zone.main.zone_id
+  zone_id = var.cloudflare_zone_id
+  name    = each.value.name
+  content = each.value.record
+  type    = each.value.type
+  ttl     = 60
+  proxied = false  # Must be false for ACM validation
 }
 
 resource "aws_acm_certificate_validation" "website" {
-  provider                = aws.us_east_1
-  certificate_arn         = aws_acm_certificate.website.arn
-  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+  provider        = aws.us_east_1
+  certificate_arn = aws_acm_certificate.website.arn
+  
+  # Wait for Cloudflare DNS records to propagate
+  depends_on = [cloudflare_record.cert_validation]
 }
 
 # ============================================================================
@@ -206,6 +219,7 @@ resource "aws_cloudfront_distribution" "website" {
   default_root_object = "index.html"
   aliases             = var.create_www_redirect ? [var.domain_name, "www.${var.domain_name}"] : [var.domain_name]
   price_class         = "PriceClass_100"  # US, Canada, Europe only - cheapest
+  comment             = "${var.domain_name} portfolio website"
   
   origin {
     domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
@@ -253,44 +267,30 @@ resource "aws_cloudfront_distribution" "website" {
 }
 
 # ============================================================================
-# ROUTE53 RECORDS
+# CLOUDFLARE DNS RECORDS
 # ============================================================================
 
-resource "aws_route53_record" "apex" {
-  zone_id = data.aws_route53_zone.main.zone_id
-  name    = var.domain_name
-  type    = "A"
-  
-  alias {
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-    evaluate_target_health = false
-  }
+# Apex domain (beyops.com) -> CloudFront
+resource "cloudflare_record" "apex" {
+  zone_id = var.cloudflare_zone_id
+  name    = "@"
+  content = aws_cloudfront_distribution.website.domain_name
+  type    = "CNAME"
+  ttl     = 1  # Auto TTL
+  proxied = false  # Must be false to use CloudFront SSL
+  comment = "Portfolio website - CloudFront distribution"
 }
 
-resource "aws_route53_record" "apex_ipv6" {
-  zone_id = data.aws_route53_zone.main.zone_id
-  name    = var.domain_name
-  type    = "AAAA"
-  
-  alias {
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-    evaluate_target_health = false
-  }
-}
-
-resource "aws_route53_record" "www" {
+# WWW subdomain -> CloudFront
+resource "cloudflare_record" "www" {
   count   = var.create_www_redirect ? 1 : 0
-  zone_id = data.aws_route53_zone.main.zone_id
-  name    = "www.${var.domain_name}"
-  type    = "A"
-  
-  alias {
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
-    evaluate_target_health = false
-  }
+  zone_id = var.cloudflare_zone_id
+  name    = "www"
+  content = aws_cloudfront_distribution.website.domain_name
+  type    = "CNAME"
+  ttl     = 1  # Auto TTL
+  proxied = false  # Must be false to use CloudFront SSL
+  comment = "Portfolio website - WWW redirect"
 }
 
 # ============================================================================
