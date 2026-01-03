@@ -1433,6 +1433,176 @@ const styles = `
     color: var(--accent-cyan);
   }
   
+  /* Architecture Section */
+  .architecture-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  
+  @media (max-width: 1024px) {
+    .architecture-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .architecture-diagram {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+  
+  .architecture-diagram h3 {
+    font-size: 18px;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+  }
+  
+  .arch-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .arch-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-width: 200px;
+    transition: all 0.3s ease;
+  }
+  
+  .arch-node:hover {
+    border-color: var(--accent-blue);
+    transform: scale(1.02);
+  }
+  
+  .arch-node.highlight {
+    border-color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  
+  .arch-node-icon {
+    font-size: 28px;
+  }
+  
+  .arch-node-info h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  
+  .arch-node-info span {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  
+  .arch-arrow {
+    color: var(--accent-blue);
+    font-size: 20px;
+  }
+  
+  .architecture-code {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  .architecture-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .architecture-code-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .architecture-code-content {
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .architecture-code-content pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  
+  .architecture-code-content .comment {
+    color: #6a9955;
+  }
+  
+  .architecture-code-content .keyword {
+    color: #569cd6;
+  }
+  
+  .architecture-code-content .string {
+    color: #ce9178;
+  }
+  
+  .architecture-code-content .resource {
+    color: #4ec9b0;
+  }
+  
+  .arch-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+  }
+  
+  .arch-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  
+  .arch-feature-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  
+  .arch-feature h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  
+  .arch-feature p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  
   /* Contact Section */
   .contact-links {
     display: flex;
@@ -1895,6 +2065,144 @@ export default function App() {
               </p>
             </div>
           )}
+        </div>
+      </section>
+      
+      {/* Architecture Section - How This Site is Built */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <p className="section-label">// Infrastructure as Code</p>
+            <h2 className="section-title">How This Site is Built</h2>
+          </div>
+          
+          <div className="architecture-container">
+            {/* Visual Diagram */}
+            <div className="architecture-diagram">
+              <h3>AWS + Cloudflare Architecture</h3>
+              <div className="arch-flow">
+                <div className="arch-node">
+                  <span className="arch-node-icon">👤</span>
+                  <div className="arch-node-info">
+                    <h4>User Request</h4>
+                    <span>beyops.com</span>
+                  </div>
+                </div>
+                
+                <div className="arch-arrow">↓</div>
+                
+                <div className="arch-node" style={{ borderColor: '#f38020' }}>
+                  <span className="arch-node-icon">🔶</span>
+                  <div className="arch-node-info">
+                    <h4>Cloudflare DNS</h4>
+                    <span>Domain Management</span>
+                  </div>
+                </div>
+                
+                <div className="arch-arrow">↓</div>
+                
+                <div className="arch-node highlight">
+                  <span className="arch-node-icon">⚡</span>
+                  <div className="arch-node-info">
+                    <h4>CloudFront CDN</h4>
+                    <span>Edge Caching + ACM SSL</span>
+                  </div>
+                </div>
+                
+                <div className="arch-arrow">↓</div>
+                
+                <div className="arch-node">
+                  <span className="arch-node-icon">🪣</span>
+                  <div className="arch-node-info">
+                    <h4>S3 Bucket</h4>
+                    <span>Static Website Hosting</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Terraform Code */}
+            <div className="architecture-code">
+              <div className="architecture-code-header">
+                <h3>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                  main.tf
+                </h3>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Terraform</span>
+              </div>
+              <div className="architecture-code-content">
+                <pre>{`# Cloudflare DNS -> CloudFront -> S3
+# Domain: beyops.com
+
+# S3 Bucket for static website hosting
+resource "aws_s3_bucket" "website" {
+  bucket = "beyops.com"
+}
+
+# CloudFront Distribution with ACM SSL
+resource "aws_cloudfront_distribution" "website" {
+  enabled             = true
+  aliases             = ["beyops.com", "www.beyops.com"]
+  default_root_object = "index.html"
+  
+  origin {
+    domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
+    origin_id                = "S3-beyops"
+    origin_access_control_id = aws_cloudfront_origin_access_control.website.id
+  }
+  
+  viewer_certificate {
+    acm_certificate_arn = aws_acm_certificate.website.arn
+    ssl_support_method  = "sni-only"
+  }
+}
+
+# Cloudflare DNS pointing to CloudFront
+resource "cloudflare_record" "apex" {
+  zone_id = var.cloudflare_zone_id
+  name    = "@"
+  content = aws_cloudfront_distribution.website.domain_name
+  type    = "CNAME"
+  proxied = false  # Use CloudFront SSL
+}`}</pre>
+              </div>
+            </div>
+          </div>
+          
+          {/* Feature highlights */}
+          <div className="arch-features">
+            <div className="arch-feature">
+              <span className="arch-feature-icon">🔒</span>
+              <div>
+                <h4>SSL/TLS Encryption</h4>
+                <p>ACM certificate with automatic renewal for HTTPS</p>
+              </div>
+            </div>
+            <div className="arch-feature">
+              <span className="arch-feature-icon">🌍</span>
+              <div>
+                <h4>Global CDN</h4>
+                <p>CloudFront edge locations for low-latency delivery</p>
+              </div>
+            </div>
+            <div className="arch-feature">
+              <span className="arch-feature-icon">💰</span>
+              <div>
+                <h4>Cost Effective</h4>
+                <p>~$0.50/month for S3 + CloudFront static hosting</p>
+              </div>
+            </div>
+            <div className="arch-feature">
+              <span className="arch-feature-icon">🔄</span>
+              <div>
+                <h4>CI/CD Ready</h4>
+                <p>GitHub Actions deploys on push to main branch</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       
