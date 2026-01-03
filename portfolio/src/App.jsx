@@ -2796,7 +2796,7 @@ export default function App() {
                 </div>
                 
                 {/* Arrow from GitHub down to Terraform */}
-                <div className="arch-x-arrow-down" style={{ marginLeft: 'auto', marginRight: '80px' }}>↓</div>
+                <div className="arch-x-arrow-down">↓</div>
                 
                 {/* Center: Terraform Cloud */}
                 <div className="arch-x-center">
@@ -2962,6 +2962,46 @@ export default function App() {
         </div>
       </section>
       
+      {/* Career Timeline Section */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <p className="section-label">// Experience</p>
+            <h2 className="section-title">Career Timeline</h2>
+          </div>
+          
+          <div className="career-timeline">
+            {CONFIG.career.map((job, i) => (
+              <div key={i} className="career-item">
+                <div className="career-marker">{job.icon}</div>
+                <div className="career-card">
+                  <div className="career-header">
+                    <h3 className="career-title">{job.title}</h3>
+                    <div className="career-company">{job.company}</div>
+                    <div className="career-meta">
+                      <span>📍 {job.location}</span>
+                      <span>📅 {job.period}</span>
+                    </div>
+                  </div>
+                  {job.technologies && job.technologies.length > 0 && (
+                    <div className="career-technologies">
+                      {job.technologies.map((tech, k) => (
+                        <span key={k} className="career-tech-tag">{tech}</span>
+                      ))}
+                    </div>
+                  )}
+                  <ul className="career-highlights">
+                    {job.highlights.map((highlight, j) => (
+                      <li key={j}>{highlight}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
       {/* Skills Section with Progress Bars */}
       <section className="section">
         <div className="container">
@@ -3034,52 +3074,12 @@ export default function App() {
         </div>
       </section>
       
-      {/* Career Timeline Section */}
-      <section className="section">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">// Experience</p>
-            <h2 className="section-title">Career Timeline</h2>
-          </div>
-          
-          <div className="career-timeline">
-            {CONFIG.career.map((job, i) => (
-              <div key={i} className="career-item">
-                <div className="career-marker">{job.icon}</div>
-                <div className="career-card">
-                  <div className="career-header">
-                    <h3 className="career-title">{job.title}</h3>
-                    <div className="career-company">{job.company}</div>
-                    <div className="career-meta">
-                      <span>📍 {job.location}</span>
-                      <span>📅 {job.period}</span>
-                    </div>
-                  </div>
-                  {job.technologies && job.technologies.length > 0 && (
-                    <div className="career-technologies">
-                      {job.technologies.map((tech, k) => (
-                        <span key={k} className="career-tech-tag">{tech}</span>
-                      ))}
-                    </div>
-                  )}
-                  <ul className="career-highlights">
-                    {job.highlights.map((highlight, j) => (
-                      <li key={j}>{highlight}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      {/* Skills Section */}
+      {/* GitHub Repos Section */}
       <section className="section" style={{ background: 'var(--bg-secondary)' }} ref={skillsRef}>
         <div className={`container scroll-animate ${skillsVisible ? 'visible' : ''}`}>
           <div className="section-header">
-            <p className="section-label">// Expertise</p>
-            <h2 className="section-title">Skills & Proficiency</h2>
+            <p className="section-label">// Projects</p>
+            <h2 className="section-title">GitHub Repositories</h2>
           </div>
           
           <div className="github-repos">
