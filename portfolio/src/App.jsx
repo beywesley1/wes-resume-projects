@@ -1827,6 +1827,14 @@ const styles = `
     color: #4ec9b0;
   }
   
+  .code-number {
+    color: #b5cea8;
+  }
+  
+  [data-theme="light"] .code-number {
+    color: #098658;
+  }
+  
   [data-theme="light"] .code-comment {
     color: #008000;
   }
@@ -2411,27 +2419,245 @@ export default function App() {
             </a>
           </div>
           
+          {/* Stats Bar - moved into hero */}
+          <div className="stats-bar" style={{ marginTop: '48px' }}>
+            <div className="stat-card">
+              <div className="stat-value">{CONFIG.yearsExperience}+</div>
+              <div className="stat-label">Years Experience</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">70+</div>
+              <div className="stat-label">AWS Accounts Managed</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">10</div>
+              <div className="stat-label">Certifications</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">2,000+</div>
+              <div className="stat-label">Terraform Runs</div>
+            </div>
+          </div>
+          
           </div>
       </section>
       
-      {/* Stats Bar */}
-      <section className="container">
-        <div className="stats-bar">
-          <div className="stat-card">
-            <div className="stat-value">{CONFIG.yearsExperience}+</div>
-            <div className="stat-label">Years Experience</div>
+      {/* Architecture Section - How This Site is Built */}
+      <section className="section" style={{ paddingTop: '40px' }}>
+        <div className="container">
+          <div className="section-header">
+            <p className="section-label">// Infrastructure as Code</p>
+            <h2 className="section-title">How This Site is Built</h2>
           </div>
-          <div className="stat-card">
-            <div className="stat-value">200+</div>
-            <div className="stat-label">GitHub Repos Managed</div>
+          
+          <div className="architecture-container">
+            {/* Visual Diagram */}
+            <div className="architecture-diagram">
+              <h3>AWS + Cloudflare Architecture</h3>
+              <div className="arch-flow">
+                <div className="arch-node">
+                  <span className="arch-node-icon">👤</span>
+                  <div className="arch-node-info">
+                    <h4>User Request</h4>
+                    <span>beyops.com</span>
+                  </div>
+                </div>
+                
+                <div className="arch-arrow">↓</div>
+                
+                <div className="arch-node" style={{ borderColor: '#f38020' }}>
+                  <span className="arch-node-icon">🔶</span>
+                  <div className="arch-node-info">
+                    <h4>Cloudflare DNS</h4>
+                    <span>Domain Management</span>
+                  </div>
+                </div>
+                
+                <div className="arch-arrow">↓</div>
+                
+                <div className="arch-node highlight">
+                  <span className="arch-node-icon">⚡</span>
+                  <div className="arch-node-info">
+                    <h4>CloudFront CDN</h4>
+                    <span>Edge Caching + ACM SSL</span>
+                  </div>
+                </div>
+                
+                <div className="arch-arrow">↓</div>
+                
+                <div className="arch-node">
+                  <span className="arch-node-icon">🪣</span>
+                  <div className="arch-node-info">
+                    <h4>S3 Bucket</h4>
+                    <span>Static Website Hosting</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Terraform Code - Full main.tf */}
+            <div className="architecture-code">
+              <div className="architecture-code-header">
+                <h3>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                  main.tf
+                </h3>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Terraform • 332 lines</span>
+              </div>
+              <div className="architecture-code-content" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                <pre className="code-highlighted">
+                  <span className="code-comment"># ============================================================================</span>{'\n'}
+                  <span className="code-comment"># PORTFOLIO WEBSITE INFRASTRUCTURE</span>{'\n'}
+                  <span className="code-comment"># S3 + CloudFront + Cloudflare DNS + ACM</span>{'\n'}
+                  <span className="code-comment"># Domain: beyops.com</span>{'\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-keyword">terraform</span> {'{\n'}
+                  {'  '}<span className="code-attr">required_version</span> = <span className="code-string">"&gt;= 1.5.0"</span>{'\n\n'}
+                  {'  '}<span className="code-keyword">required_providers</span> {'{\n'}
+                  {'    '}<span className="code-keyword">aws</span> = {'{\n'}
+                  {'      '}<span className="code-attr">source</span>  = <span className="code-string">"hashicorp/aws"</span>{'\n'}
+                  {'      '}<span className="code-attr">version</span> = <span className="code-string">"~&gt; 5.0"</span>{'\n'}
+                  {'    }\n'}
+                  {'    '}<span className="code-keyword">cloudflare</span> = {'{\n'}
+                  {'      '}<span className="code-attr">source</span>  = <span className="code-string">"cloudflare/cloudflare"</span>{'\n'}
+                  {'      '}<span className="code-attr">version</span> = <span className="code-string">"~&gt; 4.0"</span>{'\n'}
+                  {'    }\n'}
+                  {'  }\n\n'}
+                  {'  '}<span className="code-keyword">cloud</span> {'{\n'}
+                  {'    '}<span className="code-attr">organization</span> = <span className="code-string">"wes-resume-projects"</span>{'\n'}
+                  {'    '}<span className="code-keyword">workspaces</span> {'{\n'}
+                  {'      '}<span className="code-attr">name</span> = <span className="code-string">"wes-portfolio"</span>{'\n'}
+                  {'    }\n'}
+                  {'  }\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n'}
+                  <span className="code-comment"># S3 BUCKET - Website Content</span>{'\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">bucket</span> = <span className="code-ref">var.domain_name</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket_public_access_block"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">bucket</span>                  = <span className="code-ref">aws_s3_bucket.website.id</span>{'\n'}
+                  {'  '}<span className="code-attr">block_public_acls</span>       = <span className="code-bool">true</span>{'\n'}
+                  {'  '}<span className="code-attr">block_public_policy</span>     = <span className="code-bool">true</span>{'\n'}
+                  {'  '}<span className="code-attr">ignore_public_acls</span>      = <span className="code-bool">true</span>{'\n'}
+                  {'  '}<span className="code-attr">restrict_public_buckets</span> = <span className="code-bool">true</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket_versioning"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">bucket</span> = <span className="code-ref">aws_s3_bucket.website.id</span>{'\n'}
+                  {'  '}<span className="code-keyword">versioning_configuration</span> {'{\n'}
+                  {'    '}<span className="code-attr">status</span> = <span className="code-string">"Enabled"</span>{'\n'}
+                  {'  }\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n'}
+                  <span className="code-comment"># CLOUDFRONT ORIGIN ACCESS CONTROL</span>{'\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_cloudfront_origin_access_control"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">name</span>                              = <span className="code-string">"$&#123;var.domain_name&#125;-oac"</span>{'\n'}
+                  {'  '}<span className="code-attr">origin_access_control_origin_type</span> = <span className="code-string">"s3"</span>{'\n'}
+                  {'  '}<span className="code-attr">signing_behavior</span>                  = <span className="code-string">"always"</span>{'\n'}
+                  {'  '}<span className="code-attr">signing_protocol</span>                  = <span className="code-string">"sigv4"</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n'}
+                  <span className="code-comment"># ACM CERTIFICATE</span>{'\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_acm_certificate"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">provider</span>          = <span className="code-ref">aws.us_east_1</span>{'\n'}
+                  {'  '}<span className="code-attr">domain_name</span>       = <span className="code-ref">var.domain_name</span>{'\n'}
+                  {'  '}<span className="code-attr">validation_method</span> = <span className="code-string">"DNS"</span>{'\n'}
+                  {'  '}<span className="code-attr">subject_alternative_names</span> = [<span className="code-string">"www.$&#123;var.domain_name&#125;"</span>]{'\n\n'}
+                  {'  '}<span className="code-keyword">lifecycle</span> {'{\n'}
+                  {'    '}<span className="code-attr">create_before_destroy</span> = <span className="code-bool">true</span>{'\n'}
+                  {'  }\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n'}
+                  <span className="code-comment"># CLOUDFRONT DISTRIBUTION</span>{'\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"aws_cloudfront_distribution"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">enabled</span>             = <span className="code-bool">true</span>{'\n'}
+                  {'  '}<span className="code-attr">is_ipv6_enabled</span>     = <span className="code-bool">true</span>{'\n'}
+                  {'  '}<span className="code-attr">default_root_object</span> = <span className="code-string">"index.html"</span>{'\n'}
+                  {'  '}<span className="code-attr">aliases</span>             = [<span className="code-ref">var.domain_name</span>, <span className="code-string">"www.$&#123;var.domain_name&#125;"</span>]{'\n'}
+                  {'  '}<span className="code-attr">price_class</span>         = <span className="code-string">"PriceClass_100"</span>{'\n\n'}
+                  {'  '}<span className="code-keyword">origin</span> {'{\n'}
+                  {'    '}<span className="code-attr">domain_name</span>              = <span className="code-ref">aws_s3_bucket.website.bucket_regional_domain_name</span>{'\n'}
+                  {'    '}<span className="code-attr">origin_id</span>                = <span className="code-string">"S3-$&#123;var.domain_name&#125;"</span>{'\n'}
+                  {'    '}<span className="code-attr">origin_access_control_id</span> = <span className="code-ref">aws_cloudfront_origin_access_control.website.id</span>{'\n'}
+                  {'  }\n\n'}
+                  {'  '}<span className="code-keyword">default_cache_behavior</span> {'{\n'}
+                  {'    '}<span className="code-attr">allowed_methods</span>        = [<span className="code-string">"GET"</span>, <span className="code-string">"HEAD"</span>, <span className="code-string">"OPTIONS"</span>]{'\n'}
+                  {'    '}<span className="code-attr">cached_methods</span>         = [<span className="code-string">"GET"</span>, <span className="code-string">"HEAD"</span>]{'\n'}
+                  {'    '}<span className="code-attr">target_origin_id</span>       = <span className="code-string">"S3-$&#123;var.domain_name&#125;"</span>{'\n'}
+                  {'    '}<span className="code-attr">viewer_protocol_policy</span> = <span className="code-string">"redirect-to-https"</span>{'\n'}
+                  {'    '}<span className="code-attr">compress</span>               = <span className="code-bool">true</span>{'\n'}
+                  {'    '}<span className="code-attr">cache_policy_id</span>        = <span className="code-string">"658327ea-f89d-4fab-a63d-7e88639e58f6"</span>{'\n'}
+                  {'  }\n\n'}
+                  {'  '}<span className="code-keyword">custom_error_response</span> {'{\n'}
+                  {'    '}<span className="code-attr">error_code</span>         = <span className="code-number">403</span>{'\n'}
+                  {'    '}<span className="code-attr">response_code</span>      = <span className="code-number">200</span>{'\n'}
+                  {'    '}<span className="code-attr">response_page_path</span> = <span className="code-string">"/index.html"</span>{'\n'}
+                  {'  }\n\n'}
+                  {'  '}<span className="code-keyword">viewer_certificate</span> {'{\n'}
+                  {'    '}<span className="code-attr">acm_certificate_arn</span>      = <span className="code-ref">aws_acm_certificate.website.arn</span>{'\n'}
+                  {'    '}<span className="code-attr">ssl_support_method</span>       = <span className="code-string">"sni-only"</span>{'\n'}
+                  {'    '}<span className="code-attr">minimum_protocol_version</span> = <span className="code-string">"TLSv1.2_2021"</span>{'\n'}
+                  {'  }\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n'}
+                  <span className="code-comment"># CLOUDFLARE DNS RECORDS</span>{'\n'}
+                  <span className="code-comment"># ============================================================================</span>{'\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"cloudflare_record"</span> <span className="code-string">"apex"</span> {'{\n'}
+                  {'  '}<span className="code-attr">zone_id</span> = <span className="code-ref">var.cloudflare_zone_id</span>{'\n'}
+                  {'  '}<span className="code-attr">name</span>    = <span className="code-string">"@"</span>{'\n'}
+                  {'  '}<span className="code-attr">content</span> = <span className="code-ref">aws_cloudfront_distribution.website.domain_name</span>{'\n'}
+                  {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
+                  {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>  <span className="code-comment"># Use CloudFront SSL</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"cloudflare_record"</span> <span className="code-string">"www"</span> {'{\n'}
+                  {'  '}<span className="code-attr">zone_id</span> = <span className="code-ref">var.cloudflare_zone_id</span>{'\n'}
+                  {'  '}<span className="code-attr">name</span>    = <span className="code-string">"www"</span>{'\n'}
+                  {'  '}<span className="code-attr">content</span> = <span className="code-ref">aws_cloudfront_distribution.website.domain_name</span>{'\n'}
+                  {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
+                  {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>{'\n'}
+                  {'}'}
+                </pre>
+              </div>
+            </div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value">10</div>
-            <div className="stat-label">Certifications</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">2,000+</div>
-            <div className="stat-label">Terraform Runs</div>
+          
+          {/* Feature highlights */}
+          <div className="arch-features">
+            <div className="arch-feature">
+              <span className="arch-feature-icon">🔒</span>
+              <div>
+                <h4>SSL/TLS Encryption</h4>
+                <p>ACM certificate with automatic renewal for HTTPS</p>
+              </div>
+            </div>
+            <div className="arch-feature">
+              <span className="arch-feature-icon">🌍</span>
+              <div>
+                <h4>Global CDN</h4>
+                <p>CloudFront edge locations for low-latency delivery</p>
+              </div>
+            </div>
+            <div className="arch-feature">
+              <span className="arch-feature-icon">💰</span>
+              <div>
+                <h4>Cost Effective</h4>
+                <p>~$0.50/month for S3 + CloudFront static hosting</p>
+              </div>
+            </div>
+            <div className="arch-feature">
+              <span className="arch-feature-icon">🔄</span>
+              <div>
+                <h4>CI/CD Ready</h4>
+                <p>GitHub Actions deploys on push to main branch</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -2582,141 +2808,6 @@ export default function App() {
               </p>
             </div>
           )}
-        </div>
-      </section>
-      
-      {/* Architecture Section - How This Site is Built */}
-      <section className="section">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">// Infrastructure as Code</p>
-            <h2 className="section-title">How This Site is Built</h2>
-          </div>
-          
-          <div className="architecture-container">
-            {/* Visual Diagram */}
-            <div className="architecture-diagram">
-              <h3>AWS + Cloudflare Architecture</h3>
-              <div className="arch-flow">
-                <div className="arch-node">
-                  <span className="arch-node-icon">👤</span>
-                  <div className="arch-node-info">
-                    <h4>User Request</h4>
-                    <span>beyops.com</span>
-                  </div>
-                </div>
-                
-                <div className="arch-arrow">↓</div>
-                
-                <div className="arch-node" style={{ borderColor: '#f38020' }}>
-                  <span className="arch-node-icon">🔶</span>
-                  <div className="arch-node-info">
-                    <h4>Cloudflare DNS</h4>
-                    <span>Domain Management</span>
-                  </div>
-                </div>
-                
-                <div className="arch-arrow">↓</div>
-                
-                <div className="arch-node highlight">
-                  <span className="arch-node-icon">⚡</span>
-                  <div className="arch-node-info">
-                    <h4>CloudFront CDN</h4>
-                    <span>Edge Caching + ACM SSL</span>
-                  </div>
-                </div>
-                
-                <div className="arch-arrow">↓</div>
-                
-                <div className="arch-node">
-                  <span className="arch-node-icon">🪣</span>
-                  <div className="arch-node-info">
-                    <h4>S3 Bucket</h4>
-                    <span>Static Website Hosting</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Terraform Code */}
-            <div className="architecture-code">
-              <div className="architecture-code-header">
-                <h3>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="16 18 22 12 16 6"/>
-                    <polyline points="8 6 2 12 8 18"/>
-                  </svg>
-                  main.tf
-                </h3>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Terraform</span>
-              </div>
-              <div className="architecture-code-content">
-                <pre className="code-highlighted">
-                  <span className="code-comment"># Cloudflare DNS → CloudFront → S3</span>{'\n'}
-                  <span className="code-comment"># Domain: beyops.com</span>{'\n\n'}
-                  <span className="code-comment"># S3 Bucket for static website hosting</span>{'\n'}
-                  <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket"</span> <span className="code-string">"website"</span> {'{\n'}
-                  {'  '}<span className="code-attr">bucket</span> = <span className="code-string">"beyops.com"</span>{'\n'}
-                  {'}\n\n'}
-                  <span className="code-comment"># CloudFront Distribution with ACM SSL</span>{'\n'}
-                  <span className="code-keyword">resource</span> <span className="code-string">"aws_cloudfront_distribution"</span> <span className="code-string">"website"</span> {'{\n'}
-                  {'  '}<span className="code-attr">enabled</span>             = <span className="code-bool">true</span>{'\n'}
-                  {'  '}<span className="code-attr">aliases</span>             = [<span className="code-string">"beyops.com"</span>, <span className="code-string">"www.beyops.com"</span>]{'\n'}
-                  {'  '}<span className="code-attr">default_root_object</span> = <span className="code-string">"index.html"</span>{'\n\n'}
-                  {'  '}<span className="code-keyword">origin</span> {'{\n'}
-                  {'    '}<span className="code-attr">domain_name</span>              = <span className="code-ref">aws_s3_bucket.website.bucket_regional_domain_name</span>{'\n'}
-                  {'    '}<span className="code-attr">origin_id</span>                = <span className="code-string">"S3-beyops"</span>{'\n'}
-                  {'    '}<span className="code-attr">origin_access_control_id</span> = <span className="code-ref">aws_cloudfront_origin_access_control.website.id</span>{'\n'}
-                  {'  }\n\n'}
-                  {'  '}<span className="code-keyword">viewer_certificate</span> {'{\n'}
-                  {'    '}<span className="code-attr">acm_certificate_arn</span> = <span className="code-ref">aws_acm_certificate.website.arn</span>{'\n'}
-                  {'    '}<span className="code-attr">ssl_support_method</span>  = <span className="code-string">"sni-only"</span>{'\n'}
-                  {'  }\n'}
-                  {'}\n\n'}
-                  <span className="code-comment"># Cloudflare DNS pointing to CloudFront</span>{'\n'}
-                  <span className="code-keyword">resource</span> <span className="code-string">"cloudflare_record"</span> <span className="code-string">"apex"</span> {'{\n'}
-                  {'  '}<span className="code-attr">zone_id</span> = <span className="code-ref">var.cloudflare_zone_id</span>{'\n'}
-                  {'  '}<span className="code-attr">name</span>    = <span className="code-string">"@"</span>{'\n'}
-                  {'  '}<span className="code-attr">content</span> = <span className="code-ref">aws_cloudfront_distribution.website.domain_name</span>{'\n'}
-                  {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
-                  {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>  <span className="code-comment"># Use CloudFront SSL</span>{'\n'}
-                  {'}'}
-                </pre>
-              </div>
-            </div>
-          </div>
-          
-          {/* Feature highlights */}
-          <div className="arch-features">
-            <div className="arch-feature">
-              <span className="arch-feature-icon">🔒</span>
-              <div>
-                <h4>SSL/TLS Encryption</h4>
-                <p>ACM certificate with automatic renewal for HTTPS</p>
-              </div>
-            </div>
-            <div className="arch-feature">
-              <span className="arch-feature-icon">🌍</span>
-              <div>
-                <h4>Global CDN</h4>
-                <p>CloudFront edge locations for low-latency delivery</p>
-              </div>
-            </div>
-            <div className="arch-feature">
-              <span className="arch-feature-icon">💰</span>
-              <div>
-                <h4>Cost Effective</h4>
-                <p>~$0.50/month for S3 + CloudFront static hosting</p>
-              </div>
-            </div>
-            <div className="arch-feature">
-              <span className="arch-feature-icon">🔄</span>
-              <div>
-                <h4>CI/CD Ready</h4>
-                <p>GitHub Actions deploys on push to main branch</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
       
