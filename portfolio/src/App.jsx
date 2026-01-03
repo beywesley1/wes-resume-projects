@@ -839,36 +839,61 @@ const styles = `
     }
   }
   
-  /* Hero Credly Badges */
-  .hero-credly-badges {
+  /* Condensed Certifications Section */
+  .certs-section {
+    padding: 40px 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .certs-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .certs-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .certs-row {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 32px;
+    gap: 16px;
     flex-wrap: wrap;
     align-items: flex-start;
   }
   
-  .hero-credly-badge {
-    width: 110px;
-    height: 140px;
+  .cert-badge {
+    width: 150px;
+    height: 170px;
   }
   
-  @media (max-width: 700px) {
-    .hero-credly-badges {
-      gap: 4px;
+  @media (max-width: 900px) {
+    .certs-row {
+      gap: 12px;
     }
     
-    .hero-credly-badge {
-      width: 90px;
-      height: 115px;
+    .cert-badge {
+      width: 130px;
+      height: 150px;
     }
   }
   
-  @media (max-width: 500px) {
-    .hero-credly-badge {
-      width: 65px;
-      height: 85px;
+  @media (max-width: 600px) {
+    .certs-section {
+      padding: 30px 0;
+    }
+    
+    .certs-row {
+      gap: 8px;
+    }
+    
+    .cert-badge {
+      width: 100px;
+      height: 115px;
     }
   }
   
@@ -2695,22 +2720,6 @@ export default function App() {
             </a>
           </div>
           
-          {/* Credly Badges Row */}
-          {CONFIG.credlyBadges.length > 0 && (
-            <div className="hero-credly-badges">
-              {CONFIG.credlyBadges.map((badge, i) => (
-                <div key={i} className="hero-credly-badge">
-                  <div 
-                    data-iframe-width="110" 
-                    data-iframe-height="140" 
-                    data-share-badge-id={badge.id}
-                    data-share-badge-host="https://www.credly.com"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-          
           {/* Stats Bar - moved into hero */}
           <div className="stats-bar" style={{ marginTop: '32px' }}>
             <div className="stat-card">
@@ -2733,6 +2742,29 @@ export default function App() {
           
           </div>
       </section>
+      
+      {/* Certifications Section - Condensed */}
+      {CONFIG.credlyBadges.length > 0 && (
+        <section className="certs-section">
+          <div className="container">
+            <div className="certs-header">
+              <h3>🏆 Certifications</h3>
+            </div>
+            <div className="certs-row">
+              {CONFIG.credlyBadges.map((badge, i) => (
+                <div key={i} className="cert-badge">
+                  <div 
+                    data-iframe-width="150" 
+                    data-iframe-height="170" 
+                    data-share-badge-id={badge.id}
+                    data-share-badge-host="https://www.credly.com"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       
       {/* Architecture Section - How This Site is Built */}
       <section className="section" style={{ paddingTop: '40px' }}>
@@ -3007,43 +3039,6 @@ export default function App() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-      
-      {/* Credly Certifications Section */}
-      <section className="credly-section">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">// Verified Credentials</p>
-            <h2 className="section-title">Certifications</h2>
-          </div>
-          
-          {CONFIG.credlyBadges.length > 0 ? (
-            <div className="credly-grid">
-              {CONFIG.credlyBadges.map((badge, i) => (
-                <div key={i} className="credly-badge-wrapper">
-                  <div 
-                    data-iframe-width="150" 
-                    data-iframe-height="270" 
-                    data-share-badge-id={badge.id}
-                    data-share-badge-host="https://www.credly.com"
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="credly-placeholder">
-              <h4>🏆 Add Your Credly Badges</h4>
-              <p>
-                To display your certifications, add your Credly badge IDs to the <code>credlyBadges</code> array in the CONFIG section.
-                <br /><br />
-                <strong>How to find your badge ID:</strong><br />
-                1. Go to your Credly profile<br />
-                2. Click on a badge → Share → Get embed code<br />
-                3. Copy the <code>data-share-badge-id</code> value
-              </p>
-            </div>
-          )}
         </div>
       </section>
       
