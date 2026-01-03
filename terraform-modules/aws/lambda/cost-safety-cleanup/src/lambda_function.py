@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import boto3
 
@@ -144,7 +144,9 @@ def cleanup_ec2_and_ebs(region: str, required_key: str, required_value: str, dry
             ec2.terminate_instances(InstanceIds=instance_ids_to_terminate)
 
     # Delete attached EBS volumes we discovered via instances
-    volume_ids: List[str] = sorted({vid for vids in instance_id_to_volume_ids.values() for vid in vids})
+    volume_ids: List[str] = sorted(
+        {vid for vids in instance_id_to_volume_ids.values() for vid in vids}
+    )
     for vid in volume_ids:
         _delete_volume_best_effort(ec2, region, vid, required_key, required_value, dry_run)
 
@@ -155,7 +157,11 @@ def cleanup_ec2_and_ebs(region: str, required_key: str, required_value: str, dry
             vid = vol.get("VolumeId")
             if not vid:
                 continue
-            tags = {t.get("Key"): t.get("Value") for t in (vol.get("Tags", []) or []) if t.get("Key")}
+            tags = {
+                t.get("Key"): t.get("Value")
+                for t in (vol.get("Tags", []) or [])
+                if t.get("Key")
+            }
             if _is_kept(tags, required_key, required_value):
                 continue
             _delete_volume_best_effort(ec2, region, vid, required_key, required_value, dry_run)

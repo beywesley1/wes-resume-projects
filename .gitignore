@@ -1,0 +1,24 @@
+# OS
+Thumbs.db
+Desktop.ini
+
+# Terraform
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/*.tfvars.json
+**/crash.log
+**/crash.*.log
+**/.terraform.lock.hcl
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/.ruff_cache/
+
+# Reports (generated locally)
+reports/
+
+# Lambda build artifacts
+**/build/

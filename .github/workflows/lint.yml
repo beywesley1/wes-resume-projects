@@ -1,0 +1,95 @@
+# Terraform Linting Workflow
+# Runs on every push and pull request to validate Terraform code quality
+
+name: Terraform Lint
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'terraform-modules/**'
+      - '.tflint.hcl'
+      - '.github/workflows/lint.yml'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'terraform-modules/**'
+      - '.tflint.hcl'
+      - '.github/workflows/lint.yml'
+
+jobs:
+  terraform-lint:
+    name: Terraform Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      # Terraform Format Check
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive terraform-modules
+        continue-on-error: true
+
+      # Setup TFLint
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      # Initialize TFLint plugins
+      - name: Initialize TFLint
+        run: tflint --init --config .tflint.hcl
+
+      # Run TFLint on all modules
+      - name: Run TFLint
+        id: tflint
+        run: tflint --recursive --chdir terraform-modules --config $(pwd)/.tflint.hcl
+        continue-on-error: true
+
+      # Terraform Validate (per module)
+      - name: Terraform Validate
+        id: validate
+        run: |
+          EXIT_CODE=0
+          for dir in $(find terraform-modules -type f -name "*.tf" -exec dirname {} \; | sort -u); do
+            echo "=== Validating $dir ==="
+            cd "$dir"
+            terraform init -backend=false -input=false
+            if ! terraform validate -no-color; then
+              EXIT_CODE=1
+            fi
+            cd - > /dev/null
+          done
+          exit $EXIT_CODE
+        continue-on-error: true
+
+      # Report results summary
+      - name: Lint Results Summary
+        run: |
+          echo "## Lint Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Terraform Format | ${{ steps.fmt.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| TFLint | ${{ steps.tflint.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Terraform Validate | ${{ steps.validate.outcome == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+
+      # Fail workflow if any check failed
+      - name: Check for failures
+        if: steps.fmt.outcome == 'failure' || steps.tflint.outcome == 'failure' || steps.validate.outcome == 'failure'
+        run: |
+          echo "One or more lint checks failed. See above for details."
+          exit 1
