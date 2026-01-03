@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // ============================================================================
 // CONFIGURATION - Edit these values
@@ -9,8 +9,8 @@ const CONFIG = {
   subtitle: "AWS | Azure | Terraform | Infrastructure as Code",
   github: "beywesley1",
   workGithub: "", // Add your work GitHub username here to show work account stats
-  email: "your.email@example.com", // Update with your email
-  linkedin: "https://linkedin.com/in/yourprofile", // Update with your LinkedIn
+  email: "beywesley89@gmail.com",
+  linkedin: "https://linkedin.com/in/yourprofile",
   yearsExperience: 16, // Started in IT in 2009 in the Navy
   resumeUrl: "/resume.pdf",
   
@@ -338,6 +338,37 @@ resource "aws_s3_bucket_policy" "website" {
 };
 
 // ============================================================================
+// SCROLL ANIMATION HOOK
+// ============================================================================
+function useScrollAnimation() {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  return [ref, isVisible];
+}
+
+// ============================================================================
 // STYLES
 // ============================================================================
 const styles = `
@@ -361,6 +392,148 @@ const styles = `
     --accent-pink: #ec4899;
     --font-mono: 'JetBrains Mono', monospace;
     --font-sans: 'Space Grotesk', system-ui, sans-serif;
+  }
+  
+  /* Light mode variables */
+  [data-theme="light"] {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-tertiary: #e2e8f0;
+    --bg-card: #ffffff;
+    --border: #cbd5e1;
+    --border-hover: #94a3b8;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+  }
+  
+  [data-theme="light"] .abstract-bg {
+    background: radial-gradient(ellipse at 50% 0%, #dbeafe 0%, #f8fafc 50%, #ffffff 100%);
+  }
+  
+  [data-theme="light"] .abstract-bg::before {
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+  }
+  
+  [data-theme="light"] .abstract-bg::after {
+    background: 
+      radial-gradient(circle at 70% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+  }
+  
+  [data-theme="light"] .orb-1 {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.1));
+  }
+  
+  [data-theme="light"] .orb-2 {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(59, 130, 246, 0.08));
+  }
+  
+  [data-theme="light"] .orb-3 {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(16, 185, 129, 0.05));
+  }
+  
+  [data-theme="light"] .grid-overlay {
+    background-image: 
+      linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+  }
+  
+  /* Scroll animations */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .scroll-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .scroll-animate-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .scroll-animate-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .scroll-animate-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .scroll-animate-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .scroll-animate-scale {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .scroll-animate-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  /* Staggered children animations */
+  .stagger-children > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  }
+  
+  .stagger-children.visible > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+  .stagger-children.visible > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+  .stagger-children.visible > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+  .stagger-children.visible > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+  .stagger-children.visible > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+  .stagger-children.visible > *:nth-child(6) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+  
+  /* Theme toggle button */
+  .theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 1000;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .theme-toggle:hover {
+    border-color: var(--accent-blue);
+    transform: scale(1.05);
+  }
+  
+  .theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  .theme-toggle:hover svg {
+    transform: rotate(15deg);
   }
   
   * {
@@ -1604,6 +1777,31 @@ const styles = `
   }
   
   /* Contact Section */
+  .contact-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  
+  @media (max-width: 900px) {
+    .contact-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .contact-info p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  
   .contact-links {
     display: flex;
     gap: 16px;
@@ -1632,6 +1830,116 @@ const styles = `
   .contact-link svg {
     width: 20px;
     height: 20px;
+  }
+  
+  /* Contact Form */
+  .contact-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  
+  .contact-form h3 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    transition: all 0.2s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--text-muted);
+  }
+  
+  .form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+  }
+  
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .submit-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .form-success {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .form-success-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  
+  .form-success h4 {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  
+  .form-success p {
+    color: var(--text-secondary);
   }
   
   /* Footer */
@@ -1812,8 +2120,53 @@ const languageColors = {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('powershell');
+  const [theme, setTheme] = useState('dark');
+  const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
   const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
+  
+  // Scroll animation refs
+  const [skillsRef, skillsVisible] = useScrollAnimation();
+  const [careerRef, careerVisible] = useScrollAnimation();
+  const [certsRef, certsVisible] = useScrollAnimation();
+  const [archRef, archVisible] = useScrollAnimation();
+  const [reposRef, reposVisible] = useScrollAnimation();
+  const [contactRef, contactVisible] = useScrollAnimation();
+  
+  // Theme toggle
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+  
+  // Contact form handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus('sending');
+    
+    const formData = new FormData(e.target);
+    
+    try {
+      // Create your form at formspree.io and replace the ID below
+      const response = await fetch('https://formspree.io/f/mwpkgjvq', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setFormStatus('success');
+        e.target.reset();
+      } else {
+        setFormStatus('error');
+      }
+    } catch (error) {
+      setFormStatus('error');
+    }
+  };
   
   // Load Credly embed script when badges are configured
   useEffect(() => {
@@ -1831,6 +2184,27 @@ export default function App() {
   return (
     <>
       <style>{styles}</style>
+      
+      {/* Theme Toggle Button */}
+      <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+        {theme === 'dark' ? (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        )}
+      </button>
       
       {/* SVG Gradient Definition for circular progress */}
       <svg width="0" height="0" style={{ position: 'absolute' }}>
@@ -2206,12 +2580,12 @@ resource "cloudflare_record" "apex" {
         </div>
       </section>
       
-      {/* GitHub Repos Section */}
-      <section className="section" style={{ background: 'var(--bg-secondary)' }}>
-        <div className="container">
+      {/* Skills Section */}
+      <section className="section" style={{ background: 'var(--bg-secondary)' }} ref={skillsRef}>
+        <div className={`container scroll-animate ${skillsVisible ? 'visible' : ''}`}>
           <div className="section-header">
-            <p className="section-label">// Open Source</p>
-            <h2 className="section-title">GitHub Projects</h2>
+            <p className="section-label">// Expertise</p>
+            <h2 className="section-title">Skills & Proficiency</h2>
           </div>
           
           <div className="github-repos">
@@ -2460,33 +2834,108 @@ resource "cloudflare_record" "apex" {
       </section>
       
       {/* Contact Section */}
-      <section className="section" style={{ background: 'var(--bg-secondary)' }}>
-        <div className="container">
+      <section className="section" style={{ background: 'var(--bg-secondary)' }} ref={contactRef}>
+        <div className={`container scroll-animate ${contactVisible ? 'visible' : ''}`}>
           <div className="section-header">
             <p className="section-label">// Get in touch</p>
             <h2 className="section-title">Let's Connect</h2>
           </div>
           
-          <div className="contact-links">
-            <a href={`mailto:${CONFIG.email}`} className="contact-link">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
-              </svg>
-              Email
-            </a>
-            <a href={`https://github.com/${CONFIG.github}`} className="contact-link" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-              </svg>
-              GitHub
-            </a>
-            <a href={CONFIG.linkedin} className="contact-link" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-              LinkedIn
-            </a>
+          <div className="contact-container">
+            <div className="contact-info">
+              <p>
+                I'm always interested in hearing about new opportunities, challenging projects, 
+                or just connecting with fellow tech enthusiasts. Whether you have a question 
+                or just want to say hi, feel free to reach out!
+              </p>
+              
+              <div className="contact-links">
+                <a href={`mailto:${CONFIG.email}`} className="contact-link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                  Email
+                </a>
+                <a href={`https://github.com/${CONFIG.github}`} className="contact-link" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                  GitHub
+                </a>
+                <a href={CONFIG.linkedin} className="contact-link" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+            
+            <div className="contact-form">
+              <h3>Send a Message</h3>
+              {formStatus === 'success' ? (
+                <div className="form-success">
+                  <div className="form-success-icon">✅</div>
+                  <h4>Message Sent!</h4>
+                  <p>Thanks for reaching out. I'll get back to you soon.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <div className="form-group">
+                    <label htmlFor="name">Name</label>
+                    <input 
+                      type="text" 
+                      id="name" 
+                      name="name" 
+                      placeholder="Your name"
+                      required 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      name="email" 
+                      placeholder="your@email.com"
+                      required 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="message">Message</label>
+                    <textarea 
+                      id="message" 
+                      name="message" 
+                      placeholder="What would you like to discuss?"
+                      required
+                    />
+                  </div>
+                  <button 
+                    type="submit" 
+                    className="submit-btn"
+                    disabled={formStatus === 'sending'}
+                  >
+                    {formStatus === 'sending' ? (
+                      <>Sending...</>
+                    ) : (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <line x1="22" y1="2" x2="11" y2="13"/>
+                          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                        Send Message
+                      </>
+                    )}
+                  </button>
+                  {formStatus === 'error' && (
+                    <p style={{ color: '#ef4444', marginTop: '12px', fontSize: '14px' }}>
+                      Something went wrong. Please try again or email me directly.
+                    </p>
+                  )}
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </section>
