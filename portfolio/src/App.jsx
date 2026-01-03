@@ -3601,25 +3601,38 @@ function useGitHubStats(username) {
         });
         setRepos(displayRepos);
         
-        // Fetch lines of code from repo languages (approximation based on repo sizes)
+        // Fetch lines of code from contributor stats with retry logic
+        // GitHub's stats API returns 202 on first request while computing, need to retry
         let totalAdded = 0;
         let totalDeleted = 0;
+        
+        const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
+          for (let i = 0; i < retries; i++) {
+            const res = await fetch(url);
+            if (res.status === 200) {
+              return await res.json();
+            } else if (res.status === 202) {
+              // GitHub is computing stats, wait and retry
+              await new Promise(r => setTimeout(r, delay));
+            } else {
+              return null;
+            }
+          }
+          return null;
+        };
         
         // Fetch contributor stats for each repo to get lines added/deleted
         const statsPromises = allReposData.slice(0, 10).map(async (repo) => {
           try {
-            const statsRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/stats/contributors`);
-            if (statsRes.ok) {
-              const statsData = await statsRes.json();
-              if (Array.isArray(statsData)) {
-                // Find the user's contributions
-                const userStats = statsData.find(c => c.author?.login?.toLowerCase() === username.toLowerCase());
-                if (userStats && userStats.weeks) {
-                  userStats.weeks.forEach(week => {
-                    totalAdded += week.a || 0;
-                    totalDeleted += week.d || 0;
-                  });
-                }
+            const statsData = await fetchWithRetry(`https://api.github.com/repos/${username}/${repo.name}/stats/contributors`);
+            if (Array.isArray(statsData)) {
+              // Find the user's contributions
+              const userStats = statsData.find(c => c.author?.login?.toLowerCase() === username.toLowerCase());
+              if (userStats && userStats.weeks) {
+                userStats.weeks.forEach(week => {
+                  totalAdded += week.a || 0;
+                  totalDeleted += week.d || 0;
+                });
               }
             }
           } catch (e) {
@@ -4577,6 +4590,65 @@ export default function App() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* GitHub Profile Section */}
+      <section className="section" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="container">
+          <div className="section-header">
+            <p className="section-label">// Open Source</p>
+            <h2 className="section-title">GitHub Activity</h2>
+          </div>
+          
+          {/* Profile Stats */}
+          <div className="github-stats-grid" style={{ marginBottom: '24px' }}>
+            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ fontSize: '32px' }}>📦</div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  {loading ? '...' : stats?.public_repos || 0}
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Public Repos</div>
+              </div>
+            </div>
+            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ fontSize: '32px' }}>👥</div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  {loading ? '...' : stats?.followers || 0}
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Followers</div>
+              </div>
+            </div>
+            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ fontSize: '32px', color: '#22c55e' }}>++</div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #22c55e, #4ade80)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  {loading ? '...' : linesOfCode.added.toLocaleString()}
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Added</div>
+              </div>
+            </div>
+            <div className="github-stat-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ fontSize: '32px', color: '#ef4444' }}>--</div>
+              <div>
+                <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #ef4444, #f87171)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  {loading ? '...' : linesOfCode.deleted.toLocaleString()}
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Deleted</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Contribution Calendar */}
+          <div className="github-contribution-graph">
+            <img 
+              src={`https://ghchart.rshah.org/3b82f6/${CONFIG.github}`}
+              alt="GitHub Contribution Graph"
+              style={{ width: '100%', height: 'auto' }}
+            />
           </div>
         </div>
       </section>
