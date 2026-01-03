@@ -672,7 +672,10 @@ const styles = `
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
   }
   
   .nav-logo span {
@@ -692,18 +695,21 @@ const styles = `
     text-decoration: none;
     border-radius: 6px;
     transition: all 0.2s ease;
-    border: 1px solid transparent;
+    border: 1px solid var(--border);
+    background: var(--bg-tertiary);
+    cursor: pointer;
   }
   
   .nav-tab:hover {
     color: var(--text-primary);
-    background: var(--bg-tertiary);
+    background: var(--bg-secondary);
+    border-color: var(--border-hover);
   }
   
   .nav-tab.active {
-    color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.3);
+    color: #fff;
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
   }
   
   .nav-tab.coming-soon {
@@ -712,7 +718,8 @@ const styles = `
   }
   
   .nav-tab.coming-soon:hover {
-    background: transparent;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
   }
   
   /* Scripts Page Styles */
