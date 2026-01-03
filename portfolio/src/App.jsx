@@ -843,34 +843,25 @@ const styles = `
   .hero-credly-badges {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 12px;
     margin-top: 32px;
     flex-wrap: wrap;
+    align-items: center;
   }
   
   .hero-credly-badge {
-    width: 80px;
-    height: 80px;
-    overflow: hidden;
-  }
-  
-  .hero-credly-badge div {
-    transform: scale(0.8);
-    transform-origin: top left;
+    width: 90px;
+    height: 90px;
   }
   
   @media (max-width: 600px) {
     .hero-credly-badges {
-      gap: 4px;
+      gap: 8px;
     }
     
     .hero-credly-badge {
-      width: 60px;
-      height: 60px;
-    }
-    
-    .hero-credly-badge div {
-      transform: scale(0.6);
+      width: 70px;
+      height: 70px;
     }
   }
   
@@ -2703,8 +2694,8 @@ export default function App() {
               {CONFIG.credlyBadges.map((badge, i) => (
                 <div key={i} className="hero-credly-badge">
                   <div 
-                    data-iframe-width="100" 
-                    data-iframe-height="100" 
+                    data-iframe-width="90" 
+                    data-iframe-height="90" 
                     data-share-badge-id={badge.id}
                     data-share-badge-host="https://www.credly.com"
                   />
