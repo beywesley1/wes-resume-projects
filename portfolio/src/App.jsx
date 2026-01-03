@@ -839,6 +839,41 @@ const styles = `
     }
   }
   
+  /* Hero Credly Badges */
+  .hero-credly-badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  
+  .hero-credly-badge {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+  }
+  
+  .hero-credly-badge div {
+    transform: scale(0.8);
+    transform-origin: top left;
+  }
+  
+  @media (max-width: 600px) {
+    .hero-credly-badges {
+      gap: 4px;
+    }
+    
+    .hero-credly-badge {
+      width: 60px;
+      height: 60px;
+    }
+    
+    .hero-credly-badge div {
+      transform: scale(0.6);
+    }
+  }
+  
   .btn-primary {
     background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
     color: white;
@@ -2662,8 +2697,24 @@ export default function App() {
             </a>
           </div>
           
+          {/* Credly Badges Row */}
+          {CONFIG.credlyBadges.length > 0 && (
+            <div className="hero-credly-badges">
+              {CONFIG.credlyBadges.map((badge, i) => (
+                <div key={i} className="hero-credly-badge">
+                  <div 
+                    data-iframe-width="100" 
+                    data-iframe-height="100" 
+                    data-share-badge-id={badge.id}
+                    data-share-badge-host="https://www.credly.com"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          
           {/* Stats Bar - moved into hero */}
-          <div className="stats-bar" style={{ marginTop: '48px' }}>
+          <div className="stats-bar" style={{ marginTop: '32px' }}>
             <div className="stat-card">
               <div className="stat-value">{CONFIG.yearsExperience}+</div>
               <div className="stat-label">Years Experience</div>
