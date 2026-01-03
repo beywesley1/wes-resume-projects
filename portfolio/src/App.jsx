@@ -1886,6 +1886,15 @@ const styles = `
     font-weight: bold;
   }
   
+  .arch-x-arrows-split {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    color: var(--accent-blue);
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
   .arch-arrow-h {
     color: var(--accent-blue);
     font-size: 20px;
@@ -1902,6 +1911,11 @@ const styles = `
     }
     
     .arch-x-arrow-down {
+      font-size: 18px;
+    }
+    
+    .arch-x-arrows-split {
+      gap: 40px;
       font-size: 18px;
     }
     
@@ -2781,8 +2795,8 @@ export default function App() {
                   </div>
                 </div>
                 
-                {/* Diagonal Arrow Down */}
-                <div className="arch-x-arrow-down">↘</div>
+                {/* Arrow from GitHub down to Terraform */}
+                <div className="arch-x-arrow-down" style={{ marginLeft: 'auto', marginRight: '80px' }}>↓</div>
                 
                 {/* Center: Terraform Cloud */}
                 <div className="arch-x-center">
@@ -2802,8 +2816,11 @@ export default function App() {
                   </div>
                 </div>
                 
-                {/* Diagonal Arrow Down */}
-                <div className="arch-x-arrow-down">↘</div>
+                {/* Arrows down to AWS and Cloudflare */}
+                <div className="arch-x-arrows-split">
+                  <span>↙</span>
+                  <span>↘</span>
+                </div>
                 
                 {/* Bottom Row: AWS + Cloudflare */}
                 <div className="arch-x-row">
@@ -2818,8 +2835,6 @@ export default function App() {
                       <span>S3 + CloudFront</span>
                     </div>
                   </div>
-                  
-                  <div className="arch-arrow-h">+</div>
                   
                   <div className="arch-node" style={{ borderColor: '#F38020' }}>
                     <span className="arch-node-icon">
