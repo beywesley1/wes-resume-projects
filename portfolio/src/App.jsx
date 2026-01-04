@@ -4975,45 +4975,48 @@ export default function App() {
                     </marker>
                   </defs>
                   
+                  {/* AWS Cloud Border - shifted right to make room for CloudFlare */}
+                  <rect x="380" y="20" width="800" height="810" rx="12" fill="none" stroke="#FF9900" strokeWidth="2" strokeDasharray="8,4" opacity="0.5"/>
+                  <text x="780" y="50" fill="#FF9900" fontSize="16" fontFamily="monospace" fontWeight="bold">AWS Cloud (us-east-1)</text>
+                  
                   {/* CloudFlare DNS & CDN - Outside AWS */}
-                  <rect x="80" y="55" width="280" height="70" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
-                  <use href="#cloudflare-icon" x="95" y="68" width="40" height="40"/>
-                  <text x="220" y="80" fill="#F6821F" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
-                  <text x="220" y="98" fill="#FAAD3F" fontSize="11" textAnchor="middle" fontFamily="monospace">DNS + CDN + DDoS + SSL</text>
-                  <text x="220" y="113" fill="#8b949e" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website.com</text>
+                  <rect x="40" y="55" width="300" height="90" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
+                  <use href="#cloudflare-icon" x="55" y="68" width="45" height="45"/>
+                  <text x="190" y="80" fill="#F6821F" fontSize="15" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
+                  <text x="190" y="100" fill="#FAAD3F" fontSize="11" textAnchor="middle" fontFamily="monospace">DNS + CDN + DDoS + SSL</text>
+                  <text x="190" y="118" fill="#8b949e" fontSize="10" textAnchor="middle" fontFamily="monospace">Nameservers → ALB DNS</text>
+                  <text x="190" y="135" fill="#6ee7b7" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website.com</text>
                   
-                  {/* Arrow from CloudFlare to AWS WAF */}
-                  <line x1="360" y1="90" x2="465" y2="90" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadCloudflare)"/>
-                  
-                  {/* AWS Cloud Border */}
-                  <rect x="20" y="20" width="1160" height="810" rx="12" fill="none" stroke="#FF9900" strokeWidth="2" strokeDasharray="8,4" opacity="0.5"/>
-                  <text x="800" y="50" fill="#FF9900" fontSize="16" fontFamily="monospace" fontWeight="bold">AWS Cloud (us-east-1)</text>
+                  {/* Arrow from CloudFlare through AWS border to WAF */}
+                  <line x1="340" y1="100" x2="430" y2="100" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadCloudflare)"/>
                   
                   {/* AWS WAF */}
-                  <rect x="470" y="55" width="300" height="70" rx="6" fill="#232f3e" stroke="#ef4444" strokeWidth="2"/>
-                  <use href="#aws-waf-icon" x="485" y="70" width="35" height="35"/>
-                  <text x="640" y="85" fill="#ef4444" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">AWS WAF</text>
-                  <text x="640" y="105" fill="#fca5a5" fontSize="11" textAnchor="middle" fontFamily="monospace">SQL Injection / XSS Protection</text>
+                  <rect x="435" y="55" width="300" height="90" rx="6" fill="#232f3e" stroke="#ef4444" strokeWidth="2"/>
+                  <use href="#aws-waf-icon" x="450" y="75" width="40" height="40"/>
+                  <text x="605" y="90" fill="#ef4444" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">AWS WAF</text>
+                  <text x="605" y="110" fill="#fca5a5" fontSize="11" textAnchor="middle" fontFamily="monospace">SQL Injection / XSS Protection</text>
+                  <text x="605" y="128" fill="#8b949e" fontSize="10" textAnchor="middle" fontFamily="monospace">Attached to ALB</text>
                   
-                  {/* VPC Container */}
-                  <rect x="40" y="150" width="1120" height="660" rx="10" fill="url(#vpcGradient)" stroke="#8B5CF6" strokeWidth="3"/>
-                  <use href="#aws-vpc-icon" x="60" y="162" width="24" height="24"/>
-                  <text x="90" y="180" fill="#8B5CF6" fontSize="18" fontWeight="bold" fontFamily="monospace">VPC: 10.11.0.0/16</text>
+                  {/* VPC Container - inside AWS border */}
+                  <rect x="400" y="160" width="760" height="650" rx="10" fill="url(#vpcGradient)" stroke="#8B5CF6" strokeWidth="3"/>
+                  <use href="#aws-vpc-icon" x="420" y="172" width="24" height="24"/>
+                  <text x="450" y="190" fill="#8B5CF6" fontSize="18" fontWeight="bold" fontFamily="monospace">VPC: 10.11.0.0/16</text>
                   
                   {/* Internet Gateway */}
-                  <rect x="545" y="160" width="130" height="40" rx="6" fill="#232f3e" stroke="#FF9900" strokeWidth="2"/>
-                  <use href="#aws-igw-icon" x="552" y="166" width="26" height="26"/>
-                  <text x="630" y="186" fill="#FF9900" fontSize="12" textAnchor="middle" fontFamily="monospace" fontWeight="bold">IGW</text>
+                  <rect x="715" y="170" width="130" height="40" rx="6" fill="#232f3e" stroke="#FF9900" strokeWidth="2"/>
+                  <use href="#aws-igw-icon" x="722" y="176" width="26" height="26"/>
+                  <text x="800" y="196" fill="#FF9900" fontSize="12" textAnchor="middle" fontFamily="monospace" fontWeight="bold">IGW</text>
                   
                   {/* Application Load Balancer */}
-                  <rect x="480" y="215" width="260" height="55" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glow)"/>
-                  <use href="#aws-alb-icon" x="492" y="225" width="30" height="30"/>
-                  <text x="630" y="240" fill="#8B5CF6" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Application Load Balancer</text>
-                  <text x="630" y="258" fill="#a78bfa" fontSize="11" textAnchor="middle" fontFamily="monospace">sales.example.com</text>
+                  <rect x="650" y="225" width="260" height="55" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glow)"/>
+                  <use href="#aws-alb-icon" x="662" y="235" width="30" height="30"/>
+                  <text x="800" y="250" fill="#8B5CF6" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Application Load Balancer</text>
+                  <text x="800" y="268" fill="#a78bfa" fontSize="11" textAnchor="middle" fontFamily="monospace">sales-website-alb.amazonaws.com</text>
                   
                   {/* Connection from WAF to IGW to ALB */}
-                  <line x1="610" y1="125" x2="610" y2="160" stroke="#ef4444" strokeWidth="2"/>
-                  <line x1="610" y1="200" x2="610" y2="215" stroke="#FF9900" strokeWidth="2"/>
+                  <line x1="585" y1="145" x2="585" y2="155" stroke="#ef4444" strokeWidth="2"/>
+                  <path d="M585 155 Q585 165, 715 190" stroke="#ef4444" strokeWidth="2" fill="none"/>
+                  <line x1="780" y1="210" x2="780" y2="225" stroke="#FF9900" strokeWidth="2"/>
                   
                   {/* PUBLIC SUBNETS SECTION */}
                   <text x="60" y="295" fill="#22c55e" fontSize="14" fontWeight="bold" fontFamily="monospace">PUBLIC SUBNETS (Web Tier)</text>
