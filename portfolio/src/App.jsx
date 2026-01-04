@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { TERRAFORM_MODULES, TF_PROVIDERS, TF_SUBCATEGORY_ICONS, getTfSubcategories, getTfModuleIcon, highlightTerraform } from './terraformData';
+import { TERRAFORM_MODULES, TF_PROVIDERS, TF_SUBCATEGORY_ICONS, getTfSubcategories, getTfModuleIcon } from './terraformData';
+
+// Import Terraform solutions as raw text (Vite feature)
+// Cache bust: v2
+import VPC_TERRAFORM_CODE from './terraform-solutions/vpc-sales-website/main.tf?raw';
 
 // ============================================================================
 // CONFIGURATION - Edit these values
@@ -531,7 +535,7 @@ const CATEGORIES = {
   },
   awscli: {
     label: "AWS CLI",
-    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="#FF9900"><path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586z"/></svg>`,
+    icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><text x="0" y="16" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#FF9900">aws</text></svg>`,
   },
   azurecli: {
     label: "Azure CLI",
@@ -549,8 +553,8 @@ const getSubcategories = (category) => {
 const SUBCATEGORY_ICONS = {
   "Active Directory": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h5.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 10.621 4H22.5A1.5 1.5 0 0 1 24 5.5v15a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 20.5v-17z"/></svg>`,
   "Azure / Entra ID": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`,
-  "AWS": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9900"><path d="M7.163 6.688c0 .352.039.64.109.848.078.207.176.434.305.68a.435.435 0 0 1 .07.227c0 .098-.059.196-.184.293l-.61.406a.466.466 0 0 1-.254.09c-.098 0-.195-.047-.293-.133a3.013 3.013 0 0 1-.351-.457 7.249 7.249 0 0 1-.301-.574c-.762.898-1.719 1.348-2.871 1.348-.82 0-1.473-.234-1.95-.703-.48-.469-.723-1.094-.723-1.875 0-.828.293-1.5.886-2.012.594-.512 1.383-.766 2.383-.766.332 0 .672.027 1.027.074.356.047.723.121 1.106.215v-.715c0-.742-.156-1.262-.46-1.562-.31-.3-.837-.45-1.587-.45-.34 0-.691.04-1.054.125a7.77 7.77 0 0 0-1.055.332 2.606 2.606 0 0 1-.32.125.556.556 0 0 1-.145.027c-.129 0-.192-.093-.192-.285V5.04c0-.149.02-.262.067-.332a.69.69 0 0 1 .273-.207c.34-.176.75-.324 1.23-.442a5.9 5.9 0 0 1 1.524-.183c1.16 0 2.008.262 2.555.789.54.527.813 1.328.813 2.402v3.164h.004zm-3.965 1.48c.32 0 .652-.058.996-.175.344-.118.649-.336.906-.637.156-.187.27-.394.332-.625.063-.23.098-.508.098-.832v-.402a8.149 8.149 0 0 0-.883-.168 7.233 7.233 0 0 0-.902-.059c-.652 0-1.13.125-1.445.383-.316.258-.469.621-.469 1.094 0 .445.114.777.348 1.004.227.234.559.347.996.347l.023.07zm7.836 1.055c-.164 0-.273-.027-.34-.086-.066-.051-.125-.168-.175-.324l-1.965-6.465a1.553 1.553 0 0 1-.078-.34c0-.136.066-.21.199-.21h.918c.172 0 .29.026.348.085.066.051.117.168.168.325l1.406 5.535 1.305-5.535c.043-.164.094-.274.16-.325.066-.05.191-.085.355-.085h.75c.172 0 .29.035.356.085.066.051.125.168.16.325l1.32 5.605 1.446-5.605c.05-.164.109-.274.168-.325.066-.05.183-.085.347-.085h.871c.133 0 .207.067.207.21 0 .044-.008.087-.016.137a1.26 1.26 0 0 1-.062.21l-2.016 6.466c-.05.164-.11.273-.176.324-.066.051-.183.086-.34.086h-.808c-.172 0-.29-.035-.356-.094-.066-.058-.125-.168-.16-.332l-1.297-5.394-1.29 5.387c-.042.17-.093.28-.16.339-.065.058-.19.093-.355.093h-.808l.023.004z"/></svg>`,
-  "Docker": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#2496ED"><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.12a.186.186 0 0 0-.185.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 0 0-.75.748 11.376 11.376 0 0 0 .692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 0 0 3.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288z"/></svg>`,
+  "AWS": `<svg width="16" height="16" viewBox="0 0 24 24" fill="#FF9900"><path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 0 0-.735-.136 6.02 6.02 0 0 0-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 0 1-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 0 1 .32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 0 1 .311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 0 1-.056.2l-1.923 6.17c-.048.16-.104.264-.168.312a.549.549 0 0 1-.32.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 0 1-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 0 0 .415-.758.777.777 0 0 0-.215-.559c-.144-.151-.415-.287-.806-.415l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 0 1-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415.32-.096.655-.136 1.006-.136.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.144a.69.69 0 0 1 .24.2.43.43 0 0 1 .071.263v.375c0 .168-.064.256-.184.256a.83.83 0 0 1-.303-.096 3.652 3.652 0 0 0-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.877.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.336.511-.583.703-.248.2-.543.343-.886.447-.36.111-.734.167-1.142.167zM21.698 16.207c-2.626 1.94-6.442 2.969-9.722 2.969-4.598 0-8.74-1.7-11.87-4.526-.247-.223-.024-.527.27-.351 3.384 1.963 7.559 3.153 11.877 3.153 2.914 0 6.114-.607 9.06-1.852.439-.2.814.287.385.607zM22.792 14.961c-.336-.43-2.22-.207-3.074-.103-.255.032-.295-.192-.063-.36 1.5-1.053 3.967-.75 4.254-.399.287.36-.08 2.826-1.485 4.007-.215.184-.423.088-.327-.151.32-.79 1.03-2.57.695-2.994z"/></svg>`,
+  "Docker": `<svg width="16" height="16" viewBox="0 0 640 512" fill="#2496ED"><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>`,
   "EC2": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#FF9900"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
   "S3": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#569A31"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
   "IAM": `<svg width="14" height="14" viewBox="0 0 24 24" fill="#DD344C"><path d="M12 2C9.243 2 7 4.243 7 7v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7c0-2.757-2.243-5-5-5zm0 2c1.654 0 3 1.346 3 3v3H9V7c0-1.654 1.346-3 3-3zm0 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>`,
@@ -569,7 +573,7 @@ const getScriptIcon = (script) => {
     return `<svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4"><path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zm8.1 13.81l-6.37-11.3a.5.5 0 0 0-.44-.26h-4.19a.5.5 0 0 0-.44.75l6.37 11.3a.5.5 0 0 0 .44.26h4.19a.5.5 0 0 0 .44-.75z"/></svg>`;
   }
   if (script.tags.includes('docker') || script.subcategory === 'Docker') {
-    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="#2496ED"><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.185-.186h-2.12a.186.186 0 0 0-.185.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185m15.08-2.715h2.118a.186.186 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186"/></svg>`;
+    return `<svg width="22" height="22" viewBox="0 0 640 512" fill="#2496ED"><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>`;
   }
   if (script.tags.includes('active-directory') || script.subcategory === 'Active Directory') {
     return `<svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h5.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A1.5 1.5 0 0 0 10.621 4H22.5A1.5 1.5 0 0 1 24 5.5v15a1.5 1.5 0 0 1-1.5 1.5h-21A1.5 1.5 0 0 1 0 20.5v-17z"/></svg>`;
@@ -581,41 +585,169 @@ const getScriptIcon = (script) => {
   return CATEGORIES[script.category]?.icon || '';
 };
 
-// Syntax highlighting function for code
-const highlightCode = (code, category) => {
-  let highlighted = code
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+// Unified syntax highlighting component for all code blocks
+// VS Code Dark+ inspired highlighting
+const HighlightedCode = ({ code }) => {
+  if (!code) return null;
   
-  // Comments (# for shell/powershell, // for others)
-  highlighted = highlighted.replace(/(#[^\n]*)/g, '<span class="comment">$1</span>');
+  // Highlight tokens within a line (not comments)
+  const highlightLine = (line, isResourceLine = false) => {
+    const parts = [];
+    let remaining = line;
+    let keyIndex = 0;
+    
+    while (remaining.length > 0) {
+      // Strings (double quotes)
+      const dqMatch = remaining.match(/^("(?:[^"\\]|\\.)*")/);
+      if (dqMatch) {
+        parts.push(<span key={keyIndex++} className="hl-string">{dqMatch[1]}</span>);
+        remaining = remaining.slice(dqMatch[1].length);
+        continue;
+      }
+      
+      // Strings (single quotes)
+      const sqMatch = remaining.match(/^('(?:[^'\\]|\\.)*')/);
+      if (sqMatch) {
+        parts.push(<span key={keyIndex++} className="hl-string">{sqMatch[1]}</span>);
+        remaining = remaining.slice(sqMatch[1].length);
+        continue;
+      }
+      
+      // Variables (${...}) - interpolation
+      const varBraceMatch = remaining.match(/^(\$\{[^}]+\})/);
+      if (varBraceMatch) {
+        parts.push(<span key={keyIndex++} className="hl-variable">{varBraceMatch[1]}</span>);
+        remaining = remaining.slice(varBraceMatch[1].length);
+        continue;
+      }
+      
+      // Variables ($word) - shell/PowerShell
+      const varMatch = remaining.match(/^(\$[\w_]+)/);
+      if (varMatch) {
+        parts.push(<span key={keyIndex++} className="hl-variable">{varMatch[1]}</span>);
+        remaining = remaining.slice(varMatch[1].length);
+        continue;
+      }
+      
+      // var.something references (Terraform)
+      const varRefMatch = remaining.match(/^(var\.[\w_]+)/);
+      if (varRefMatch) {
+        parts.push(<span key={keyIndex++} className="hl-variable">{varRefMatch[1]}</span>);
+        remaining = remaining.slice(varRefMatch[1].length);
+        continue;
+      }
+      
+      // aws_*.something or resource references
+      const resourceRefMatch = remaining.match(/^(aws_[\w_]+\.[\w_]+\.[\w_]+)/);
+      if (resourceRefMatch) {
+        parts.push(<span key={keyIndex++} className="hl-type">{resourceRefMatch[1]}</span>);
+        remaining = remaining.slice(resourceRefMatch[1].length);
+        continue;
+      }
+      
+      // Terraform keywords at line start
+      const tfKeywords = ['resource', 'data', 'variable', 'output', 'locals', 'module', 'provider', 'terraform', 'backend', 'required_providers', 'required_version'];
+      const tfMatch = remaining.match(new RegExp(`^(${tfKeywords.join('|')})(?=\\s|$)`));
+      if (tfMatch && parts.length === 0) {
+        parts.push(<span key={keyIndex++} className="hl-keyword">{tfMatch[1]}</span>);
+        remaining = remaining.slice(tfMatch[1].length);
+        continue;
+      }
+      
+      // Shell/Bash keywords
+      const shellKeywords = ['if', 'then', 'else', 'elif', 'fi', 'for', 'do', 'done', 'while', 'until', 'case', 'esac', 'in', 'function', 'return', 'export', 'local', 'readonly', 'declare'];
+      const shellMatch = remaining.match(new RegExp(`^(${shellKeywords.join('|')})\\b`));
+      if (shellMatch) {
+        parts.push(<span key={keyIndex++} className="hl-keyword">{shellMatch[1]}</span>);
+        remaining = remaining.slice(shellMatch[1].length);
+        continue;
+      }
+      
+      // PowerShell cmdlets and common commands
+      const commands = ['aws', 'az', 'docker', 'terraform', 'git', 'echo', 'curl', 'wget', 'grep', 'sed', 'awk', 'cat', 'ls', 'cd', 'mkdir', 'rm', 'cp', 'mv', 'chmod', 'chown', 'Get-ADUser', 'Get-ADGroupMember', 'Connect-MgGraph', 'Get-MgUser', 'Get-MgAuditLogSignIn', 'Select-Object', 'Format-List', 'Format-Table', 'Export-Csv', 'Read-Host', 'Write-Host', 'Set-Location', 'Get-ChildItem', 'New-Item', 'Remove-Item', 'Copy-Item', 'Move-Item', 'Invoke-WebRequest', 'ConvertTo-Json', 'ConvertFrom-Json'];
+      const cmdMatch = remaining.match(new RegExp(`^(${commands.join('|')})\\b`));
+      if (cmdMatch) {
+        parts.push(<span key={keyIndex++} className="hl-function">{cmdMatch[1]}</span>);
+        remaining = remaining.slice(cmdMatch[1].length);
+        continue;
+      }
+      
+      // Booleans
+      const boolMatch = remaining.match(/^(true|false|null)\b/);
+      if (boolMatch) {
+        parts.push(<span key={keyIndex++} className="hl-boolean">{boolMatch[1]}</span>);
+        remaining = remaining.slice(boolMatch[1].length);
+        continue;
+      }
+      
+      // Numbers
+      const numMatch = remaining.match(/^(\d+)/);
+      if (numMatch) {
+        parts.push(<span key={keyIndex++} className="hl-number">{numMatch[1]}</span>);
+        remaining = remaining.slice(numMatch[1].length);
+        continue;
+      }
+      
+      // Operators
+      const opMatch = remaining.match(/^(==|!=|>=|<=|=>|->|&&|\|\||[=<>!+\-*/%])/);
+      if (opMatch) {
+        parts.push(<span key={keyIndex++} className="hl-operator">{opMatch[1]}</span>);
+        remaining = remaining.slice(opMatch[1].length);
+        continue;
+      }
+      
+      // Brackets and braces
+      const bracketMatch = remaining.match(/^([{}[\]()])/);
+      if (bracketMatch) {
+        parts.push(<span key={keyIndex++} className="hl-bracket">{bracketMatch[1]}</span>);
+        remaining = remaining.slice(bracketMatch[1].length);
+        continue;
+      }
+      
+      // Attribute names (word followed by =)
+      const attrMatch = remaining.match(/^([\w_]+)(\s*=)/);
+      if (attrMatch) {
+        parts.push(<span key={keyIndex++} className="hl-attribute">{attrMatch[1]}</span>);
+        parts.push(attrMatch[2]);
+        remaining = remaining.slice(attrMatch[0].length);
+        continue;
+      }
+      
+      // Plain text - grab one character at a time for safety
+      parts.push(remaining[0]);
+      remaining = remaining.slice(1);
+    }
+    
+    return parts;
+  };
   
-  // Strings (double and single quotes)
-  highlighted = highlighted.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="string">$1</span>');
-  highlighted = highlighted.replace(/('(?:[^'\\]|\\.)*')/g, '<span class="string">$1</span>');
+  // Process each line separately
+  const lines = code.split('\n');
   
-  // Variables ($var for PowerShell/Bash, ${var})
-  highlighted = highlighted.replace(/(\$\{?[\w_]+\}?)/g, '<span class="variable">$1</span>');
-  
-  // Keywords
-  const keywords = ['if', 'else', 'elseif', 'for', 'foreach', 'while', 'do', 'function', 'return', 'export', 'then', 'fi', 'done', 'in', 'case', 'esac'];
-  keywords.forEach(kw => {
-    const regex = new RegExp(`\\b(${kw})\\b`, 'g');
-    highlighted = highlighted.replace(regex, '<span class="keyword">$1</span>');
-  });
-  
-  // Common commands
-  const commands = ['aws', 'az', 'docker', 'terraform', 'git', 'echo', 'Get-ADUser', 'Get-ADGroupMember', 'Connect-MgGraph', 'Get-MgUser', 'Get-MgAuditLogSignIn', 'Select-Object', 'Format-List', 'Format-Table', 'Export-Csv', 'Read-Host'];
-  commands.forEach(cmd => {
-    const regex = new RegExp(`\\b(${cmd})\\b`, 'g');
-    highlighted = highlighted.replace(regex, '<span class="command">$1</span>');
-  });
-  
-  // Numbers
-  highlighted = highlighted.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
-  
-  return highlighted;
+  return (
+    <>
+      {lines.map((line, lineIndex) => {
+        // Check if line is a comment (starts with optional whitespace then #)
+        const commentMatch = line.match(/^(\s*)(#.*)$/);
+        if (commentMatch) {
+          return (
+            <React.Fragment key={lineIndex}>
+              {commentMatch[1]}<span className="hl-comment">{commentMatch[2]}</span>
+              {lineIndex < lines.length - 1 ? '\n' : ''}
+            </React.Fragment>
+          );
+        }
+        
+        // For non-comment lines, highlight tokens
+        return (
+          <React.Fragment key={lineIndex}>
+            {highlightLine(line)}
+            {lineIndex < lines.length - 1 ? '\n' : ''}
+          </React.Fragment>
+        );
+      })}
+    </>
+  );
 };
 
 // ============================================================================
@@ -1285,23 +1417,33 @@ const styles = `
     word-break: break-word;
   }
   
-  /* Syntax highlighting for code */
-  .script-item-code .comment { color: #6a9955; font-style: italic; }
-  .script-item-code .keyword { color: #569cd6; }
-  .script-item-code .string { color: #ce9178; }
-  .script-item-code .variable { color: #9cdcfe; }
-  .script-item-code .function { color: #dcdcaa; }
-  .script-item-code .number { color: #b5cea8; }
-  .script-item-code .operator { color: #d4d4d4; }
-  .script-item-code .command { color: #4ec9b0; }
+  /* Unified syntax highlighting for all code blocks - VS Code Dark+ inspired */
+  .hl-comment { color: #6A9955; font-style: italic; }
+  .hl-keyword { color: #C586C0; font-weight: 500; }
+  .hl-string { color: #CE9178; }
+  .hl-variable { color: #9CDCFE; }
+  .hl-boolean { color: #569CD6; font-weight: 500; }
+  .hl-number { color: #B5CEA8; }
+  .hl-command { color: #DCDCAA; }
+  .hl-type { color: #4EC9B0; }
+  .hl-attribute { color: #9CDCFE; }
+  .hl-operator { color: #D4D4D4; }
+  .hl-bracket { color: #FFD700; }
+  .hl-function { color: #DCDCAA; }
+  .hl-resource-type { color: #4EC9B0; }
+  .hl-resource-name { color: #CE9178; }
   
-  [data-theme="light"] .script-item-code .comment { color: #008000; }
-  [data-theme="light"] .script-item-code .keyword { color: #0000ff; }
-  [data-theme="light"] .script-item-code .string { color: #a31515; }
-  [data-theme="light"] .script-item-code .variable { color: #001080; }
-  [data-theme="light"] .script-item-code .function { color: #795e26; }
-  [data-theme="light"] .script-item-code .number { color: #098658; }
-  [data-theme="light"] .script-item-code .command { color: #267f99; }
+  [data-theme="light"] .hl-comment { color: #008000; }
+  [data-theme="light"] .hl-keyword { color: #AF00DB; }
+  [data-theme="light"] .hl-string { color: #A31515; }
+  [data-theme="light"] .hl-variable { color: #001080; }
+  [data-theme="light"] .hl-boolean { color: #0000FF; }
+  [data-theme="light"] .hl-number { color: #098658; }
+  [data-theme="light"] .hl-command { color: #795E26; }
+  [data-theme="light"] .hl-type { color: #267F99; }
+  [data-theme="light"] .hl-attribute { color: #001080; }
+  [data-theme="light"] .hl-resource-type { color: #267F99; }
+  [data-theme="light"] .hl-resource-name { color: #A31515; }
   
   .scripts-empty {
     text-align: center;
@@ -2003,6 +2145,66 @@ const styles = `
     .stat-label {
       margin-top: 0;
       font-size: 13px;
+    }
+  }
+  
+  /* Certifications Grid */
+  .certifications-grid {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .certification-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+  
+  .certification-badge:hover {
+    transform: translateY(-4px);
+  }
+  
+  .certification-badge a {
+    text-decoration: none;
+    color: var(--text-muted);
+  }
+  
+  .certification-badge a:hover {
+    color: var(--accent-blue);
+  }
+  
+  .certification-name {
+    margin-top: 8px;
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.3;
+    max-width: 140px;
+  }
+  
+  /* Credly iframe styling */
+  .certification-badge iframe {
+    border: none;
+  }
+  
+  @media (max-width: 768px) {
+    .certifications-grid {
+      gap: 16px;
+    }
+    
+    .certification-name {
+      font-size: 10px;
+      max-width: 120px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .certifications-grid {
+      gap: 12px;
     }
   }
   
@@ -3514,6 +3716,200 @@ const styles = `
     font-family: var(--font-mono);
   }
   
+  .footer-tech {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .footer-item {
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .footer-separator {
+    color: var(--text-muted);
+    margin: 0 4px;
+  }
+  
+  /* Diagrams Page */
+  .diagrams-page {
+    padding: 80px 0 40px;
+    min-height: 100vh;
+  }
+  
+  .diagram-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  
+  .diagram-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .diagram-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+  
+  .diagram-header p {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  
+  .diagram-container {
+    padding: 24px;
+    background: #0a0a0f;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+  }
+  
+  .network-diagram {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+  }
+  
+  .diagram-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+  }
+  
+  .diagram-detail-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  .diagram-detail-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+  }
+  
+  .diagram-detail-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .diagram-detail-card li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    font-family: var(--font-mono);
+  }
+  
+  .diagram-detail-card li strong {
+    color: var(--text-primary);
+  }
+  
+  @media (max-width: 768px) {
+    .diagram-container {
+      padding: 12px;
+    }
+    
+    .diagram-details {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Terraform Code Section */
+  .terraform-code-section {
+    background: #0d1117;
+    border-radius: 0 0 12px 12px;
+  }
+  
+  .terraform-code-tabs {
+    display: flex;
+    gap: 0;
+    padding: 12px 24px 0;
+    border-bottom: 1px solid #30363d;
+  }
+  
+  .terraform-tab {
+    padding: 10px 20px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    color: #58a6ff;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .terraform-tab.active {
+    background: #0d1117;
+    border-bottom: 1px solid #0d1117;
+    margin-bottom: -1px;
+  }
+  
+  .terraform-code-content {
+    padding: 0;
+    max-height: 600px;
+    overflow: auto;
+  }
+  
+  .terraform-code {
+    margin: 0;
+    padding: 20px 24px;
+    background: transparent;
+    color: #c9d1d9;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  
+  .terraform-code-highlighted {
+    margin: 0;
+    padding: 20px 24px;
+    background: transparent;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  
+  /* Terraform code block uses unified hl- classes defined above */
+  
+  .terraform-code-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .terraform-code-content::-webkit-scrollbar-track {
+    background: #161b22;
+  }
+  
+  .terraform-code-content::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 4px;
+  }
+  
+  .terraform-code-content::-webkit-scrollbar-thumb:hover {
+    background: #484f58;
+  }
+  
   /* Loading States */
   .skeleton {
     background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-card) 50%, var(--bg-tertiary) 75%);
@@ -3551,7 +3947,7 @@ const styles = `
 // COMPONENTS
 // ============================================================================
 
-// GitHub Stats Hook
+// GitHub Stats Hook - Optimized with caching
 function useGitHubStats(username) {
   const [stats, setStats] = useState(null);
   const [repos, setRepos] = useState([]);
@@ -3564,41 +3960,55 @@ function useGitHubStats(username) {
       return;
     }
     
+    // Check for cached data (valid for 5 minutes)
+    const cacheKey = `github_stats_${username}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const { data, timestamp } = JSON.parse(cached);
+        if (Date.now() - timestamp < 5 * 60 * 1000) {
+          setStats(data.stats);
+          setRepos(data.repos);
+          setLinesOfCode(data.linesOfCode);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        sessionStorage.removeItem(cacheKey);
+      }
+    }
+    
     async function fetchData() {
       try {
-        // Fetch user data
-        const userRes = await fetch(`https://api.github.com/users/${username}`);
+        // Fetch user data and repos in parallel
+        const [userRes, allReposRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${username}`),
+          fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`)
+        ]);
+        
         if (!userRes.ok) {
           console.warn('GitHub API rate limited or user not found');
           setLoading(false);
           return;
         }
-        const userData = await userRes.json();
         
-        // Fetch all repos for stats calculation
-        const allReposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
-        const allReposData = await allReposRes.json();
+        const [userData, allReposData] = await Promise.all([
+          userRes.json(),
+          allReposRes.json()
+        ]);
         
-        // Get top 6 repos for display and fetch their languages
-        const displayReposRaw = allReposData.slice(0, 6);
+        // Get top 6 repos for display - skip language fetch for speed
+        const displayRepos = allReposData.slice(0, 6).map(repo => ({
+          ...repo,
+          languages: {} // Skip individual language fetches to improve speed
+        }));
         
-        // Fetch languages for each display repo
-        const displayRepos = await Promise.all(
-          displayReposRaw.map(async (repo) => {
-            try {
-              const langRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/languages`);
-              const langData = await langRes.json();
-              return { ...repo, languages: langData };
-            } catch (e) {
-              return { ...repo, languages: {} };
-            }
-          })
-        );
-        
-        setStats({
+        const statsData = {
           publicRepos: userData.public_repos,
           followers: userData.followers,
-        });
+        };
+        
+        setStats(statsData);
         setRepos(displayRepos);
         
         // Fetch lines of code from contributor stats with retry logic
@@ -3641,7 +4051,14 @@ function useGitHubStats(username) {
         });
         
         await Promise.all(statsPromises);
-        setLinesOfCode({ added: totalAdded, deleted: totalDeleted });
+        const linesData = { added: totalAdded, deleted: totalDeleted };
+        setLinesOfCode(linesData);
+        
+        // Cache the results
+        sessionStorage.setItem(cacheKey, JSON.stringify({
+          data: { stats: statsData, repos: displayRepos, linesOfCode: linesData },
+          timestamp: Date.now()
+        }));
         
       } catch (error) {
         console.error('Error fetching GitHub data:', error);
@@ -3748,6 +4165,10 @@ export default function App() {
   const [selectedTfSubcategory, setSelectedTfSubcategory] = useState(null);
   const [theme, setTheme] = useState('dark');
   const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
+  const [selectedDiagram, setSelectedDiagram] = useState('vpc-sales');
+  const [diagramCardExpanded, setDiagramCardExpanded] = useState(false);
+  const [diagramCodeExpanded, setDiagramCodeExpanded] = useState(false);
+  const [diagramSearch, setDiagramSearch] = useState('');
   const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
   
@@ -3876,18 +4297,31 @@ export default function App() {
     }
   };
   
-  // Load Credly embed script when badges are configured
+  // Load Credly embed script when badges are configured and when returning to Home tab
   useEffect(() => {
-    if (CONFIG.credlyBadges.length > 0) {
-      const script = document.createElement('script');
-      script.src = '//cdn.credly.com/assets/utilities/embed.js';
-      script.async = true;
-      document.body.appendChild(script);
+    if (CONFIG.credlyBadges.length > 0 && activeTab === 'home') {
+      // Remove any existing Credly script first
+      const existingScript = document.querySelector('script[src*="credly.com"]');
+      if (existingScript) {
+        existingScript.remove();
+      }
+      
+      // Clear any existing iframes from previous loads
+      document.querySelectorAll('.certification-badge iframe').forEach(iframe => iframe.remove());
+      
+      // Small delay to ensure React has rendered the badge elements
+      const timer = setTimeout(() => {
+        const script = document.createElement('script');
+        script.src = '//cdn.credly.com/assets/utilities/embed.js';
+        script.async = true;
+        document.body.appendChild(script);
+      }, 200);
+      
       return () => {
-        document.body.removeChild(script);
+        clearTimeout(timer);
       };
     }
-  }, []);
+  }, [activeTab]);
   
   return (
     <>
@@ -3924,7 +4358,7 @@ export default function App() {
             <button onClick={() => setCurrentPage('home')} className={`nav-tab ${currentPage === 'home' ? 'active' : ''}`}>Home</button>
             <button onClick={() => setCurrentPage('scripts')} className={`nav-tab ${currentPage === 'scripts' ? 'active' : ''}`}>Scripts</button>
             <button onClick={() => setCurrentPage('terraform')} className={`nav-tab ${currentPage === 'terraform' ? 'active' : ''}`}>Terraform Modules</button>
-            <button className="nav-tab coming-soon" title="Coming Soon">Diagrams</button>
+            <button onClick={() => setCurrentPage('diagrams')} className={`nav-tab ${currentPage === 'diagrams' ? 'active' : ''}`}>Diagrams</button>
           </nav>
         </div>
       </header>
@@ -4095,7 +4529,7 @@ export default function App() {
                             </button>
                           </div>
                           <div className="script-item-code">
-                            <pre dangerouslySetInnerHTML={{ __html: highlightCode(script.code, script.category) }} />
+                            <pre><HighlightedCode code={script.code} /></pre>
                           </div>
                         </div>
                       </div>
@@ -4266,7 +4700,7 @@ export default function App() {
                             </button>
                           </div>
                           <div className="script-item-code">
-                            <pre dangerouslySetInnerHTML={{ __html: highlightTerraform(module.code) }} />
+                            <pre><HighlightedCode code={module.code} /></pre>
                           </div>
                         </div>
                       </div>
@@ -4278,6 +4712,474 @@ export default function App() {
                   </div>
                 )}
               </div>
+            </main>
+          </div>
+        </div>
+      )}
+      
+      {/* Diagrams Page */}
+      {currentPage === 'diagrams' && (
+        <div className="scripts-page">
+          <div className="scripts-layout">
+            {/* Sidebar */}
+            <aside className="scripts-sidebar">
+              <div className="sidebar-search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input 
+                  type="text" 
+                  placeholder="Search diagrams..." 
+                  value={diagramSearch}
+                  onChange={(e) => setDiagramSearch(e.target.value)}
+                />
+              </div>
+              
+              <div className="sidebar-categories">
+                {/* AWS Category */}
+                <div className="sidebar-category">
+                  <div className="sidebar-category-header" style={{ cursor: 'default' }}>
+                    <div className="category-label">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF9900">
+                        <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586z"/>
+                      </svg>
+                      AWS Architectures
+                    </div>
+                    <span className="sidebar-count">1</span>
+                  </div>
+                  <div className="sidebar-subcategories" style={{ display: 'block' }}>
+                    <div 
+                      className={`sidebar-subcategory ${selectedDiagram === 'vpc-sales' ? 'active' : ''}`}
+                      onClick={() => setSelectedDiagram('vpc-sales')}
+                    >
+                      <span className="subcategory-label">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#8B5CF6">
+                          <path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2z"/>
+                        </svg>
+                        VPC - Sales Website
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Coming Soon */}
+                <div className="sidebar-category">
+                  <div className="sidebar-category-header" style={{ cursor: 'default', opacity: 0.5 }}>
+                    <div className="category-label">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#0078D4">
+                        <path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04z"/>
+                      </svg>
+                      Azure Architectures
+                    </div>
+                    <span className="sidebar-count coming-soon-badge">Soon</span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+            
+            {/* Main Content */}
+            <main className="scripts-main">
+              {selectedDiagram === 'vpc-sales' && (
+                <>
+                  <div className="diagram-card" style={{ maxWidth: '100%' }}>
+                    <div 
+                      className="diagram-header"
+                      onClick={() => setDiagramCardExpanded(!diagramCardExpanded)}
+                      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                    >
+                      <div>
+                        <h3>AWS VPC - Sales Website Architecture</h3>
+                        <p>High-availability web application with Auto Scaling, RDS Multi-AZ, WAF & Shield protection</p>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{diagramCardExpanded ? 'Collapse' : 'Expand'}</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: diagramCardExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {diagramCardExpanded && (
+                    <>
+                    {/* Terraform Code Section - Collapsible - Above the diagram */}
+                    <div 
+                      className="terraform-code-header"
+                      onClick={() => setDiagramCodeExpanded(!diagramCodeExpanded)}
+                      style={{ 
+                        cursor: 'pointer', 
+                        padding: '16px 24px', 
+                        borderTop: '1px solid var(--border)', 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                          <polyline points="14,2 14,8 20,8"/>
+                          <line x1="16" y1="13" x2="8" y2="13"/>
+                          <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        <div>
+                          <h4 style={{ margin: 0, fontSize: '15px', color: '#a78bfa', fontFamily: 'monospace' }}>Terraform Infrastructure Code</h4>
+                          <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Complete IaC ready for CI/CD pipeline deployment</p>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{diagramCodeExpanded ? 'Collapse' : 'Expand'}</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2" style={{ transform: diagramCodeExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {diagramCodeExpanded && (
+                      <div className="terraform-code-section" style={{ background: '#0d1117' }}>
+                        <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center' }}>
+                          <span className="terraform-tab active" style={{ background: '#0d1117', color: '#58a6ff', padding: '6px 16px', borderRadius: '6px 6px 0 0', fontSize: '13px', fontFamily: 'monospace' }}>main.tf</span>
+                          <button 
+                            className={`copy-btn ${copiedId === 'terraform-vpc' ? 'copied' : ''}`}
+                            onClick={(e) => { e.stopPropagation(); copy(VPC_TERRAFORM_CODE, 'terraform-vpc'); }}
+                            style={{ marginLeft: 'auto', background: '#21262d', border: '1px solid #30363d', color: '#c9d1d9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: 'monospace' }}
+                          >
+                            {copiedId === 'terraform-vpc' ? '✓ Copied' : '📋 Copy Code'}
+                          </button>
+                        </div>
+                        <div className="terraform-code-content" style={{ maxHeight: '500px', overflow: 'auto' }}>
+                          <pre 
+                            className="terraform-code-highlighted" 
+                            style={{ 
+                              margin: 0, 
+                              padding: '20px 24px', 
+                              background: '#0d1117', 
+                              color: '#c9d1d9', 
+                              fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", 
+                              fontSize: '13px', 
+                              lineHeight: '1.6'
+                            }}
+                          ><HighlightedCode code={VPC_TERRAFORM_CODE} /></pre>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="diagram-container" style={{ padding: '24px', overflow: 'auto' }}>
+                      <svg viewBox="0 0 1200 850" className="network-diagram" style={{ minWidth: '1100px' }}>
+                  {/* Background */}
+                  <defs>
+                    <linearGradient id="vpcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1a1a2e" />
+                      <stop offset="100%" stopColor="#16213e" />
+                    </linearGradient>
+                    <linearGradient id="subnetGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#0f3460" />
+                      <stop offset="100%" stopColor="#1a1a2e" />
+                    </linearGradient>
+                    <linearGradient id="privateSubnetGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#1e1b4b" />
+                      <stop offset="100%" stopColor="#1a1a2e" />
+                    </linearGradient>
+                    <filter id="glow">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#8B5CF6"/>
+                    </marker>
+                    <marker id="arrowheadOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#FF9900"/>
+                    </marker>
+                    <marker id="arrowheadCyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#06b6d4"/>
+                    </marker>
+                    
+                    {/* AWS Service Icons */}
+                    <symbol id="aws-vpc-icon" viewBox="0 0 24 24">
+                      <rect x="2" y="2" width="20" height="20" rx="2" fill="none" stroke="#8B5CF6" strokeWidth="2"/>
+                      <path d="M7 7h10v10H7z" fill="none" stroke="#8B5CF6" strokeWidth="1.5"/>
+                      <circle cx="12" cy="12" r="2" fill="#8B5CF6"/>
+                    </symbol>
+                    <symbol id="aws-ec2-icon" viewBox="0 0 24 24">
+                      <rect x="3" y="3" width="18" height="18" rx="2" fill="#FF9900"/>
+                      <rect x="6" y="8" width="12" height="8" rx="1" fill="#232f3e"/>
+                      <circle cx="9" cy="12" r="1.5" fill="#FF9900"/>
+                      <circle cx="15" cy="12" r="1.5" fill="#FF9900"/>
+                    </symbol>
+                    <symbol id="aws-rds-icon" viewBox="0 0 24 24">
+                      <ellipse cx="12" cy="6" rx="8" ry="3" fill="#3B48CC"/>
+                      <path d="M4 6v12c0 1.66 3.58 3 8 3s8-1.34 8-3V6" fill="none" stroke="#3B48CC" strokeWidth="2"/>
+                      <ellipse cx="12" cy="12" rx="8" ry="3" fill="none" stroke="#3B48CC" strokeWidth="1"/>
+                      <ellipse cx="12" cy="18" rx="8" ry="3" fill="none" stroke="#3B48CC" strokeWidth="1"/>
+                    </symbol>
+                    <symbol id="aws-alb-icon" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9" fill="none" stroke="#8B5CF6" strokeWidth="2"/>
+                      <path d="M12 6v12M6 12h12" stroke="#8B5CF6" strokeWidth="2"/>
+                      <circle cx="12" cy="12" r="3" fill="#8B5CF6"/>
+                    </symbol>
+                    <symbol id="aws-waf-icon" viewBox="0 0 24 24">
+                      <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="none" stroke="#ef4444" strokeWidth="2"/>
+                      <path d="M9 12l2 2 4-4" stroke="#ef4444" strokeWidth="2" fill="none"/>
+                    </symbol>
+                    <symbol id="aws-shield-icon" viewBox="0 0 24 24">
+                      <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" fill="#06b6d4" fillOpacity="0.3" stroke="#06b6d4" strokeWidth="2"/>
+                      <path d="M12 6v10M8 11h8" stroke="#06b6d4" strokeWidth="2"/>
+                    </symbol>
+                    <symbol id="aws-igw-icon" viewBox="0 0 24 24">
+                      <rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="#FF9900" strokeWidth="2"/>
+                      <path d="M12 4v4M12 16v4M4 12H2M22 12h-2" stroke="#FF9900" strokeWidth="2"/>
+                    </symbol>
+                  </defs>
+                  
+                  {/* AWS Cloud Border */}
+                  <rect x="20" y="20" width="1160" height="810" rx="12" fill="none" stroke="#FF9900" strokeWidth="2" strokeDasharray="8,4" opacity="0.5"/>
+                  <text x="40" y="50" fill="#FF9900" fontSize="16" fontFamily="monospace" fontWeight="bold">AWS Cloud (us-east-1)</text>
+                  
+                  {/* AWS Shield Advanced */}
+                  <rect x="450" y="35" width="320" height="40" rx="6" fill="#232f3e" stroke="#06b6d4" strokeWidth="2"/>
+                  <use href="#aws-shield-icon" x="460" y="40" width="28" height="28"/>
+                  <text x="620" y="62" fill="#06b6d4" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">AWS Shield Advanced (DDoS)</text>
+                  
+                  {/* AWS WAF */}
+                  <rect x="470" y="90" width="280" height="45" rx="6" fill="#232f3e" stroke="#ef4444" strokeWidth="2"/>
+                  <use href="#aws-waf-icon" x="480" y="98" width="30" height="30"/>
+                  <text x="630" y="118" fill="#ef4444" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">AWS WAF (Firewall)</text>
+                  
+                  {/* VPC Container */}
+                  <rect x="40" y="150" width="1120" height="660" rx="10" fill="url(#vpcGradient)" stroke="#8B5CF6" strokeWidth="3"/>
+                  <use href="#aws-vpc-icon" x="60" y="162" width="24" height="24"/>
+                  <text x="90" y="180" fill="#8B5CF6" fontSize="18" fontWeight="bold" fontFamily="monospace">VPC: 10.11.0.0/16</text>
+                  
+                  {/* Internet Gateway */}
+                  <rect x="545" y="160" width="130" height="40" rx="6" fill="#232f3e" stroke="#FF9900" strokeWidth="2"/>
+                  <use href="#aws-igw-icon" x="552" y="166" width="26" height="26"/>
+                  <text x="630" y="186" fill="#FF9900" fontSize="12" textAnchor="middle" fontFamily="monospace" fontWeight="bold">IGW</text>
+                  
+                  {/* Application Load Balancer */}
+                  <rect x="480" y="215" width="260" height="55" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glow)"/>
+                  <use href="#aws-alb-icon" x="492" y="225" width="30" height="30"/>
+                  <text x="630" y="240" fill="#8B5CF6" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Application Load Balancer</text>
+                  <text x="630" y="258" fill="#a78bfa" fontSize="11" textAnchor="middle" fontFamily="monospace">sales.example.com</text>
+                  
+                  {/* Connection from Shield to WAF to IGW to ALB */}
+                  <line x1="610" y1="75" x2="610" y2="90" stroke="#06b6d4" strokeWidth="2"/>
+                  <line x1="610" y1="135" x2="610" y2="160" stroke="#ef4444" strokeWidth="2"/>
+                  <line x1="610" y1="200" x2="610" y2="215" stroke="#FF9900" strokeWidth="2"/>
+                  
+                  {/* PUBLIC SUBNETS SECTION */}
+                  <text x="60" y="295" fill="#22c55e" fontSize="14" fontWeight="bold" fontFamily="monospace">PUBLIC SUBNETS (Web Tier)</text>
+                  
+                  {/* Subnet 1 - AZ-A (2 servers due to ASG scaling) */}
+                  <rect x="55" y="310" width="340" height="220" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="225" y="335" fill="#22c55e" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet A</text>
+                  <text x="225" y="352" fill="#4ade80" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.1.0/24 | us-east-1a</text>
+                  
+                  {/* Web Server 1A */}
+                  <rect x="70" y="370" width="145" height="65" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="78" y="378" width="22" height="22"/>
+                  <text x="155" y="392" fill="#3b82f6" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1A</text>
+                  <text x="142" y="410" fill="#60a5fa" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.1.10</text>
+                  <text x="142" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">t3.medium</text>
+                  
+                  {/* Web Server 2A (ASG scaled) */}
+                  <rect x="230" y="370" width="145" height="65" rx="6" fill="#1e293b" stroke="#f59e0b" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="238" y="378" width="22" height="22"/>
+                  <text x="315" y="392" fill="#f59e0b" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 2A</text>
+                  <text x="302" y="410" fill="#fbbf24" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.1.11</text>
+                  <text x="302" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">ASG Scaled</text>
+                  
+                  {/* ASG indicator for Subnet A */}
+                  <rect x="70" y="450" width="305" height="30" rx="6" fill="#292524" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="222" y="470" fill="#f59e0b" fontSize="10" textAnchor="middle" fontFamily="monospace">⚡ ASG: 2/3 instances (High Traffic)</text>
+                  
+                  {/* Subnet 2 - AZ-B */}
+                  <rect x="420" y="310" width="340" height="220" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="590" y="335" fill="#22c55e" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet B</text>
+                  <text x="590" y="352" fill="#4ade80" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.2.0/24 | us-east-1b</text>
+                  
+                  {/* Web Server 1B */}
+                  <rect x="510" y="370" width="160" height="65" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="518" y="378" width="22" height="22"/>
+                  <text x="605" y="392" fill="#3b82f6" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1B</text>
+                  <text x="590" y="410" fill="#60a5fa" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.2.10</text>
+                  <text x="590" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">t3.medium</text>
+                  
+                  {/* ASG indicator for Subnet B */}
+                  <rect x="435" y="450" width="305" height="30" rx="6" fill="#292524" stroke="#22c55e" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="587" y="470" fill="#22c55e" fontSize="10" textAnchor="middle" fontFamily="monospace">ASG: 1/3 instances (Normal)</text>
+                  
+                  {/* Subnet 3 - AZ-C */}
+                  <rect x="785" y="310" width="340" height="220" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="955" y="335" fill="#22c55e" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet C</text>
+                  <text x="955" y="352" fill="#4ade80" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.3.0/24 | us-east-1c</text>
+                  
+                  {/* Web Server 1C */}
+                  <rect x="875" y="370" width="160" height="65" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="883" y="378" width="22" height="22"/>
+                  <text x="970" y="392" fill="#3b82f6" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1C</text>
+                  <text x="955" y="410" fill="#60a5fa" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.3.10</text>
+                  <text x="955" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">t3.medium</text>
+                  
+                  {/* ASG indicator for Subnet C */}
+                  <rect x="800" y="450" width="305" height="30" rx="6" fill="#292524" stroke="#22c55e" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="952" y="470" fill="#22c55e" fontSize="10" textAnchor="middle" fontFamily="monospace">ASG: 1/3 instances (Normal)</text>
+                  
+                  {/* Connection lines from ALB to public subnets */}
+                  <line x1="540" y1="270" x2="225" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
+                  <line x1="610" y1="270" x2="590" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
+                  <line x1="680" y1="270" x2="955" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
+                  
+                  {/* PRIVATE SUBNETS SECTION */}
+                  <text x="60" y="560" fill="#a855f7" fontSize="14" fontWeight="bold" fontFamily="monospace">PRIVATE SUBNETS (Database Tier)</text>
+                  
+                  {/* Private Subnet 1 - AZ-A */}
+                  <rect x="55" y="575" width="340" height="160" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
+                  <text x="225" y="600" fill="#a855f7" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet A</text>
+                  <text x="225" y="618" fill="#c084fc" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.101.0/24 | us-east-1a</text>
+                  
+                  {/* RDS Writer in Private Subnet A */}
+                  <rect x="75" y="635" width="240" height="70" rx="6" fill="#1e293b" stroke="#06b6d4" strokeWidth="2"/>
+                  <use href="#aws-rds-icon" x="85" y="645" width="26" height="26"/>
+                  <text x="210" y="660" fill="#06b6d4" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Writer</text>
+                  <text x="195" y="680" fill="#22d3ee" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.101.10 | db.r5.large</text>
+                  <text x="195" y="695" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Primary</text>
+                  
+                  {/* Private Subnet 2 - AZ-B */}
+                  <rect x="420" y="575" width="340" height="160" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
+                  <text x="590" y="600" fill="#a855f7" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet B</text>
+                  <text x="590" y="618" fill="#c084fc" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.102.0/24 | us-east-1b</text>
+                  
+                  {/* RDS Reader in Private Subnet B */}
+                  <rect x="440" y="635" width="240" height="70" rx="6" fill="#1e293b" stroke="#10b981" strokeWidth="2"/>
+                  <use href="#aws-rds-icon" x="450" y="645" width="26" height="26"/>
+                  <text x="575" y="660" fill="#10b981" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Reader</text>
+                  <text x="560" y="680" fill="#34d399" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.102.10 | db.r5.large</text>
+                  <text x="560" y="695" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Replica</text>
+                  
+                  {/* Private Subnet 3 - AZ-C */}
+                  <rect x="785" y="575" width="340" height="160" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
+                  <text x="955" y="600" fill="#a855f7" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet C</text>
+                  <text x="955" y="618" fill="#c084fc" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.103.0/24 | us-east-1c</text>
+                  
+                  {/* Standby indicator */}
+                  <rect x="830" y="635" width="240" height="70" rx="6" fill="#1e293b" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="950" y="670" fill="#6b7280" fontSize="11" textAnchor="middle" fontFamily="monospace">Failover Standby</text>
+                  <text x="950" y="690" fill="#4b5563" fontSize="10" textAnchor="middle" fontFamily="monospace">(Multi-AZ Ready)</text>
+                  
+                  {/* RDS Replication line */}
+                  <line x1="315" y1="670" x2="440" y2="670" stroke="#06b6d4" strokeWidth="2" strokeDasharray="5,3"/>
+                  <text x="377" y="660" fill="#06b6d4" fontSize="10" textAnchor="middle" fontFamily="monospace">sync</text>
+                  
+                  {/* Connection lines from Web Servers to RDS - drawn behind other elements */}
+                  <line x1="142" y1="495" x2="142" y2="555" stroke="#06b6d4" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="142" y1="555" x2="195" y2="555" stroke="#06b6d4" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="195" y1="555" x2="195" y2="635" stroke="#06b6d4" strokeWidth="1.5" opacity="0.4"/>
+                  
+                  <line x1="590" y1="495" x2="590" y2="565" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="590" y1="565" x2="560" y2="565" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="560" y1="565" x2="560" y2="635" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
+                  
+                  <line x1="955" y1="495" x2="955" y2="555" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="955" y1="555" x2="560" y2="555" stroke="#10b981" strokeWidth="1.5" opacity="0.4" strokeDasharray="4,2"/>
+                  
+                  {/* Traffic flow indicators */}
+                  <circle cx="380" cy="290" r="5" fill="#8B5CF6">
+                    <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="600" cy="290" r="5" fill="#8B5CF6">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="820" cy="290" r="5" fill="#8B5CF6">
+                    <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+                  </circle>
+                  
+                  {/* Legend */}
+                  <rect x="55" y="760" width="1090" height="55" rx="6" fill="#1e1e2e" stroke="#374151" strokeWidth="1"/>
+                  <text x="600" y="780" fill="#9ca3af" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">LEGEND</text>
+                  
+                  {/* Legend items - single row */}
+                  <circle cx="100" cy="800" r="6" fill="#3b82f6"/>
+                  <text x="115" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">EC2</text>
+                  <circle cx="180" cy="800" r="6" fill="#f59e0b"/>
+                  <text x="195" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">ASG</text>
+                  <circle cx="260" cy="800" r="6" fill="#06b6d4"/>
+                  <text x="275" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">RDS Writer</text>
+                  <circle cx="380" cy="800" r="6" fill="#10b981"/>
+                  <text x="395" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">RDS Reader</text>
+                  <rect x="500" y="794" width="12" height="12" fill="none" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="520" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">Public</text>
+                  <rect x="590" y="794" width="12" height="12" fill="none" stroke="#a855f7" strokeWidth="2"/>
+                  <text x="610" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">Private</text>
+                  <rect x="690" y="794" width="12" height="12" fill="none" stroke="#ef4444" strokeWidth="2"/>
+                  <text x="710" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">WAF</text>
+                  <rect x="770" y="794" width="12" height="12" fill="none" stroke="#06b6d4" strokeWidth="2"/>
+                  <text x="790" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">Shield</text>
+                  <rect x="860" y="794" width="12" height="12" fill="none" stroke="#8B5CF6" strokeWidth="2"/>
+                  <text x="880" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">ALB</text>
+                  <rect x="940" y="794" width="12" height="12" fill="none" stroke="#FF9900" strokeWidth="2"/>
+                  <text x="960" y="804" fill="#9ca3af" fontSize="10" fontFamily="monospace">IGW</text>
+                </svg>
+              </div>
+              
+              <div className="diagram-details">
+                <div className="diagram-detail-card">
+                  <h4>VPC Configuration</h4>
+                  <ul>
+                    <li><strong>CIDR Block:</strong> 10.11.0.0/16</li>
+                    <li><strong>Available IPs:</strong> 65,536</li>
+                    <li><strong>Region:</strong> us-east-1</li>
+                    <li><strong>AZs:</strong> 3 (a, b, c)</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>Public Subnets (Web Tier)</h4>
+                  <ul>
+                    <li><strong>Subnet A:</strong> 10.11.1.0/24</li>
+                    <li><strong>Subnet B:</strong> 10.11.2.0/24</li>
+                    <li><strong>Subnet C:</strong> 10.11.3.0/24</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>Private Subnets (DB Tier)</h4>
+                  <ul>
+                    <li><strong>Subnet A:</strong> 10.11.101.0/24</li>
+                    <li><strong>Subnet B:</strong> 10.11.102.0/24</li>
+                    <li><strong>Subnet C:</strong> 10.11.103.0/24</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>Auto Scaling Group</h4>
+                  <ul>
+                    <li><strong>Min:</strong> 3 | <strong>Max:</strong> 9</li>
+                    <li><strong>Current:</strong> 4 (high traffic AZ-A)</li>
+                    <li><strong>Instance:</strong> t3.medium</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>RDS Configuration</h4>
+                  <ul>
+                    <li><strong>Engine:</strong> PostgreSQL 15</li>
+                    <li><strong>Instance:</strong> db.r5.large</li>
+                    <li><strong>Multi-AZ:</strong> Enabled</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>Security</h4>
+                  <ul>
+                    <li><strong>WAF:</strong> SQL injection, XSS</li>
+                    <li><strong>Shield:</strong> DDoS protection</li>
+                    <li><strong>ACLs:</strong> Network isolation</li>
+                  </ul>
+                </div>
+              </div>
+              </>
+              )}
+              </div>
+                </>
+              )}
             </main>
           </div>
         </div>
@@ -4343,6 +5245,38 @@ export default function App() {
           </div>
           
           </div>
+      </section>
+      
+      {/* Certifications Section - Credly Badges */}
+      <section className="section" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+        <div className="container">
+          <div className="section-header">
+            <p className="section-label">// Verified Credentials</p>
+            <h2 className="section-title">Certifications</h2>
+          </div>
+          
+          <div className="certifications-grid">
+            {CONFIG.credlyBadges.map((badge, index) => (
+              <div 
+                key={index}
+                className="certification-badge"
+                data-iframe-width="150"
+                data-iframe-height="270"
+                data-share-badge-id={badge.id}
+                data-share-badge-host="https://www.credly.com"
+              >
+                <a 
+                  href={`https://www.credly.com/badges/${badge.id}/public_url`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={badge.name}
+                >
+                  <span className="certification-name">{badge.name}</span>
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
       
       {/* Architecture Section - How This Site is Built */}
@@ -4963,7 +5897,28 @@ export default function App() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>Built with React • Deployed with Terraform • Hosted on AWS</p>
+          <p className="footer-tech">
+            <span className="footer-item">
+              Built with React
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#61DAFB" style={{ marginLeft: '6px', verticalAlign: 'middle' }}>
+                <path d="M12 9.861a2.139 2.139 0 1 0 0 4.278 2.139 2.139 0 1 0 0-4.278zm-5.992 6.394l-.472-.12C2.018 15.246 0 13.737 0 11.996s2.018-3.25 5.536-4.139l.472-.119.133.468a23.53 23.53 0 0 0 1.363 3.578l.101.213-.101.213a23.307 23.307 0 0 0-1.363 3.578l-.133.467zM5.317 8.95c-2.674.751-4.315 1.9-4.315 3.046 0 1.145 1.641 2.294 4.315 3.046a24.95 24.95 0 0 1 1.182-3.046A24.752 24.752 0 0 1 5.317 8.95zm12.675 7.305l-.133-.469a23.357 23.357 0 0 0-1.364-3.577l-.101-.213.101-.213a23.42 23.42 0 0 0 1.364-3.578l.133-.468.473.119c3.517.889 5.535 2.398 5.535 4.14s-2.018 3.25-5.535 4.139l-.473.12zm-.491-4.259c.48 1.039.877 2.06 1.182 3.046 2.675-.752 4.315-1.901 4.315-3.046 0-1.146-1.641-2.294-4.315-3.046a24.788 24.788 0 0 1-1.182 3.046zM5.31 8.945l-.133-.467C4.188 4.992 4.488 2.494 6 1.622c1.483-.856 3.864.155 6.359 2.716l.34.349-.34.349a23.552 23.552 0 0 0-2.422 2.967l-.135.193-.235.02a23.657 23.657 0 0 0-3.785.61l-.472.119zm1.896-6.63c-.268 0-.505.058-.705.173-.994.573-1.17 2.565-.485 5.253a25.122 25.122 0 0 1 3.233-.501 24.847 24.847 0 0 1 2.052-2.544c-1.56-1.519-3.037-2.381-4.095-2.381zm9.589 20.362c-.001 0-.001 0 0 0-1.425 0-3.255-1.073-5.154-3.023l-.34-.349.34-.349a23.53 23.53 0 0 0 2.421-2.968l.135-.193.234-.02a23.63 23.63 0 0 0 3.787-.609l.472-.119.134.468c.987 3.484.688 5.983-.824 6.854a2.38 2.38 0 0 1-1.205.308zm-4.096-3.381c1.56 1.519 3.037 2.381 4.095 2.381h.001c.267 0 .505-.058.704-.173.994-.573 1.171-2.566.485-5.254a25.02 25.02 0 0 1-3.234.501 24.674 24.674 0 0 1-2.051 2.545zM18.69 8.945l-.472-.119a23.479 23.479 0 0 0-3.787-.61l-.234-.02-.135-.193a23.414 23.414 0 0 0-2.421-2.967l-.34-.349.34-.349C14.135 1.778 16.515.767 18 1.622c1.512.872 1.812 3.37.824 6.855l-.134.468zM14.75 7.24c1.142.104 2.227.273 3.234.501.686-2.688.509-4.68-.485-5.253-.988-.571-2.845.304-4.8 2.208A24.849 24.849 0 0 1 14.75 7.24zM7.206 22.677A2.38 2.38 0 0 1 6 22.369c-1.512-.871-1.812-3.369-.823-6.854l.132-.468.472.119c1.155.291 2.429.496 3.785.609l.235.02.134.193a23.596 23.596 0 0 0 2.422 2.968l.34.349-.34.349c-1.898 1.95-3.728 3.023-5.151 3.023zm-1.19-6.427c-.686 2.688-.509 4.681.485 5.254.987.563 2.843-.305 4.8-2.208a24.998 24.998 0 0 1-2.052-2.545 24.976 24.976 0 0 1-3.233-.501zm5.984.628c-.823 0-1.669-.036-2.516-.106l-.235-.02-.135-.193a30.388 30.388 0 0 1-1.35-2.122 30.354 30.354 0 0 1-1.166-2.228l-.1-.213.1-.213a30.3 30.3 0 0 1 1.166-2.228c.414-.716.869-1.43 1.35-2.122l.135-.193.235-.02a29.785 29.785 0 0 1 5.033 0l.234.02.134.193a30.006 30.006 0 0 1 2.517 4.35l.101.213-.101.213a29.6 29.6 0 0 1-2.517 4.35l-.134.193-.234.02c-.847.07-1.694.106-2.517.106zm-2.197-1.084c1.48.111 2.914.111 4.395 0a29.006 29.006 0 0 0 2.196-3.798 28.585 28.585 0 0 0-2.197-3.798 29.031 29.031 0 0 0-4.394 0 28.477 28.477 0 0 0-2.197 3.798 29.114 29.114 0 0 0 2.197 3.798z"/>
+              </svg>
+            </span>
+            <span className="footer-separator">•</span>
+            <span className="footer-item">
+              Deployed with Terraform
+              <svg width="18" height="18" viewBox="0 0 128 128" fill="#7B42BC" style={{ marginLeft: '6px', verticalAlign: 'middle' }}>
+                <path d="M77.941 44.5v36.836L46.324 62.918V26.082zm0 42.138L46.324 105.3V68.464l31.617-18.662zM81.41 81.336l31.633-18.662V25.838L81.41 44.5zm0-62.838L49.793 0v36.836l31.617 18.662z"/>
+              </svg>
+            </span>
+            <span className="footer-separator">•</span>
+            <span className="footer-item">
+              Hosted on AWS
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF9900" style={{ marginLeft: '6px', verticalAlign: 'middle' }}>
+                <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 0 0-.735-.136 6.02 6.02 0 0 0-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 0 1-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 0 1 .32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 0 1 .311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 0 1-.056.2l-1.923 6.17c-.048.16-.104.264-.168.312a.549.549 0 0 1-.32.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 0 1-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 0 0 .415-.758.777.777 0 0 0-.215-.559c-.144-.151-.415-.287-.806-.415l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 0 1-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415.32-.096.655-.136 1.006-.136.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.144a.69.69 0 0 1 .24.2.43.43 0 0 1 .071.263v.375c0 .168-.064.256-.184.256a.83.83 0 0 1-.303-.096 3.652 3.652 0 0 0-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.877.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.336.511-.583.703-.248.2-.543.343-.886.447-.36.111-.734.167-1.142.167zM21.698 16.207c-2.626 1.94-6.442 2.969-9.722 2.969-4.598 0-8.74-1.7-11.87-4.526-.247-.223-.024-.527.27-.351 3.384 1.963 7.559 3.153 11.877 3.153 2.914 0 6.114-.607 9.06-1.852.439-.2.814.287.385.607zM22.792 14.961c-.336-.43-2.22-.207-3.074-.103-.255.032-.295-.192-.063-.36 1.5-1.053 3.967-.75 4.254-.399.287.36-.08 2.826-1.485 4.007-.215.184-.423.088-.327-.151.32-.79 1.03-2.57.695-2.994z"/>
+              </svg>
+            </span>
+          </p>
         </div>
       </footer>
       </>
