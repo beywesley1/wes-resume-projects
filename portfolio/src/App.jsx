@@ -1926,6 +1926,17 @@ const styles = `
     50% { opacity: 0.5; }
   }
   
+  @keyframes pulse-glow {
+    0%, 100% { 
+      opacity: 1; 
+      text-shadow: 0 0 5px var(--accent-cyan);
+    }
+    50% { 
+      opacity: 0.6; 
+      text-shadow: 0 0 15px var(--accent-cyan), 0 0 25px var(--accent-blue);
+    }
+  }
+  
   .hero h1 {
     font-size: clamp(48px, 8vw, 96px);
     font-weight: 700;
@@ -3990,11 +4001,19 @@ function useGitHubStats(username) {
           allReposRes.json()
         ]);
         
-        // Get top 6 repos for display - skip language fetch for speed
-        const displayRepos = allReposData.slice(0, 6).map(repo => ({
-          ...repo,
-          languages: {} // Skip individual language fetches to improve speed
-        }));
+        // Get top 6 repos for display and fetch their languages
+        const top6Repos = allReposData.slice(0, 6);
+        const displayRepos = await Promise.all(
+          top6Repos.map(async (repo) => {
+            try {
+              const langRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/languages`);
+              const languages = langRes.ok ? await langRes.json() : {};
+              return { ...repo, languages };
+            } catch {
+              return { ...repo, languages: {} };
+            }
+          })
+        );
         
         const statsData = {
           publicRepos: userData.public_repos,
@@ -4158,6 +4177,7 @@ export default function App() {
   const [selectedTfSubcategory, setSelectedTfSubcategory] = useState(null);
   const [theme, setTheme] = useState('dark');
   const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
+  const [expandedCareerItems, setExpandedCareerItems] = useState([]); // All collapsed by default
   const [selectedDiagram, setSelectedDiagram] = useState('vpc-sales');
   const [diagramCardExpanded, setDiagramCardExpanded] = useState(false);
   const [diagramCodeExpanded, setDiagramCodeExpanded] = useState(false);
@@ -5518,33 +5538,78 @@ export default function App() {
           </div>
           
           <div className="career-timeline">
-            {CONFIG.career.map((job, i) => (
-              <div key={i} className="career-item">
-                <div className="career-marker">{job.icon}</div>
-                <div className="career-card">
-                  <div className="career-header">
-                    <h3 className="career-title">{job.title}</h3>
-                    <div className="career-company">{job.company}</div>
-                    <div className="career-meta">
-                      <span>📍 {job.location}</span>
-                      <span>📅 {job.period}</span>
+            {CONFIG.career.map((job, i) => {
+              const isExpanded = expandedCareerItems.includes(i);
+              return (
+                <div key={i} className="career-item">
+                  <div className="career-marker">{job.icon}</div>
+                  <div className="career-card">
+                    {/* Clickable Header - Always Visible */}
+                    <div 
+                      className="career-header-clickable"
+                      onClick={() => {
+                        setExpandedCareerItems(prev => 
+                          prev.includes(i) 
+                            ? prev.filter(item => item !== i)
+                            : [...prev, i]
+                        );
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <div className="career-header">
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                          <span 
+                            className="career-expand-arrow"
+                            style={{ 
+                              fontSize: '16px', 
+                              color: 'var(--accent-cyan)',
+                              transition: 'transform 0.3s ease',
+                              transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                              marginTop: '4px',
+                              flexShrink: 0,
+                              animation: !isExpanded ? 'pulse-glow 2s ease-in-out infinite' : 'none'
+                            }}
+                          >
+                            ▶
+                          </span>
+                          <div style={{ flex: 1 }}>
+                            <h3 className="career-title">{job.title}</h3>
+                            <div className="career-company">{job.company}</div>
+                            <div className="career-meta">
+                              <span>📍 {job.location}</span>
+                              <span>📅 {job.period}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {job.technologies && job.technologies.length > 0 && (
+                        <div className="career-technologies">
+                          {job.technologies.map((tech, k) => (
+                            <span key={k} className="career-tech-tag">{tech}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Collapsible Details */}
+                    <div 
+                      style={{ 
+                        maxHeight: isExpanded ? '1000px' : '0',
+                        overflow: 'hidden',
+                        transition: 'max-height 0.4s ease-in-out',
+                        opacity: isExpanded ? 1 : 0,
+                      }}
+                    >
+                      <ul className="career-highlights" style={{ marginTop: '16px' }}>
+                        {job.highlights.map((highlight, j) => (
+                          <li key={j}>{highlight}</li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-                  {job.technologies && job.technologies.length > 0 && (
-                    <div className="career-technologies">
-                      {job.technologies.map((tech, k) => (
-                        <span key={k} className="career-tech-tag">{tech}</span>
-                      ))}
-                    </div>
-                  )}
-                  <ul className="career-highlights">
-                    {job.highlights.map((highlight, j) => (
-                      <li key={j}>{highlight}</li>
-                    ))}
-                  </ul>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
