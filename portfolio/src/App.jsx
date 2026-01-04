@@ -1086,6 +1086,7 @@ const styles = `
   /* Sidebar */
   .scripts-sidebar {
     width: 280px;
+    min-width: 280px;
     flex-shrink: 0;
     background: var(--bg-secondary);
     border-right: 1px solid var(--border);
@@ -1093,6 +1094,7 @@ const styles = `
     height: calc(100vh - 60px);
     position: sticky;
     top: 60px;
+    display: block;
   }
   
   .sidebar-header {
@@ -1116,6 +1118,14 @@ const styles = `
   .sidebar-search {
     padding: 12px 16px;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .sidebar-search svg {
+    flex-shrink: 0;
+    color: var(--text-muted);
   }
   
   .sidebar-search input {
@@ -4759,6 +4769,10 @@ export default function App() {
           <div className="scripts-layout">
             {/* Sidebar */}
             <aside className="scripts-sidebar">
+              <div className="sidebar-header">
+                <h2>Solutions</h2>
+                <p>Architecture diagrams & IaC</p>
+              </div>
               <div className="sidebar-search">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
