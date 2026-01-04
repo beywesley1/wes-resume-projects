@@ -4997,10 +4997,10 @@ export default function App() {
                   <text x="605" y="110" fill="#fca5a5" fontSize="11" textAnchor="middle" fontFamily="monospace">SQL Injection / XSS Protection</text>
                   <text x="605" y="128" fill="#8b949e" fontSize="10" textAnchor="middle" fontFamily="monospace">Attached to ALB</text>
                   
-                  {/* VPC Container - inside AWS border */}
-                  <rect x="400" y="160" width="760" height="650" rx="10" fill="url(#vpcGradient)" stroke="#8B5CF6" strokeWidth="3"/>
+                  {/* VPC Container - encompasses all subnets */}
+                  <rect x="400" y="160" width="760" height="660" rx="10" fill="url(#vpcGradient)" stroke="#8B5CF6" strokeWidth="3"/>
                   <use href="#aws-vpc-icon" x="420" y="172" width="24" height="24"/>
-                  <text x="450" y="190" fill="#8B5CF6" fontSize="18" fontWeight="bold" fontFamily="monospace">VPC: 10.11.0.0/16</text>
+                  <text x="580" y="190" fill="#8B5CF6" fontSize="18" fontWeight="bold" fontFamily="monospace">VPC: 10.11.0.0/16</text>
                   
                   {/* Internet Gateway */}
                   <rect x="715" y="170" width="130" height="40" rx="6" fill="#232f3e" stroke="#FF9900" strokeWidth="2"/>
@@ -5018,127 +5018,120 @@ export default function App() {
                   <path d="M585 155 Q585 165, 715 190" stroke="#ef4444" strokeWidth="2" fill="none"/>
                   <line x1="780" y1="210" x2="780" y2="225" stroke="#FF9900" strokeWidth="2"/>
                   
-                  {/* PUBLIC SUBNETS SECTION */}
-                  <text x="60" y="295" fill="#22c55e" fontSize="14" fontWeight="bold" fontFamily="monospace">PUBLIC SUBNETS (Web Tier)</text>
+                  {/* PUBLIC SUBNETS SECTION - inside VPC */}
+                  <text x="420" y="295" fill="#22c55e" fontSize="14" fontWeight="bold" fontFamily="monospace">PUBLIC SUBNETS (Web Tier)</text>
                   
                   {/* Subnet 1 - AZ-A (2 servers due to ASG scaling) */}
-                  <rect x="55" y="310" width="340" height="220" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
-                  <text x="225" y="335" fill="#22c55e" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet A</text>
-                  <text x="225" y="352" fill="#4ade80" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.1.0/24 | us-east-1a</text>
+                  <rect x="415" y="310" width="230" height="180" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="530" y="330" fill="#22c55e" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet A</text>
+                  <text x="530" y="345" fill="#4ade80" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.1.0/24 | us-east-1a</text>
                   
                   {/* Web Server 1A */}
-                  <rect x="70" y="370" width="145" height="65" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="78" y="378" width="22" height="22"/>
-                  <text x="155" y="392" fill="#3b82f6" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1A</text>
-                  <text x="142" y="410" fill="#60a5fa" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.1.10</text>
-                  <text x="142" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">t3.medium</text>
+                  <rect x="425" y="360" width="100" height="55" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="433" y="368" width="20" height="20"/>
+                  <text x="475" y="382" fill="#3b82f6" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1A</text>
+                  <text x="475" y="396" fill="#60a5fa" fontSize="9" textAnchor="middle" fontFamily="monospace">10.11.1.10</text>
+                  <text x="475" y="408" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">t3.medium</text>
                   
                   {/* Web Server 2A (ASG scaled) */}
-                  <rect x="230" y="370" width="145" height="65" rx="6" fill="#1e293b" stroke="#f59e0b" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="238" y="378" width="22" height="22"/>
-                  <text x="315" y="392" fill="#f59e0b" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 2A</text>
-                  <text x="302" y="410" fill="#fbbf24" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.1.11</text>
-                  <text x="302" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">ASG Scaled</text>
+                  <rect x="535" y="360" width="100" height="55" rx="6" fill="#1e293b" stroke="#f59e0b" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="543" y="368" width="20" height="20"/>
+                  <text x="585" y="382" fill="#f59e0b" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 2A</text>
+                  <text x="585" y="396" fill="#fbbf24" fontSize="9" textAnchor="middle" fontFamily="monospace">10.11.1.11</text>
+                  <text x="585" y="408" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">ASG Scaled</text>
                   
                   {/* ASG indicator for Subnet A */}
-                  <rect x="70" y="450" width="305" height="30" rx="6" fill="#292524" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4,2"/>
-                  <text x="222" y="470" fill="#f59e0b" fontSize="10" textAnchor="middle" fontFamily="monospace">⚡ ASG: 2/3 instances (High Traffic)</text>
+                  <rect x="425" y="425" width="210" height="25" rx="6" fill="#292524" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="530" y="442" fill="#f59e0b" fontSize="9" textAnchor="middle" fontFamily="monospace">⚡ ASG: 2/3 (High Traffic)</text>
                   
                   {/* Subnet 2 - AZ-B */}
-                  <rect x="420" y="310" width="340" height="220" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
-                  <text x="590" y="335" fill="#22c55e" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet B</text>
-                  <text x="590" y="352" fill="#4ade80" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.2.0/24 | us-east-1b</text>
+                  <rect x="660" y="310" width="230" height="180" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="775" y="330" fill="#22c55e" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet B</text>
+                  <text x="775" y="345" fill="#4ade80" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.2.0/24 | us-east-1b</text>
                   
                   {/* Web Server 1B */}
-                  <rect x="510" y="370" width="160" height="65" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="518" y="378" width="22" height="22"/>
-                  <text x="605" y="392" fill="#3b82f6" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1B</text>
-                  <text x="590" y="410" fill="#60a5fa" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.2.10</text>
-                  <text x="590" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">t3.medium</text>
+                  <rect x="720" y="360" width="110" height="55" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="728" y="368" width="20" height="20"/>
+                  <text x="775" y="382" fill="#3b82f6" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1B</text>
+                  <text x="775" y="396" fill="#60a5fa" fontSize="9" textAnchor="middle" fontFamily="monospace">10.11.2.10</text>
+                  <text x="775" y="408" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">t3.medium</text>
                   
                   {/* ASG indicator for Subnet B */}
-                  <rect x="435" y="450" width="305" height="30" rx="6" fill="#292524" stroke="#22c55e" strokeWidth="1" strokeDasharray="4,2"/>
-                  <text x="587" y="470" fill="#22c55e" fontSize="10" textAnchor="middle" fontFamily="monospace">ASG: 1/3 instances (Normal)</text>
+                  <rect x="670" y="425" width="210" height="25" rx="6" fill="#292524" stroke="#22c55e" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="775" y="442" fill="#22c55e" fontSize="9" textAnchor="middle" fontFamily="monospace">ASG: 1/3 (Normal)</text>
                   
                   {/* Subnet 3 - AZ-C */}
-                  <rect x="785" y="310" width="340" height="220" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
-                  <text x="955" y="335" fill="#22c55e" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet C</text>
-                  <text x="955" y="352" fill="#4ade80" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.3.0/24 | us-east-1c</text>
+                  <rect x="905" y="310" width="230" height="180" rx="8" fill="url(#subnetGradient)" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="1020" y="330" fill="#22c55e" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Public Subnet C</text>
+                  <text x="1020" y="345" fill="#4ade80" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.3.0/24 | us-east-1c</text>
                   
                   {/* Web Server 1C */}
-                  <rect x="875" y="370" width="160" height="65" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="883" y="378" width="22" height="22"/>
-                  <text x="970" y="392" fill="#3b82f6" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1C</text>
-                  <text x="955" y="410" fill="#60a5fa" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.3.10</text>
-                  <text x="955" y="425" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">t3.medium</text>
+                  <rect x="965" y="360" width="110" height="55" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
+                  <use href="#aws-ec2-icon" x="973" y="368" width="20" height="20"/>
+                  <text x="1020" y="382" fill="#3b82f6" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1C</text>
+                  <text x="1020" y="396" fill="#60a5fa" fontSize="9" textAnchor="middle" fontFamily="monospace">10.11.3.10</text>
+                  <text x="1020" y="408" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">t3.medium</text>
                   
                   {/* ASG indicator for Subnet C */}
-                  <rect x="800" y="450" width="305" height="30" rx="6" fill="#292524" stroke="#22c55e" strokeWidth="1" strokeDasharray="4,2"/>
-                  <text x="952" y="470" fill="#22c55e" fontSize="10" textAnchor="middle" fontFamily="monospace">ASG: 1/3 instances (Normal)</text>
+                  <rect x="915" y="425" width="210" height="25" rx="6" fill="#292524" stroke="#22c55e" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="1020" y="442" fill="#22c55e" fontSize="9" textAnchor="middle" fontFamily="monospace">ASG: 1/3 (Normal)</text>
                   
                   {/* Connection lines from ALB to public subnets */}
-                  <line x1="540" y1="270" x2="225" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
-                  <line x1="610" y1="270" x2="590" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
-                  <line x1="680" y1="270" x2="955" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
+                  <line x1="720" y1="280" x2="530" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
+                  <line x1="780" y1="280" x2="775" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
+                  <line x1="840" y1="280" x2="1020" y2="310" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
                   
-                  {/* PRIVATE SUBNETS SECTION */}
-                  <text x="60" y="560" fill="#a855f7" fontSize="14" fontWeight="bold" fontFamily="monospace">PRIVATE SUBNETS (Database Tier)</text>
+                  {/* PRIVATE SUBNETS SECTION - inside VPC */}
+                  <text x="420" y="480" fill="#a855f7" fontSize="14" fontWeight="bold" fontFamily="monospace">PRIVATE SUBNETS (Database Tier)</text>
                   
                   {/* Private Subnet 1 - AZ-A */}
-                  <rect x="55" y="575" width="340" height="160" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
-                  <text x="225" y="600" fill="#a855f7" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet A</text>
-                  <text x="225" y="618" fill="#c084fc" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.101.0/24 | us-east-1a</text>
+                  <rect x="415" y="495" width="230" height="140" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
+                  <text x="530" y="515" fill="#a855f7" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet A</text>
+                  <text x="530" y="530" fill="#c084fc" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.101.0/24 | us-east-1a</text>
                   
                   {/* RDS Writer in Private Subnet A */}
-                  <rect x="75" y="635" width="240" height="70" rx="6" fill="#1e293b" stroke="#06b6d4" strokeWidth="2"/>
-                  <use href="#aws-rds-icon" x="85" y="645" width="26" height="26"/>
-                  <text x="210" y="660" fill="#06b6d4" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Writer</text>
-                  <text x="195" y="680" fill="#22d3ee" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.101.10 | db.r5.large</text>
-                  <text x="195" y="695" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Primary</text>
+                  <rect x="430" y="545" width="200" height="60" rx="6" fill="#1e293b" stroke="#06b6d4" strokeWidth="2"/>
+                  <use href="#aws-rds-icon" x="438" y="553" width="22" height="22"/>
+                  <text x="540" y="568" fill="#06b6d4" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Writer</text>
+                  <text x="530" y="583" fill="#22d3ee" fontSize="9" textAnchor="middle" fontFamily="monospace">10.11.101.10 | db.r5.large</text>
+                  <text x="530" y="596" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Primary</text>
                   
                   {/* Private Subnet 2 - AZ-B */}
-                  <rect x="420" y="575" width="340" height="160" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
-                  <text x="590" y="600" fill="#a855f7" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet B</text>
-                  <text x="590" y="618" fill="#c084fc" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.102.0/24 | us-east-1b</text>
+                  <rect x="660" y="495" width="230" height="140" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
+                  <text x="775" y="515" fill="#a855f7" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet B</text>
+                  <text x="775" y="530" fill="#c084fc" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.102.0/24 | us-east-1b</text>
                   
                   {/* RDS Reader in Private Subnet B */}
-                  <rect x="440" y="635" width="240" height="70" rx="6" fill="#1e293b" stroke="#10b981" strokeWidth="2"/>
-                  <use href="#aws-rds-icon" x="450" y="645" width="26" height="26"/>
-                  <text x="575" y="660" fill="#10b981" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Reader</text>
-                  <text x="560" y="680" fill="#34d399" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.102.10 | db.r5.large</text>
-                  <text x="560" y="695" fill="#6b7280" fontSize="9" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Replica</text>
+                  <rect x="675" y="545" width="200" height="60" rx="6" fill="#1e293b" stroke="#10b981" strokeWidth="2"/>
+                  <use href="#aws-rds-icon" x="683" y="553" width="22" height="22"/>
+                  <text x="785" y="568" fill="#10b981" fontSize="11" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Reader</text>
+                  <text x="775" y="583" fill="#34d399" fontSize="9" textAnchor="middle" fontFamily="monospace">10.11.102.10 | db.r5.large</text>
+                  <text x="775" y="596" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Replica</text>
                   
                   {/* Private Subnet 3 - AZ-C */}
-                  <rect x="785" y="575" width="340" height="160" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
-                  <text x="955" y="600" fill="#a855f7" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet C</text>
-                  <text x="955" y="618" fill="#c084fc" fontSize="11" textAnchor="middle" fontFamily="monospace">10.11.103.0/24 | us-east-1c</text>
+                  <rect x="905" y="495" width="230" height="140" rx="8" fill="url(#privateSubnetGradient)" stroke="#a855f7" strokeWidth="2"/>
+                  <text x="1020" y="515" fill="#a855f7" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Private Subnet C</text>
+                  <text x="1020" y="530" fill="#c084fc" fontSize="10" textAnchor="middle" fontFamily="monospace">10.11.103.0/24 | us-east-1c</text>
                   
                   {/* Standby indicator */}
-                  <rect x="830" y="635" width="240" height="70" rx="6" fill="#1e293b" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,2"/>
-                  <text x="950" y="670" fill="#6b7280" fontSize="11" textAnchor="middle" fontFamily="monospace">Failover Standby</text>
-                  <text x="950" y="690" fill="#4b5563" fontSize="10" textAnchor="middle" fontFamily="monospace">(Multi-AZ Ready)</text>
+                  <rect x="920" y="545" width="200" height="60" rx="6" fill="#1e293b" stroke="#6b7280" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="1020" y="575" fill="#6b7280" fontSize="10" textAnchor="middle" fontFamily="monospace">Failover Standby</text>
+                  <text x="1020" y="592" fill="#4b5563" fontSize="9" textAnchor="middle" fontFamily="monospace">(Multi-AZ Ready)</text>
                   
                   {/* RDS Replication line */}
-                  <line x1="315" y1="670" x2="440" y2="670" stroke="#06b6d4" strokeWidth="2" strokeDasharray="5,3"/>
-                  <text x="377" y="660" fill="#06b6d4" fontSize="10" textAnchor="middle" fontFamily="monospace">sync</text>
+                  <line x1="630" y1="575" x2="675" y2="575" stroke="#06b6d4" strokeWidth="2" strokeDasharray="5,3"/>
+                  <text x="652" y="565" fill="#06b6d4" fontSize="9" textAnchor="middle" fontFamily="monospace">sync</text>
                   
-                  {/* Connection lines from Web Servers to RDS - drawn behind other elements */}
-                  <line x1="142" y1="495" x2="142" y2="555" stroke="#06b6d4" strokeWidth="1.5" opacity="0.4"/>
-                  <line x1="142" y1="555" x2="195" y2="555" stroke="#06b6d4" strokeWidth="1.5" opacity="0.4"/>
-                  <line x1="195" y1="555" x2="195" y2="635" stroke="#06b6d4" strokeWidth="1.5" opacity="0.4"/>
-                  
-                  <line x1="590" y1="495" x2="590" y2="565" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
-                  <line x1="590" y1="565" x2="560" y2="565" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
-                  <line x1="560" y1="565" x2="560" y2="635" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
-                  
-                  <line x1="955" y1="495" x2="955" y2="555" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
-                  <line x1="955" y1="555" x2="560" y2="555" stroke="#10b981" strokeWidth="1.5" opacity="0.4" strokeDasharray="4,2"/>
+                  {/* Connection lines from Web Servers to RDS */}
+                  <line x1="530" y1="450" x2="530" y2="495" stroke="#06b6d4" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="775" y1="450" x2="775" y2="495" stroke="#10b981" strokeWidth="1.5" opacity="0.4"/>
+                  <line x1="1020" y1="450" x2="1020" y2="495" stroke="#10b981" strokeWidth="1.5" opacity="0.4" strokeDasharray="4,2"/>
                   
                   {/* Traffic flow indicators */}
-                  <circle cx="380" cy="290" r="5" fill="#8B5CF6">
+                  <circle cx="720" cy="295" r="4" fill="#8B5CF6">
                     <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
                   </circle>
-                  <circle cx="600" cy="290" r="5" fill="#8B5CF6">
+                  <circle cx="840" cy="295" r="4" fill="#8B5CF6">
                     <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite"/>
                   </circle>
                   <circle cx="820" cy="290" r="5" fill="#8B5CF6">

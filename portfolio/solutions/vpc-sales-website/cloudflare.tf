@@ -40,6 +40,7 @@ provider "cloudflare" {
 
 # -----------------------------------------------------------------------------
 # DNS Records - Point domain to ALB
+# CNAME records proxy traffic through CloudFlare for DDoS protection
 # -----------------------------------------------------------------------------
 resource "cloudflare_record" "root" {
   zone_id = var.cloudflare_zone_id
@@ -47,7 +48,7 @@ resource "cloudflare_record" "root" {
   content = aws_lb.main.dns_name
   type    = "CNAME"
   proxied = true
-  ttl     = 1  # Auto when proxied
+  ttl     = 1
 
   comment = "Root domain pointing to ALB"
 }
@@ -55,38 +56,12 @@ resource "cloudflare_record" "root" {
 resource "cloudflare_record" "www" {
   zone_id = var.cloudflare_zone_id
   name    = "www"
-  content = aws_lb.main.dns_name
+  content = var.domain_name
   type    = "CNAME"
   proxied = true
   ttl     = 1
 
-  comment = "WWW subdomain pointing to ALB"
-}
-
-# -----------------------------------------------------------------------------
-# Redirect Rule - www to root (CloudFlare v4 syntax)
-# -----------------------------------------------------------------------------
-resource "cloudflare_ruleset" "redirect_www" {
-  zone_id     = var.cloudflare_zone_id
-  name        = "Redirect www to root"
-  description = "Redirect www subdomain to root domain"
-  kind        = "zone"
-  phase       = "http_request_dynamic_redirect"
-
-  rules {
-    action = "redirect"
-    action_parameters {
-      from_value {
-        status_code = 301
-        target_url {
-          expression = "concat(\"https://${var.domain_name}\", http.request.uri.path)"
-        }
-      }
-    }
-    expression  = "(http.host eq \"www.${var.domain_name}\")"
-    description = "Redirect www to root domain"
-    enabled     = true
-  }
+  comment = "WWW redirects to root domain"
 }
 
 # -----------------------------------------------------------------------------
@@ -102,28 +77,5 @@ resource "cloudflare_zone_settings_override" "security" {
     automatic_https_rewrites = "on"
     brotli                   = "on"
     browser_cache_ttl        = 14400
-  }
-}
-
-# -----------------------------------------------------------------------------
-# Rate Limiting Rule (CloudFlare v4 syntax)
-# -----------------------------------------------------------------------------
-resource "cloudflare_ruleset" "rate_limit" {
-  zone_id     = var.cloudflare_zone_id
-  name        = "Rate limiting rules"
-  description = "Rate limit sensitive endpoints"
-  kind        = "zone"
-  phase       = "http_ratelimit"
-
-  rules {
-    action = "block"
-    ratelimit {
-      characteristics     = ["ip.src"]
-      period              = 60
-      requests_per_period = 10
-    }
-    expression  = "(http.request.uri.path contains \"/api/login\")"
-    description = "Rate limit login attempts"
-    enabled     = true
   }
 }
