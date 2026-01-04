@@ -11,6 +11,7 @@ import VPC_ALB from '../solutions/vpc-sales-website/alb.tf?raw';
 import VPC_ASG from '../solutions/vpc-sales-website/asg.tf?raw';
 import VPC_RDS from '../solutions/vpc-sales-website/rds.tf?raw';
 import VPC_WAF from '../solutions/vpc-sales-website/waf.tf?raw';
+import VPC_CLOUDFLARE from '../solutions/vpc-sales-website/cloudflare.tf?raw';
 import VPC_DATA from '../solutions/vpc-sales-website/data.tf?raw';
 
 // Solution files configuration
@@ -23,6 +24,7 @@ const VPC_SOLUTION_FILES = [
   { name: 'asg.tf', code: VPC_ASG, description: 'Auto scaling' },
   { name: 'rds.tf', code: VPC_RDS, description: 'Database' },
   { name: 'waf.tf', code: VPC_WAF, description: 'Web firewall' },
+  { name: 'cloudflare.tf', code: VPC_CLOUDFLARE, description: 'CloudFlare DNS' },
   { name: 'data.tf', code: VPC_DATA, description: 'Data sources' },
 ];
 

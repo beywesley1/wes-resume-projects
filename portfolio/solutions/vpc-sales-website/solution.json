@@ -1,8 +1,8 @@
 {
   "title": "Sales Website VPC Infrastructure",
-  "description": "Production-ready AWS infrastructure with VPC, ALB, Auto Scaling, WAF, and RDS Multi-AZ for a high-availability sales website.",
-  "provider": "aws",
-  "tags": ["vpc", "alb", "auto-scaling", "rds", "waf", "multi-az", "high-availability"],
+  "description": "Production-ready AWS infrastructure with VPC, ALB, Auto Scaling, WAF, RDS Multi-AZ, and CloudFlare DNS for a high-availability sales website.",
+  "providers": ["aws", "cloudflare"],
+  "tags": ["vpc", "alb", "auto-scaling", "rds", "waf", "multi-az", "high-availability", "cloudflare", "dns"],
   "diagram": true,
   "featured": true
 }
