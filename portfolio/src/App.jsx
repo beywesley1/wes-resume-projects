@@ -4234,11 +4234,15 @@ export default function App() {
   const [theme, setTheme] = useState('dark');
   const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
   const [expandedCareerItems, setExpandedCareerItems] = useState([]); // All collapsed by default
-  const [selectedDiagram, setSelectedDiagram] = useState('vpc-sales');
-  const [diagramCardExpanded, setDiagramCardExpanded] = useState(false);
-  const [diagramCodeExpanded, setDiagramCodeExpanded] = useState(false);
-  const [selectedSolutionFile, setSelectedSolutionFile] = useState(0);
   const [diagramSearch, setDiagramSearch] = useState('');
+  // VPC Solution state
+  const [vpcCardExpanded, setVpcCardExpanded] = useState(false);
+  const [vpcCodeExpanded, setVpcCodeExpanded] = useState(false);
+  const [vpcSelectedFile, setVpcSelectedFile] = useState(0);
+  // S3 Solution state
+  const [s3CardExpanded, setS3CardExpanded] = useState(false);
+  const [s3CodeExpanded, setS3CodeExpanded] = useState(false);
+  const [s3SelectedFile, setS3SelectedFile] = useState(0);
   const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
   
@@ -4840,110 +4844,109 @@ export default function App() {
             
             {/* Main Content */}
             <main className="scripts-main">
-              {selectedDiagram === 'vpc-sales' && (
+              {/* VPC Sales Website Solution */}
+              <div className="diagram-card" style={{ maxWidth: '100%', marginBottom: '24px' }}>
+                <div 
+                  className="diagram-header"
+                  onClick={() => setVpcCardExpanded(!vpcCardExpanded)}
+                  style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                >
+                  <div>
+                    <h3>AWS VPC - Sales Website Architecture</h3>
+                    <p>High-availability web application with Auto Scaling, RDS Multi-AZ, WAF & Shield protection</p>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{vpcCardExpanded ? 'Collapse' : 'Expand'}</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: vpcCardExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </div>
+                </div>
+                
+                {vpcCardExpanded && (
                 <>
-                  <div className="diagram-card" style={{ maxWidth: '100%' }}>
-                    <div 
-                      className="diagram-header"
-                      onClick={() => setDiagramCardExpanded(!diagramCardExpanded)}
-                      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    >
-                      <div>
-                        <h3>AWS VPC - Sales Website Architecture</h3>
-                        <p>High-availability web application with Auto Scaling, RDS Multi-AZ, WAF & Shield protection</p>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{diagramCardExpanded ? 'Collapse' : 'Expand'}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: diagramCardExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-                          <path d="M6 9l6 6 6-6"/>
-                        </svg>
-                      </div>
+                {/* Terraform Code Section */}
+                <div 
+                  className="terraform-code-header"
+                  onClick={() => setVpcCodeExpanded(!vpcCodeExpanded)}
+                  style={{ 
+                    cursor: 'pointer', 
+                    padding: '16px 24px', 
+                    borderTop: '1px solid var(--border)', 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14,2 14,8 20,8"/>
+                      <line x1="16" y1="13" x2="8" y2="13"/>
+                      <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '15px', color: '#a78bfa', fontFamily: 'monospace' }}>Terraform Infrastructure Code</h4>
+                      <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Complete IaC ready for CI/CD pipeline deployment</p>
                     </div>
-                    
-                    {diagramCardExpanded && (
-                    <>
-                    {/* Terraform Code Section - Collapsible - Above the diagram */}
-                    <div 
-                      className="terraform-code-header"
-                      onClick={() => setDiagramCodeExpanded(!diagramCodeExpanded)}
-                      style={{ 
-                        cursor: 'pointer', 
-                        padding: '16px 24px', 
-                        borderTop: '1px solid var(--border)', 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center', 
-                        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2">
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                          <polyline points="14,2 14,8 20,8"/>
-                          <line x1="16" y1="13" x2="8" y2="13"/>
-                          <line x1="16" y1="17" x2="8" y2="17"/>
-                        </svg>
-                        <div>
-                          <h4 style={{ margin: 0, fontSize: '15px', color: '#a78bfa', fontFamily: 'monospace' }}>Terraform Infrastructure Code</h4>
-                          <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Complete IaC ready for CI/CD pipeline deployment</p>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{diagramCodeExpanded ? 'Collapse' : 'Expand'}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2" style={{ transform: diagramCodeExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>
-                          <path d="M6 9l6 6 6-6"/>
-                        </svg>
-                      </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{vpcCodeExpanded ? 'Collapse' : 'Expand'}</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2" style={{ transform: vpcCodeExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </div>
+                </div>
+                
+                {vpcCodeExpanded && (
+                  <div className="terraform-code-section" style={{ background: '#0d1117' }}>
+                    <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                      {VPC_SOLUTION_FILES.map((file, index) => (
+                        <button
+                          key={file.name}
+                          onClick={(e) => { e.stopPropagation(); setVpcSelectedFile(index); }}
+                          style={{ 
+                            background: vpcSelectedFile === index ? '#0d1117' : 'transparent',
+                            color: vpcSelectedFile === index ? '#58a6ff' : '#8b949e',
+                            padding: '6px 12px',
+                            borderRadius: '6px 6px 0 0',
+                            fontSize: '12px',
+                            fontFamily: 'monospace',
+                            border: 'none',
+                            cursor: 'pointer',
+                            borderBottom: vpcSelectedFile === index ? '2px solid #58a6ff' : '2px solid transparent',
+                            transition: 'all 0.2s ease'
+                          }}
+                          title={file.description}
+                        >
+                          {file.name}
+                        </button>
+                      ))}
+                      <button 
+                        className={`copy-btn ${copiedId === 'terraform-vpc' ? 'copied' : ''}`}
+                        onClick={(e) => { e.stopPropagation(); copy(VPC_SOLUTION_FILES[vpcSelectedFile].code, 'terraform-vpc'); }}
+                        style={{ marginLeft: 'auto', background: '#21262d', border: '1px solid #30363d', color: '#c9d1d9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: 'monospace' }}
+                      >
+                        {copiedId === 'terraform-vpc' ? '✓ Copied' : '📋 Copy'}
+                      </button>
                     </div>
-                    
-                    {diagramCodeExpanded && (
-                      <div className="terraform-code-section" style={{ background: '#0d1117' }}>
-                        <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                          {VPC_SOLUTION_FILES.map((file, index) => (
-                            <button
-                              key={file.name}
-                              onClick={(e) => { e.stopPropagation(); setSelectedSolutionFile(index); }}
-                              style={{ 
-                                background: selectedSolutionFile === index ? '#0d1117' : 'transparent',
-                                color: selectedSolutionFile === index ? '#58a6ff' : '#8b949e',
-                                padding: '6px 12px',
-                                borderRadius: '6px 6px 0 0',
-                                fontSize: '12px',
-                                fontFamily: 'monospace',
-                                border: 'none',
-                                cursor: 'pointer',
-                                borderBottom: selectedSolutionFile === index ? '2px solid #58a6ff' : '2px solid transparent',
-                                transition: 'all 0.2s ease'
-                              }}
-                              title={file.description}
-                            >
-                              {file.name}
-                            </button>
-                          ))}
-                          <button 
-                            className={`copy-btn ${copiedId === 'terraform-vpc' ? 'copied' : ''}`}
-                            onClick={(e) => { e.stopPropagation(); copy(VPC_SOLUTION_FILES[selectedSolutionFile].code, 'terraform-vpc'); }}
-                            style={{ marginLeft: 'auto', background: '#21262d', border: '1px solid #30363d', color: '#c9d1d9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: 'monospace' }}
-                          >
-                            {copiedId === 'terraform-vpc' ? '✓ Copied' : '📋 Copy'}
-                          </button>
-                        </div>
-                        <div className="terraform-code-content" style={{ maxHeight: '500px', overflow: 'auto' }}>
-                          <pre 
-                            className="terraform-code-highlighted" 
-                            style={{ 
-                              margin: 0, 
-                              padding: '20px 24px', 
-                              background: '#0d1117', 
-                              color: '#c9d1d9', 
-                              fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", 
-                              fontSize: '13px', 
-                              lineHeight: '1.6'
-                            }}
-                          ><HighlightedCode code={VPC_SOLUTION_FILES[selectedSolutionFile].code} /></pre>
-                        </div>
-                      </div>
-                    )}
+                    <div className="terraform-code-content" style={{ maxHeight: '500px', overflow: 'auto' }}>
+                      <pre 
+                        className="terraform-code-highlighted" 
+                        style={{ 
+                          margin: 0, 
+                          padding: '20px 24px', 
+                          background: '#0d1117', 
+                          color: '#c9d1d9', 
+                          fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", 
+                          fontSize: '13px', 
+                          lineHeight: '1.6'
+                        }}
+                      ><HighlightedCode code={VPC_SOLUTION_FILES[vpcSelectedFile].code} /></pre>
+                    </div>
+                  </div>
+                )}
                     
                     <div className="diagram-container" style={{ padding: '24px', overflow: 'auto' }}>
                       <svg viewBox="0 0 1200 750" className="network-diagram" style={{ minWidth: '1100px' }}>
@@ -5258,111 +5261,108 @@ export default function App() {
               </>
               )}
               </div>
-                </>
-              )}
-              
-              {selectedDiagram === 's3-static' && (
+
+              {/* S3 Static Website Solution */}
+              <div className="diagram-card" style={{ maxWidth: '100%' }}>
+                <div 
+                  className="diagram-header"
+                  onClick={() => setS3CardExpanded(!s3CardExpanded)}
+                  style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                >
+                  <div>
+                    <h3>Static Website - S3 + CloudFront + CloudFlare</h3>
+                    <p>Cost-effective static hosting with global CDN, SSL/TLS, and edge caching</p>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{s3CardExpanded ? 'Collapse' : 'Expand'}</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: s3CardExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </div>
+                </div>
+                
+                {s3CardExpanded && (
                 <>
-                  <div className="diagram-card" style={{ maxWidth: '100%' }}>
-                    <div 
-                      className="diagram-header"
-                      onClick={() => setDiagramCardExpanded(!diagramCardExpanded)}
-                      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    >
-                      <div>
-                        <h3>Static Website - S3 + CloudFront + CloudFlare</h3>
-                        <p>Cost-effective static hosting with global CDN, SSL/TLS, and edge caching</p>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{diagramCardExpanded ? 'Collapse' : 'Expand'}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: diagramCardExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-                          <path d="M6 9l6 6 6-6"/>
-                        </svg>
-                      </div>
+                {/* Terraform Code Section */}
+                <div 
+                  className="terraform-code-header"
+                  onClick={() => setS3CodeExpanded(!s3CodeExpanded)}
+                  style={{ 
+                    cursor: 'pointer', 
+                    padding: '16px 24px', 
+                    borderTop: '1px solid var(--border)', 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14,2 14,8 20,8"/>
+                      <line x1="16" y1="13" x2="8" y2="13"/>
+                      <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '15px', color: '#4ade80', fontFamily: 'monospace' }}>Terraform Infrastructure Code</h4>
+                      <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Complete IaC for S3 + CloudFront static hosting</p>
                     </div>
-                    
-                    {diagramCardExpanded && (
-                    <>
-                    {/* Terraform Code Section */}
-                    <div 
-                      className="terraform-code-header"
-                      onClick={() => setDiagramCodeExpanded(!diagramCodeExpanded)}
-                      style={{ 
-                        cursor: 'pointer', 
-                        padding: '16px 24px', 
-                        borderTop: '1px solid var(--border)', 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'center', 
-                        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                          <polyline points="14,2 14,8 20,8"/>
-                          <line x1="16" y1="13" x2="8" y2="13"/>
-                          <line x1="16" y1="17" x2="8" y2="17"/>
-                        </svg>
-                        <div>
-                          <h4 style={{ margin: 0, fontSize: '15px', color: '#4ade80', fontFamily: 'monospace' }}>Terraform Infrastructure Code</h4>
-                          <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Complete IaC for S3 + CloudFront static hosting</p>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{diagramCodeExpanded ? 'Collapse' : 'Expand'}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2" style={{ transform: diagramCodeExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>
-                          <path d="M6 9l6 6 6-6"/>
-                        </svg>
-                      </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{s3CodeExpanded ? 'Collapse' : 'Expand'}</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2" style={{ transform: s3CodeExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </div>
+                </div>
+                
+                {s3CodeExpanded && (
+                  <div className="terraform-code-section" style={{ background: '#0d1117' }}>
+                    <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                      {S3_SOLUTION_FILES.map((file, index) => (
+                        <button
+                          key={file.name}
+                          onClick={(e) => { e.stopPropagation(); setS3SelectedFile(index); }}
+                          style={{ 
+                            background: s3SelectedFile === index ? '#0d1117' : 'transparent',
+                            color: s3SelectedFile === index ? '#4ade80' : '#8b949e',
+                            padding: '6px 12px',
+                            borderRadius: '6px 6px 0 0',
+                            fontSize: '12px',
+                            fontFamily: 'monospace',
+                            border: 'none',
+                            cursor: 'pointer',
+                            borderBottom: s3SelectedFile === index ? '2px solid #4ade80' : '2px solid transparent',
+                            transition: 'all 0.2s ease'
+                          }}
+                          title={file.description}
+                        >
+                          {file.name}
+                        </button>
+                      ))}
+                      <button 
+                        className={`copy-btn ${copiedId === 'terraform-s3' ? 'copied' : ''}`}
+                        onClick={(e) => { e.stopPropagation(); copy(S3_SOLUTION_FILES[s3SelectedFile].code, 'terraform-s3'); }}
+                        style={{ marginLeft: 'auto', background: '#21262d', border: '1px solid #30363d', color: '#c9d1d9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: 'monospace' }}
+                      >
+                        {copiedId === 'terraform-s3' ? '✓ Copied' : '📋 Copy'}
+                      </button>
                     </div>
-                    
-                    {diagramCodeExpanded && (
-                      <div className="terraform-code-section" style={{ background: '#0d1117' }}>
-                        <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                          {S3_SOLUTION_FILES.map((file, index) => (
-                            <button
-                              key={file.name}
-                              onClick={(e) => { e.stopPropagation(); setSelectedSolutionFile(index); }}
-                              style={{ 
-                                background: selectedSolutionFile === index ? '#0d1117' : 'transparent',
-                                color: selectedSolutionFile === index ? '#4ade80' : '#8b949e',
-                                padding: '6px 12px',
-                                borderRadius: '6px 6px 0 0',
-                                fontSize: '12px',
-                                fontFamily: 'monospace',
-                                border: 'none',
-                                cursor: 'pointer',
-                                borderBottom: selectedSolutionFile === index ? '2px solid #4ade80' : '2px solid transparent',
-                                transition: 'all 0.2s ease'
-                              }}
-                              title={file.description}
-                            >
-                              {file.name}
-                            </button>
-                          ))}
-                          <button 
-                            className={`copy-btn ${copiedId === 'terraform-s3' ? 'copied' : ''}`}
-                            onClick={(e) => { e.stopPropagation(); copy(S3_SOLUTION_FILES[selectedSolutionFile].code, 'terraform-s3'); }}
-                            style={{ marginLeft: 'auto', background: '#21262d', border: '1px solid #30363d', color: '#c9d1d9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: 'monospace' }}
-                          >
-                            {copiedId === 'terraform-s3' ? '✓ Copied' : '📋 Copy'}
-                          </button>
-                        </div>
-                        <div style={{ padding: '0' }}>
-                          <pre style={{ 
-                            margin: 0, 
-                            padding: '16px', 
-                            background: '#0d1117', 
-                            overflow: 'auto', 
-                            maxHeight: '500px',
-                            fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", 
-                            fontSize: '13px', 
-                            lineHeight: '1.6'
-                          }}><HighlightedCode code={S3_SOLUTION_FILES[selectedSolutionFile].code} /></pre>
-                        </div>
-                      </div>
-                    )}
+                    <div style={{ padding: '0' }}>
+                      <pre style={{ 
+                        margin: 0, 
+                        padding: '16px', 
+                        background: '#0d1117', 
+                        overflow: 'auto', 
+                        maxHeight: '500px',
+                        fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", 
+                        fontSize: '13px', 
+                        lineHeight: '1.6'
+                      }}><HighlightedCode code={S3_SOLUTION_FILES[s3SelectedFile].code} /></pre>
+                    </div>
+                  </div>
+                )}
                     
                     <div className="diagram-container" style={{ padding: '24px', overflow: 'auto' }}>
                       <svg viewBox="0 0 1000 500" className="network-diagram" style={{ minWidth: '900px' }}>
@@ -5522,8 +5522,6 @@ export default function App() {
               </>
               )}
               </div>
-                </>
-              )}
             </main>
           </div>
         </div>
