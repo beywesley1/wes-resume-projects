@@ -5227,11 +5227,11 @@ export default function App() {
           {/* Certification Badge Cards with Local Images */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'center' }}>
             {[
-              { name: "AWS Solutions Architect Professional", img: "/src/assets/badges/aws-certified-solutions-architect-professional.png" },
-              { name: "AWS SysOps Administrator Associate", img: "/src/assets/badges/aws-certified-sysops-administrator-associate.png" },
-              { name: "AWS Solutions Architect Associate", img: "/src/assets/badges/aws-certified-solutions-architect-associate.png" },
-              { name: "CompTIA Security+", img: "/src/assets/badges/comptia-security-ce-certification.png" },
-              { name: "HashiCorp Terraform Associate", img: "/src/assets/badges/hashicorp-certified-terraform-associate-002.png" },
+              { name: "AWS Solutions Architect Professional", img: "/badges/aws-certified-solutions-architect-professional.png" },
+              { name: "AWS SysOps Administrator Associate", img: "/badges/aws-certified-sysops-administrator-associate.png" },
+              { name: "AWS Solutions Architect Associate", img: "/badges/aws-certified-solutions-architect-associate.png" },
+              { name: "CompTIA Security+", img: "/badges/comptia-security-ce-certification.png" },
+              { name: "HashiCorp Terraform Associate", img: "/badges/hashicorp-certified-terraform-associate-002.png" },
             ].map((cert, index) => (
               <a
                 key={index}
