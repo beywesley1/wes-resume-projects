@@ -3,7 +3,28 @@ import { TERRAFORM_MODULES, TF_PROVIDERS, TF_SUBCATEGORY_ICONS, getTfSubcategori
 
 // Import Terraform solutions as raw text (Vite feature)
 // Solutions are stored in /solutions folder at project root for easier management
-import VPC_TERRAFORM_CODE from '../solutions/vpc-sales-website/main.tf?raw';
+import VPC_MAIN from '../solutions/vpc-sales-website/main.tf?raw';
+import VPC_VARIABLES from '../solutions/vpc-sales-website/variables.tf?raw';
+import VPC_VPC from '../solutions/vpc-sales-website/vpc.tf?raw';
+import VPC_SECURITY_GROUPS from '../solutions/vpc-sales-website/security_groups.tf?raw';
+import VPC_ALB from '../solutions/vpc-sales-website/alb.tf?raw';
+import VPC_ASG from '../solutions/vpc-sales-website/asg.tf?raw';
+import VPC_RDS from '../solutions/vpc-sales-website/rds.tf?raw';
+import VPC_WAF from '../solutions/vpc-sales-website/waf.tf?raw';
+import VPC_DATA from '../solutions/vpc-sales-website/data.tf?raw';
+
+// Solution files configuration
+const VPC_SOLUTION_FILES = [
+  { name: 'main.tf', code: VPC_MAIN, description: 'Provider & locals' },
+  { name: 'variables.tf', code: VPC_VARIABLES, description: 'Input variables' },
+  { name: 'vpc.tf', code: VPC_VPC, description: 'VPC & subnets' },
+  { name: 'security_groups.tf', code: VPC_SECURITY_GROUPS, description: 'Security groups' },
+  { name: 'alb.tf', code: VPC_ALB, description: 'Load balancer' },
+  { name: 'asg.tf', code: VPC_ASG, description: 'Auto scaling' },
+  { name: 'rds.tf', code: VPC_RDS, description: 'Database' },
+  { name: 'waf.tf', code: VPC_WAF, description: 'Web firewall' },
+  { name: 'data.tf', code: VPC_DATA, description: 'Data sources' },
+];
 
 // ============================================================================
 // CONFIGURATION - Edit these values
@@ -4182,6 +4203,7 @@ export default function App() {
   const [selectedDiagram, setSelectedDiagram] = useState('vpc-sales');
   const [diagramCardExpanded, setDiagramCardExpanded] = useState(false);
   const [diagramCodeExpanded, setDiagramCodeExpanded] = useState(false);
+  const [selectedSolutionFile, setSelectedSolutionFile] = useState(0);
   const [diagramSearch, setDiagramSearch] = useState('');
   const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
@@ -4827,14 +4849,34 @@ export default function App() {
                     
                     {diagramCodeExpanded && (
                       <div className="terraform-code-section" style={{ background: '#0d1117' }}>
-                        <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center' }}>
-                          <span className="terraform-tab active" style={{ background: '#0d1117', color: '#58a6ff', padding: '6px 16px', borderRadius: '6px 6px 0 0', fontSize: '13px', fontFamily: 'monospace' }}>main.tf</span>
+                        <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                          {VPC_SOLUTION_FILES.map((file, index) => (
+                            <button
+                              key={file.name}
+                              onClick={(e) => { e.stopPropagation(); setSelectedSolutionFile(index); }}
+                              style={{ 
+                                background: selectedSolutionFile === index ? '#0d1117' : 'transparent',
+                                color: selectedSolutionFile === index ? '#58a6ff' : '#8b949e',
+                                padding: '6px 12px',
+                                borderRadius: '6px 6px 0 0',
+                                fontSize: '12px',
+                                fontFamily: 'monospace',
+                                border: 'none',
+                                cursor: 'pointer',
+                                borderBottom: selectedSolutionFile === index ? '2px solid #58a6ff' : '2px solid transparent',
+                                transition: 'all 0.2s ease'
+                              }}
+                              title={file.description}
+                            >
+                              {file.name}
+                            </button>
+                          ))}
                           <button 
                             className={`copy-btn ${copiedId === 'terraform-vpc' ? 'copied' : ''}`}
-                            onClick={(e) => { e.stopPropagation(); copy(VPC_TERRAFORM_CODE, 'terraform-vpc'); }}
+                            onClick={(e) => { e.stopPropagation(); copy(VPC_SOLUTION_FILES[selectedSolutionFile].code, 'terraform-vpc'); }}
                             style={{ marginLeft: 'auto', background: '#21262d', border: '1px solid #30363d', color: '#c9d1d9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: 'monospace' }}
                           >
-                            {copiedId === 'terraform-vpc' ? '✓ Copied' : '📋 Copy Code'}
+                            {copiedId === 'terraform-vpc' ? '✓ Copied' : '📋 Copy'}
                           </button>
                         </div>
                         <div className="terraform-code-content" style={{ maxHeight: '500px', overflow: 'auto' }}>
@@ -4849,7 +4891,7 @@ export default function App() {
                               fontSize: '13px', 
                               lineHeight: '1.6'
                             }}
-                          ><HighlightedCode code={VPC_TERRAFORM_CODE} /></pre>
+                          ><HighlightedCode code={VPC_SOLUTION_FILES[selectedSolutionFile].code} /></pre>
                         </div>
                       </div>
                     )}
