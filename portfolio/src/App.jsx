@@ -584,7 +584,7 @@ const HighlightedCode = ({ code }) => {
   if (!code) return null;
   
   // Highlight tokens within a line (not comments)
-  const highlightLine = (line, isResourceLine = false) => {
+  const highlightLine = (line, _isResourceLine = false) => {
     const parts = [];
     let remaining = line;
     let keyIndex = 0;
@@ -760,13 +760,14 @@ function useScrollAnimation() {
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -3977,7 +3978,7 @@ function useGitHubStats(username) {
           setLoading(false);
           return;
         }
-      } catch (e) {
+      } catch {
         sessionStorage.removeItem(cacheKey);
       }
     }
@@ -4057,7 +4058,7 @@ function useGitHubStats(username) {
                 });
               }
             }
-          } catch (e) {
+          } catch {
             // Silently fail for individual repos
           }
         });
@@ -4161,7 +4162,7 @@ function TechIcon({ name }) {
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  const [activeTab, setActiveTab] = useState('powershell');
+  const [_activeTab, _setActiveTab] = useState('powershell');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('a-z');
   const [expandedScript, setExpandedScript] = useState(null);
@@ -4269,10 +4270,10 @@ export default function App() {
   
   // Scroll animation refs
   const [skillsRef, skillsVisible] = useScrollAnimation();
-  const [careerRef, careerVisible] = useScrollAnimation();
-  const [certsRef, certsVisible] = useScrollAnimation();
-  const [archRef, archVisible] = useScrollAnimation();
-  const [reposRef, reposVisible] = useScrollAnimation();
+  const [_careerRef, _careerVisible] = useScrollAnimation();
+  const [_certsRef, _certsVisible] = useScrollAnimation();
+  const [_archRef, _archVisible] = useScrollAnimation();
+  const [_reposRef, _reposVisible] = useScrollAnimation();
   const [contactRef, contactVisible] = useScrollAnimation();
   
   // Theme toggle
@@ -4305,7 +4306,7 @@ export default function App() {
       } else {
         setFormStatus('error');
       }
-    } catch (error) {
+    } catch {
       setFormStatus('error');
     }
   };
