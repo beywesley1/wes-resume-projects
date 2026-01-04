@@ -4786,7 +4786,7 @@ export default function App() {
                   <div className="sidebar-subcategories" style={{ display: 'block' }}>
                     <div 
                       className={`sidebar-subcategory ${selectedDiagram === 's3-static' ? 'active' : ''}`}
-                      onClick={() => setSelectedDiagram('s3-static')}
+                      onClick={() => { setSelectedDiagram('s3-static'); setSelectedSolutionFile(0); setDiagramCardExpanded(false); setDiagramCodeExpanded(false); }}
                     >
                       <span className="subcategory-label">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#22c55e">
@@ -4797,7 +4797,7 @@ export default function App() {
                     </div>
                     <div 
                       className={`sidebar-subcategory ${selectedDiagram === 'vpc-sales' ? 'active' : ''}`}
-                      onClick={() => setSelectedDiagram('vpc-sales')}
+                      onClick={() => { setSelectedDiagram('vpc-sales'); setSelectedSolutionFile(0); setDiagramCardExpanded(false); setDiagramCodeExpanded(false); }}
                     >
                       <span className="subcategory-label">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#8B5CF6">
