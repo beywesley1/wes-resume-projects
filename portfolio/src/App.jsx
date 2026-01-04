@@ -33,15 +33,8 @@ const CONFIG = {
     { name: "AZ-104", icon: "🔷", status: "in-progress" },
   ],
   
-  // Credly badges - paste your Credly badge URLs here
-  // Get the embed URL from Credly: Share Badge > Embed Code > copy the data-share-badge-id
-  credlyBadges: [
-    { id: "a3966b13-05a6-4606-896d-b081b9c8d661", name: "AWS Solutions Architect Professional" },
-    { id: "a3ebb6eb-001c-4e30-9b32-6dc32cbf4a58", name: "AWS SysOps Administrator Associate" },
-    { id: "54e88ce4-f14b-43ca-9b75-a42b4de7780a", name: "AWS Solutions Architect Associate" },
-    { id: "d677cf10-a791-4dbb-9b75-5e9415a2ad03", name: "CompTIA Security+" },
-    { id: "564bab1c-138c-4e07-88f4-9151bce7328f", name: "HashiCorp Terraform Associate" },
-  ],
+  // Credly profile username for badge wallet embed
+  credlyUsername: "wesley-bey",
   
   // Skills with proficiency percentages (0-100)
   skillsWithProgress: {
@@ -4297,31 +4290,7 @@ export default function App() {
     }
   };
   
-  // Load Credly embed script when badges are configured and when returning to Home tab
-  useEffect(() => {
-    if (CONFIG.credlyBadges.length > 0 && activeTab === 'home') {
-      // Remove any existing Credly script first
-      const existingScript = document.querySelector('script[src*="credly.com"]');
-      if (existingScript) {
-        existingScript.remove();
-      }
-      
-      // Clear any existing iframes from previous loads
-      document.querySelectorAll('.certification-badge iframe').forEach(iframe => iframe.remove());
-      
-      // Small delay to ensure React has rendered the badge elements
-      const timer = setTimeout(() => {
-        const script = document.createElement('script');
-        script.src = '//cdn.credly.com/assets/utilities/embed.js';
-        script.async = true;
-        document.body.appendChild(script);
-      }, 200);
-      
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [activeTab]);
+  // Credly badges now use direct iframe embeds - no script needed
   
   return (
     <>
@@ -5255,26 +5224,78 @@ export default function App() {
             <h2 className="section-title">Certifications</h2>
           </div>
           
-          <div className="certifications-grid">
-            {CONFIG.credlyBadges.map((badge, index) => (
-              <div 
+          {/* Certification Badge Cards with Local Images */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'center' }}>
+            {[
+              { name: "AWS Solutions Architect Professional", img: "/src/assets/badges/aws-certified-solutions-architect-professional.png" },
+              { name: "AWS SysOps Administrator Associate", img: "/src/assets/badges/aws-certified-sysops-administrator-associate.png" },
+              { name: "AWS Solutions Architect Associate", img: "/src/assets/badges/aws-certified-solutions-architect-associate.png" },
+              { name: "CompTIA Security+", img: "/src/assets/badges/comptia-security-ce-certification.png" },
+              { name: "HashiCorp Terraform Associate", img: "/src/assets/badges/hashicorp-certified-terraform-associate-002.png" },
+            ].map((cert, index) => (
+              <a
                 key={index}
+                href={`https://www.credly.com/users/${CONFIG.credlyUsername}/badges`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                  padding: '20px',
+                  background: 'var(--bg-card)',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border)',
+                  transition: 'all 0.3s ease',
+                  width: '160px'
+                }}
                 className="certification-badge"
-                data-iframe-width="150"
-                data-iframe-height="270"
-                data-share-badge-id={badge.id}
-                data-share-badge-host="https://www.credly.com"
               >
-                <a 
-                  href={`https://www.credly.com/badges/${badge.id}/public_url`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={badge.name}
-                >
-                  <span className="certification-name">{badge.name}</span>
-                </a>
-              </div>
+                <img 
+                  src={cert.img}
+                  alt={cert.name}
+                  style={{ width: '120px', height: '120px', objectFit: 'contain' }}
+                />
+                <span style={{ 
+                  marginTop: '12px', 
+                  fontSize: '12px', 
+                  color: 'var(--text-secondary)',
+                  textAlign: 'center',
+                  lineHeight: '1.4'
+                }}>
+                  {cert.name}
+                </span>
+              </a>
             ))}
+          </div>
+          
+          <div style={{ textAlign: 'center', marginTop: '32px' }}>
+            <a 
+              href={`https://www.credly.com/users/${CONFIG.credlyUsername}/badges`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ 
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 24px',
+                background: 'transparent',
+                color: 'var(--accent-blue)',
+                borderRadius: '8px',
+                border: '1px solid var(--accent-blue)',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <span>Verify on Credly</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
           </div>
         </div>
       </section>
