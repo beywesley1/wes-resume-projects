@@ -14,18 +14,18 @@ import VPC_WAF from '../solutions/vpc-sales-website/waf.tf?raw';
 import VPC_CLOUDFLARE from '../solutions/vpc-sales-website/cloudflare.tf?raw';
 import VPC_DATA from '../solutions/vpc-sales-website/data.tf?raw';
 
-// Solution files configuration
+// Solution files configuration (alphabetically sorted)
 const VPC_SOLUTION_FILES = [
-  { name: 'main.tf', code: VPC_MAIN, description: 'Provider & locals' },
-  { name: 'variables.tf', code: VPC_VARIABLES, description: 'Input variables' },
-  { name: 'vpc.tf', code: VPC_VPC, description: 'VPC & subnets' },
-  { name: 'security_groups.tf', code: VPC_SECURITY_GROUPS, description: 'Security groups' },
   { name: 'alb.tf', code: VPC_ALB, description: 'Load balancer' },
   { name: 'asg.tf', code: VPC_ASG, description: 'Auto scaling' },
-  { name: 'rds.tf', code: VPC_RDS, description: 'Database' },
-  { name: 'waf.tf', code: VPC_WAF, description: 'Web firewall' },
   { name: 'cloudflare.tf', code: VPC_CLOUDFLARE, description: 'CloudFlare DNS' },
   { name: 'data.tf', code: VPC_DATA, description: 'Data sources' },
+  { name: 'main.tf', code: VPC_MAIN, description: 'Provider & locals' },
+  { name: 'rds.tf', code: VPC_RDS, description: 'Database' },
+  { name: 'security_groups.tf', code: VPC_SECURITY_GROUPS, description: 'Security groups' },
+  { name: 'variables.tf', code: VPC_VARIABLES, description: 'Input variables' },
+  { name: 'vpc.tf', code: VPC_VPC, description: 'VPC & subnets' },
+  { name: 'waf.tf', code: VPC_WAF, description: 'Web firewall' },
 ];
 
 // ============================================================================
