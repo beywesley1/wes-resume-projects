@@ -4802,26 +4802,20 @@ export default function App() {
                     <span className="sidebar-count">2</span>
                   </div>
                   <div className="sidebar-subcategories" style={{ display: 'block' }}>
-                    <div 
-                      className={`sidebar-subcategory ${selectedDiagram === 's3-static' ? 'active' : ''}`}
-                      onClick={() => { setSelectedDiagram('s3-static'); setSelectedSolutionFile(0); setDiagramCardExpanded(false); setDiagramCodeExpanded(false); }}
-                    >
-                      <span className="subcategory-label">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#22c55e">
-                          <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.5L18 8l-6 3.5L6 8l6-3.5zM5 9.5l6 3.5v6.5l-6-3.5V9.5zm14 0v6.5l-6 3.5v-6.5l6-3.5z"/>
-                        </svg>
-                        S3 Static Website
-                      </span>
-                    </div>
-                    <div 
-                      className={`sidebar-subcategory ${selectedDiagram === 'vpc-sales' ? 'active' : ''}`}
-                      onClick={() => { setSelectedDiagram('vpc-sales'); setSelectedSolutionFile(0); setDiagramCardExpanded(false); setDiagramCodeExpanded(false); }}
-                    >
+                    <div className="sidebar-subcategory">
                       <span className="subcategory-label">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#8B5CF6">
                           <path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2z"/>
                         </svg>
                         VPC - Sales Website
+                      </span>
+                    </div>
+                    <div className="sidebar-subcategory">
+                      <span className="subcategory-label">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#22c55e">
+                          <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.5L18 8l-6 3.5L6 8l6-3.5zM5 9.5l6 3.5v6.5l-6-3.5V9.5zm14 0v6.5l-6 3.5v-6.5l6-3.5z"/>
+                        </svg>
+                        S3 Static Website
                       </span>
                     </div>
                   </div>
