@@ -4966,11 +4966,28 @@ export default function App() {
                       <rect x="4" y="8" width="16" height="8" rx="2" fill="none" stroke="#FF9900" strokeWidth="2"/>
                       <path d="M12 4v4M12 16v4M4 12H2M22 12h-2" stroke="#FF9900" strokeWidth="2"/>
                     </symbol>
+                    <symbol id="cloudflare-icon" viewBox="0 0 24 24">
+                      <path d="M16.5 8.5c-.3-1.4-1.5-2.5-3-2.5-1.3 0-2.4.8-2.9 2-.4-.3-.9-.5-1.4-.5-1.4 0-2.5 1.1-2.5 2.5 0 .2 0 .3.1.5C5.2 10.7 4 12 4 13.5 4 15.4 5.6 17 7.5 17h9c1.9 0 3.5-1.6 3.5-3.5 0-1.8-1.4-3.3-3.1-3.5l-.4-1.5z" fill="#F6821F"/>
+                      <path d="M17.8 12.8l-1.3-4.5c-.1-.4-.5-.6-.9-.5l-4.1 1.2c-.3.1-.5.3-.5.6l-.3 3.9c0 .2.1.4.3.5.2.1.4.1.6 0l1.5-.8 1.4 1.4c.2.2.4.2.6.1.2-.1.3-.3.3-.5l.3-1.8 1.8.3c.2 0 .4-.1.5-.3.1-.2.1-.4-.2-.6z" fill="#FAAD3F"/>
+                    </symbol>
+                    <marker id="arrowheadCloudflare" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#F6821F"/>
+                    </marker>
                   </defs>
+                  
+                  {/* CloudFlare DNS & CDN - Outside AWS */}
+                  <rect x="80" y="35" width="280" height="70" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
+                  <use href="#cloudflare-icon" x="95" y="48" width="40" height="40"/>
+                  <text x="220" y="60" fill="#F6821F" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
+                  <text x="220" y="78" fill="#FAAD3F" fontSize="11" textAnchor="middle" fontFamily="monospace">DNS + CDN + SSL</text>
+                  <text x="220" y="93" fill="#8b949e" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website.com</text>
+                  
+                  {/* Arrow from CloudFlare to AWS Shield */}
+                  <line x1="360" y1="70" x2="445" y2="55" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadCloudflare)"/>
                   
                   {/* AWS Cloud Border */}
                   <rect x="20" y="20" width="1160" height="810" rx="12" fill="none" stroke="#FF9900" strokeWidth="2" strokeDasharray="8,4" opacity="0.5"/>
-                  <text x="40" y="50" fill="#FF9900" fontSize="16" fontFamily="monospace" fontWeight="bold">AWS Cloud (us-east-1)</text>
+                  <text x="800" y="50" fill="#FF9900" fontSize="16" fontFamily="monospace" fontWeight="bold">AWS Cloud (us-east-1)</text>
                   
                   {/* AWS Shield Advanced */}
                   <rect x="450" y="35" width="320" height="40" rx="6" fill="#232f3e" stroke="#06b6d4" strokeWidth="2"/>
