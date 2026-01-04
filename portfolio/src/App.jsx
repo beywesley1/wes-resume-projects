@@ -14,6 +14,16 @@ import VPC_WAF from '../solutions/vpc-sales-website/waf.tf?raw';
 import VPC_CLOUDFLARE from '../solutions/vpc-sales-website/cloudflare.tf?raw';
 import VPC_DATA from '../solutions/vpc-sales-website/data.tf?raw';
 
+// Import Static Website S3 solution files
+import S3_MAIN from '../solutions/static-website-s3/main.tf?raw';
+import S3_VARIABLES from '../solutions/static-website-s3/variables.tf?raw';
+import S3_S3 from '../solutions/static-website-s3/s3.tf?raw';
+import S3_CLOUDFRONT from '../solutions/static-website-s3/cloudfront.tf?raw';
+import S3_CLOUDFLARE from '../solutions/static-website-s3/cloudflare.tf?raw';
+import S3_ACM from '../solutions/static-website-s3/acm.tf?raw';
+import S3_DATA from '../solutions/static-website-s3/data.tf?raw';
+import S3_OUTPUTS from '../solutions/static-website-s3/outputs.tf?raw';
+
 // Solution files configuration (alphabetically sorted)
 const VPC_SOLUTION_FILES = [
   { name: 'alb.tf', code: VPC_ALB, description: 'Load balancer' },
@@ -26,6 +36,18 @@ const VPC_SOLUTION_FILES = [
   { name: 'variables.tf', code: VPC_VARIABLES, description: 'Input variables' },
   { name: 'vpc.tf', code: VPC_VPC, description: 'VPC & subnets' },
   { name: 'waf.tf', code: VPC_WAF, description: 'Web firewall' },
+];
+
+// S3 Static Website solution files (alphabetically sorted)
+const S3_SOLUTION_FILES = [
+  { name: 'acm.tf', code: S3_ACM, description: 'SSL certificate' },
+  { name: 'cloudflare.tf', code: S3_CLOUDFLARE, description: 'DNS config' },
+  { name: 'cloudfront.tf', code: S3_CLOUDFRONT, description: 'CDN distribution' },
+  { name: 'data.tf', code: S3_DATA, description: 'Data sources' },
+  { name: 'main.tf', code: S3_MAIN, description: 'Provider & locals' },
+  { name: 'outputs.tf', code: S3_OUTPUTS, description: 'Output values' },
+  { name: 's3.tf', code: S3_S3, description: 'S3 bucket' },
+  { name: 'variables.tf', code: S3_VARIABLES, description: 'Input variables' },
 ];
 
 // ============================================================================
@@ -4759,9 +4781,20 @@ export default function App() {
                       </svg>
                       AWS Architectures
                     </div>
-                    <span className="sidebar-count">1</span>
+                    <span className="sidebar-count">2</span>
                   </div>
                   <div className="sidebar-subcategories" style={{ display: 'block' }}>
+                    <div 
+                      className={`sidebar-subcategory ${selectedDiagram === 's3-static' ? 'active' : ''}`}
+                      onClick={() => setSelectedDiagram('s3-static')}
+                    >
+                      <span className="subcategory-label">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#22c55e">
+                          <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.5L18 8l-6 3.5L6 8l6-3.5zM5 9.5l6 3.5v6.5l-6-3.5V9.5zm14 0v6.5l-6 3.5v-6.5l6-3.5z"/>
+                        </svg>
+                        S3 Static Website
+                      </span>
+                    </div>
                     <div 
                       className={`sidebar-subcategory ${selectedDiagram === 'vpc-sales' ? 'active' : ''}`}
                       onClick={() => setSelectedDiagram('vpc-sales')}
@@ -5205,6 +5238,270 @@ export default function App() {
                     <li><strong>WAF:</strong> SQL injection, XSS</li>
                     <li><strong>Shield:</strong> DDoS protection</li>
                     <li><strong>ACLs:</strong> Network isolation</li>
+                  </ul>
+                </div>
+              </div>
+              </>
+              )}
+              </div>
+                </>
+              )}
+              
+              {selectedDiagram === 's3-static' && (
+                <>
+                  <div className="diagram-card" style={{ maxWidth: '100%' }}>
+                    <div 
+                      className="diagram-header"
+                      onClick={() => setDiagramCardExpanded(!diagramCardExpanded)}
+                      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                    >
+                      <div>
+                        <h3>Static Website - S3 + CloudFront + CloudFlare</h3>
+                        <p>Cost-effective static hosting with global CDN, SSL/TLS, and edge caching</p>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{diagramCardExpanded ? 'Collapse' : 'Expand'}</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: diagramCardExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {diagramCardExpanded && (
+                    <>
+                    {/* Terraform Code Section */}
+                    <div 
+                      className="terraform-code-header"
+                      onClick={() => setDiagramCodeExpanded(!diagramCodeExpanded)}
+                      style={{ 
+                        cursor: 'pointer', 
+                        padding: '16px 24px', 
+                        borderTop: '1px solid var(--border)', 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                          <polyline points="14,2 14,8 20,8"/>
+                          <line x1="16" y1="13" x2="8" y2="13"/>
+                          <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        <div>
+                          <h4 style={{ margin: 0, fontSize: '15px', color: '#4ade80', fontFamily: 'monospace' }}>Terraform Infrastructure Code</h4>
+                          <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Complete IaC for S3 + CloudFront static hosting</p>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{diagramCodeExpanded ? 'Collapse' : 'Expand'}</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2" style={{ transform: diagramCodeExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {diagramCodeExpanded && (
+                      <div className="terraform-code-section" style={{ background: '#0d1117' }}>
+                        <div className="terraform-code-tabs" style={{ background: '#161b22', borderBottom: '1px solid #30363d', padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                          {S3_SOLUTION_FILES.map((file, index) => (
+                            <button
+                              key={file.name}
+                              onClick={(e) => { e.stopPropagation(); setSelectedSolutionFile(index); }}
+                              style={{ 
+                                background: selectedSolutionFile === index ? '#0d1117' : 'transparent',
+                                color: selectedSolutionFile === index ? '#4ade80' : '#8b949e',
+                                padding: '6px 12px',
+                                borderRadius: '6px 6px 0 0',
+                                fontSize: '12px',
+                                fontFamily: 'monospace',
+                                border: 'none',
+                                cursor: 'pointer',
+                                borderBottom: selectedSolutionFile === index ? '2px solid #4ade80' : '2px solid transparent',
+                                transition: 'all 0.2s ease'
+                              }}
+                              title={file.description}
+                            >
+                              {file.name}
+                            </button>
+                          ))}
+                          <button 
+                            className={`copy-btn ${copiedId === 'terraform-s3' ? 'copied' : ''}`}
+                            onClick={(e) => { e.stopPropagation(); copy(S3_SOLUTION_FILES[selectedSolutionFile].code, 'terraform-s3'); }}
+                            style={{ marginLeft: 'auto', background: '#21262d', border: '1px solid #30363d', color: '#c9d1d9', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontFamily: 'monospace' }}
+                          >
+                            {copiedId === 'terraform-s3' ? '✓ Copied' : '📋 Copy'}
+                          </button>
+                        </div>
+                        <div style={{ padding: '0' }}>
+                          <pre style={{ 
+                            margin: 0, 
+                            padding: '16px', 
+                            background: '#0d1117', 
+                            overflow: 'auto', 
+                            maxHeight: '500px',
+                            fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace", 
+                            fontSize: '13px', 
+                            lineHeight: '1.6'
+                          }}><HighlightedCode code={S3_SOLUTION_FILES[selectedSolutionFile].code} /></pre>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="diagram-container" style={{ padding: '24px', overflow: 'auto' }}>
+                      <svg viewBox="0 0 1000 500" className="network-diagram" style={{ minWidth: '900px' }}>
+                  {/* Background Gradients & Definitions */}
+                  <defs>
+                    <linearGradient id="awsGradientS3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1a1a2e" />
+                      <stop offset="100%" stopColor="#16213e" />
+                    </linearGradient>
+                    <filter id="glowS3">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <marker id="arrowheadOrangeS3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#F6821F"/>
+                    </marker>
+                    <marker id="arrowheadPurpleS3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#8B5CF6"/>
+                    </marker>
+                    <marker id="arrowheadGreenS3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                      <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e"/>
+                    </marker>
+                  </defs>
+                  
+                  {/* User */}
+                  <rect x="40" y="180" width="100" height="80" rx="8" fill="#1e293b" stroke="#60a5fa" strokeWidth="2"/>
+                  <text x="90" y="215" fill="#60a5fa" fontSize="24" textAnchor="middle">👤</text>
+                  <text x="90" y="245" fill="#60a5fa" fontSize="12" textAnchor="middle" fontWeight="bold" fontFamily="monospace">User</text>
+                  
+                  {/* Arrow User to CloudFlare */}
+                  <line x1="140" y1="220" x2="195" y2="220" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#arrowheadOrangeS3)"/>
+                  <text x="168" y="210" fill="#60a5fa" fontSize="8" textAnchor="middle" fontFamily="monospace">DNS</text>
+                  
+                  {/* CloudFlare */}
+                  <rect x="200" y="160" width="140" height="120" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
+                  <text x="270" y="195" fill="#F6821F" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
+                  <text x="270" y="215" fill="#FAAD3F" fontSize="9" textAnchor="middle" fontFamily="monospace">DNS Management</text>
+                  <text x="270" y="235" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">example.com</text>
+                  <text x="270" y="255" fill="#6ee7b7" fontSize="8" textAnchor="middle" fontFamily="monospace">CNAME → CloudFront</text>
+                  
+                  {/* Arrow CloudFlare to CloudFront */}
+                  <line x1="340" y1="220" x2="425" y2="220" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadPurpleS3)"/>
+                  <text x="383" y="210" fill="#F6821F" fontSize="8" textAnchor="middle" fontFamily="monospace">HTTPS</text>
+                  
+                  {/* AWS Cloud Border */}
+                  <rect x="415" y="50" width="560" height="400" rx="12" fill="none" stroke="#FF9900" strokeWidth="2" strokeDasharray="8,4" opacity="0.5"/>
+                  <text x="695" y="75" fill="#FF9900" fontSize="14" fontFamily="monospace" fontWeight="bold">AWS Cloud</text>
+                  
+                  {/* CloudFront */}
+                  <rect x="430" y="140" width="180" height="160" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glowS3)"/>
+                  <text x="520" y="175" fill="#8B5CF6" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFront</text>
+                  <text x="520" y="195" fill="#a78bfa" fontSize="9" textAnchor="middle" fontFamily="monospace">CDN Distribution</text>
+                  <text x="520" y="215" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">d1234.cloudfront.net</text>
+                  <text x="520" y="235" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Edge Caching</text>
+                  <text x="520" y="255" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">SSL Termination</text>
+                  <text x="520" y="275" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Security Headers</text>
+                  <text x="520" y="290" fill="#94a3b8" fontSize="7" textAnchor="middle" fontFamily="monospace">HTTP/2 + HTTP/3</text>
+                  
+                  {/* ACM Certificate Badge */}
+                  <rect x="580" y="115" width="70" height="45" rx="4" fill="#232f3e" stroke="#f59e0b" strokeWidth="2"/>
+                  <text x="615" y="140" fill="#f59e0b" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">ACM</text>
+                  <text x="615" y="155" fill="#fbbf24" fontSize="7" textAnchor="middle" fontFamily="monospace">TLS 1.2+</text>
+                  
+                  {/* Arrow CloudFront to S3 */}
+                  <line x1="610" y1="220" x2="695" y2="220" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#arrowheadGreenS3)"/>
+                  <text x="653" y="210" fill="#8B5CF6" fontSize="8" textAnchor="middle" fontFamily="monospace">OAC</text>
+                  
+                  {/* S3 Bucket */}
+                  <rect x="700" y="140" width="180" height="160" rx="8" fill="#232f3e" stroke="#22c55e" strokeWidth="2"/>
+                  <text x="790" y="175" fill="#22c55e" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">S3 Bucket</text>
+                  <text x="790" y="195" fill="#4ade80" fontSize="9" textAnchor="middle" fontFamily="monospace">Static Website Origin</text>
+                  <text x="790" y="215" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">website-prod-a1b2c3d4</text>
+                  <text x="790" y="235" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Private Access Only</text>
+                  <text x="790" y="255" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Versioning Enabled</text>
+                  <text x="790" y="275" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">AES-256 Encryption</text>
+                  <text x="790" y="290" fill="#94a3b8" fontSize="7" textAnchor="middle" fontFamily="monospace">30 day version cleanup</text>
+
+                  {/* S3 Contents Preview */}
+                  <rect x="730" y="330" width="120" height="80" rx="4" fill="#1e293b" stroke="#374151" strokeWidth="1"/>
+                  <text x="790" y="348" fill="#9ca3af" fontSize="8" textAnchor="middle" fontFamily="monospace">📁 Contents</text>
+                  <text x="790" y="365" fill="#60a5fa" fontSize="7" textAnchor="middle" fontFamily="monospace">index.html</text>
+                  <text x="790" y="378" fill="#60a5fa" fontSize="7" textAnchor="middle" fontFamily="monospace">error.html</text>
+                  <text x="790" y="391" fill="#a78bfa" fontSize="7" textAnchor="middle" fontFamily="monospace">/assets/*</text>
+                  <text x="790" y="404" fill="#a78bfa" fontSize="7" textAnchor="middle" fontFamily="monospace">/js/* /css/*</text>
+                  
+                  {/* Edge Locations */}
+                  <rect x="450" y="330" width="140" height="60" rx="4" fill="#1e293b" stroke="#8B5CF6" strokeWidth="1" strokeDasharray="4,2"/>
+                  <text x="520" y="350" fill="#8B5CF6" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">🌐 Edge Locations</text>
+                  <text x="520" y="368" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">PriceClass_100</text>
+                  <text x="520" y="382" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">NA, EU (Low Latency)</text>
+
+                  {/* Flow Labels */}
+                  <text x="500" y="430" fill="#9ca3af" fontSize="10" textAnchor="middle" fontFamily="monospace">User → CloudFlare DNS → CloudFront CDN → S3 Origin</text>
+                  <text x="500" y="445" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">Global edge caching • SSL/TLS encryption • ~$1-5/month</text>
+                </svg>
+              </div>
+              
+              <div className="diagram-details">
+                <div className="diagram-detail-card">
+                  <h4>S3 Configuration</h4>
+                  <ul>
+                    <li><strong>Access:</strong> Private (OAC only)</li>
+                    <li><strong>Versioning:</strong> Enabled</li>
+                    <li><strong>Encryption:</strong> AES-256</li>
+                    <li><strong>Lifecycle:</strong> 30 day cleanup</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>CloudFront CDN</h4>
+                  <ul>
+                    <li><strong>Price Class:</strong> 100 (NA, EU)</li>
+                    <li><strong>Protocol:</strong> HTTP/2 + HTTP/3</li>
+                    <li><strong>Cache:</strong> Optimized policy</li>
+                    <li><strong>SPA:</strong> 404 → index.html</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>SSL/TLS (ACM)</h4>
+                  <ul>
+                    <li><strong>Min Version:</strong> TLS 1.2</li>
+                    <li><strong>Validation:</strong> DNS (CloudFlare)</li>
+                    <li><strong>Region:</strong> us-east-1</li>
+                    <li><strong>Auto-renew:</strong> Yes</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>CloudFlare DNS</h4>
+                  <ul>
+                    <li><strong>Record:</strong> CNAME → CF</li>
+                    <li><strong>Proxy:</strong> Disabled</li>
+                    <li><strong>SSL Mode:</strong> Full</li>
+                    <li><strong>HTTPS:</strong> Always</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>Security Headers</h4>
+                  <ul>
+                    <li><strong>HSTS:</strong> Enabled</li>
+                    <li><strong>X-Frame:</strong> DENY</li>
+                    <li><strong>XSS:</strong> Protected</li>
+                    <li><strong>Referrer:</strong> Strict origin</li>
+                  </ul>
+                </div>
+                <div className="diagram-detail-card">
+                  <h4>Estimated Cost</h4>
+                  <ul>
+                    <li><strong>S3:</strong> ~$0.50/month</li>
+                    <li><strong>CloudFront:</strong> ~$1-4/month</li>
+                    <li><strong>ACM:</strong> Free</li>
+                    <li><strong>Total:</strong> ~$1-5/month</li>
                   </ul>
                 </div>
               </div>

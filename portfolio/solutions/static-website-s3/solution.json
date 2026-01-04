@@ -1,0 +1,56 @@
+{
+  "name": "Static Website - S3 + CloudFront + CloudFlare",
+  "description": "Production-ready static website hosting with S3, CloudFront CDN, and CloudFlare DNS",
+  "version": "1.0.0",
+  "category": "web-hosting",
+  "tags": ["aws", "s3", "cloudfront", "cloudflare", "static-website", "cdn", "ssl"],
+  "architecture": {
+    "components": [
+      {
+        "name": "CloudFlare",
+        "type": "dns",
+        "description": "DNS management and optional DDoS protection"
+      },
+      {
+        "name": "CloudFront",
+        "type": "cdn",
+        "description": "Global CDN with edge caching and SSL termination"
+      },
+      {
+        "name": "S3",
+        "type": "storage",
+        "description": "Static website content storage with versioning"
+      },
+      {
+        "name": "ACM",
+        "type": "certificate",
+        "description": "SSL/TLS certificate for HTTPS"
+      }
+    ],
+    "flow": "User → CloudFlare DNS → CloudFront CDN → S3 Bucket"
+  },
+  "features": [
+    "Global CDN distribution via CloudFront",
+    "SSL/TLS with ACM certificate",
+    "S3 Origin Access Control (OAC)",
+    "Versioning for rollback capability",
+    "Security headers via CloudFront Functions",
+    "SPA routing support (404 → index.html)",
+    "Automatic HTTPS redirect",
+    "Cost-effective static hosting"
+  ],
+  "estimated_cost": {
+    "monthly": "$1-5",
+    "notes": "Based on moderate traffic; S3 storage + CloudFront requests"
+  },
+  "files": [
+    "main.tf",
+    "variables.tf",
+    "s3.tf",
+    "cloudfront.tf",
+    "cloudflare.tf",
+    "acm.tf",
+    "data.tf",
+    "outputs.tf"
+  ]
+}
