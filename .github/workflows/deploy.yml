@@ -36,6 +36,10 @@ jobs:
         working-directory: portfolio
         run: npm ci
 
+      - name: Lint code
+        working-directory: portfolio
+        run: npm run lint
+
       - name: Build website
         working-directory: portfolio
         run: npm run build
