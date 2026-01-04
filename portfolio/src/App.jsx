@@ -4766,9 +4766,9 @@ export default function App() {
       {/* Solutions Page */}
       {currentPage === 'solutions' && (
         <div className="scripts-page">
-          <div className="scripts-layout">
+          <div className="scripts-layout" style={{ display: 'flex' }}>
             {/* Sidebar */}
-            <aside className="scripts-sidebar">
+            <aside className="scripts-sidebar" style={{ minWidth: '280px', width: '280px', display: 'block', background: '#1a1a2e' }}>
               <div className="sidebar-header">
                 <h2>Solutions</h2>
                 <p>Architecture diagrams & IaC</p>
