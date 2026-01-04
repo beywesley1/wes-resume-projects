@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { TERRAFORM_MODULES, TF_PROVIDERS, TF_SUBCATEGORY_ICONS, getTfSubcategories, getTfModuleIcon } from './terraformData';
 
 // Import Terraform solutions as raw text (Vite feature)
-import VPC_TERRAFORM_CODE from './terraform-solutions/vpc-sales-website/main.tf?raw';
+// Solutions are stored in /solutions folder at project root for easier management
+import VPC_TERRAFORM_CODE from '../solutions/vpc-sales-website/main.tf?raw';
 
 // ============================================================================
 // CONFIGURATION - Edit these values
@@ -3737,8 +3738,8 @@ const styles = `
     margin: 0 4px;
   }
   
-  /* Diagrams Page */
-  .diagrams-page {
+  /* Solutions Page */
+  .solutions-page {
     padding: 80px 0 40px;
     min-height: 100vh;
   }
@@ -4346,7 +4347,7 @@ export default function App() {
             <button onClick={() => setCurrentPage('home')} className={`nav-tab ${currentPage === 'home' ? 'active' : ''}`}>Home</button>
             <button onClick={() => setCurrentPage('scripts')} className={`nav-tab ${currentPage === 'scripts' ? 'active' : ''}`}>Scripts</button>
             <button onClick={() => setCurrentPage('terraform')} className={`nav-tab ${currentPage === 'terraform' ? 'active' : ''}`}>Terraform Modules</button>
-            <button onClick={() => setCurrentPage('diagrams')} className={`nav-tab ${currentPage === 'diagrams' ? 'active' : ''}`}>Diagrams</button>
+            <button onClick={() => setCurrentPage('solutions')} className={`nav-tab ${currentPage === 'solutions' ? 'active' : ''}`}>Solutions</button>
           </nav>
         </div>
       </header>
@@ -4705,8 +4706,8 @@ export default function App() {
         </div>
       )}
       
-      {/* Diagrams Page */}
-      {currentPage === 'diagrams' && (
+      {/* Solutions Page */}
+      {currentPage === 'solutions' && (
         <div className="scripts-page">
           <div className="scripts-layout">
             {/* Sidebar */}
@@ -4717,7 +4718,7 @@ export default function App() {
                 </svg>
                 <input 
                   type="text" 
-                  placeholder="Search diagrams..." 
+                  placeholder="Search solutions..." 
                   value={diagramSearch}
                   onChange={(e) => setDiagramSearch(e.target.value)}
                 />
