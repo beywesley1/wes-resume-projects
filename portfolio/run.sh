@@ -54,23 +54,25 @@ run_terraform() {
 
 # Main command handling
 case "${1:-help}" in
-    bootstrap-init)
-        log_info "Initializing bootstrap (state backend)..."
-        check_aws_credentials
-        run_terraform "terraform/bootstrap" init
-        ;;
-    
-    bootstrap-plan)
-        log_info "Planning bootstrap infrastructure..."
-        check_aws_credentials
-        run_terraform "terraform/bootstrap" plan
-        ;;
-    
-    bootstrap-apply)
-        log_info "Applying bootstrap infrastructure..."
-        check_aws_credentials
-        run_terraform "terraform/bootstrap" apply
-        ;;
+    # NOTE: Bootstrap commands disabled - terraform/bootstrap directory does not exist
+    # Uncomment when bootstrap infrastructure is created
+    # bootstrap-init)
+    #     log_info "Initializing bootstrap (state backend)..."
+    #     check_aws_credentials
+    #     run_terraform "terraform/bootstrap" init
+    #     ;;
+    # 
+    # bootstrap-plan)
+    #     log_info "Planning bootstrap infrastructure..."
+    #     check_aws_credentials
+    #     run_terraform "terraform/bootstrap" plan
+    #     ;;
+    # 
+    # bootstrap-apply)
+    #     log_info "Applying bootstrap infrastructure..."
+    #     check_aws_credentials
+    #     run_terraform "terraform/bootstrap" apply
+    #     ;;
     
     init)
         log_info "Initializing main infrastructure..."
@@ -158,11 +160,6 @@ case "${1:-help}" in
         echo "================================"
         echo ""
         echo "Usage: ./run.sh <command>"
-        echo ""
-        echo "Bootstrap Commands (run first):"
-        echo "  bootstrap-init    Initialize bootstrap Terraform"
-        echo "  bootstrap-plan    Plan state backend infrastructure"
-        echo "  bootstrap-apply   Create S3 bucket + DynamoDB for state"
         echo ""
         echo "Infrastructure Commands:"
         echo "  init              Initialize main Terraform"

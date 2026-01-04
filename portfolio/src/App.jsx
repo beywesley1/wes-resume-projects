@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { TERRAFORM_MODULES, TF_PROVIDERS, TF_SUBCATEGORY_ICONS, getTfSubcategories, getTfModuleIcon } from './terraformData';
 
 // Import Terraform solutions as raw text (Vite feature)
-// Cache bust: v2
 import VPC_TERRAFORM_CODE from './terraform-solutions/vpc-sales-website/main.tf?raw';
 
 // ============================================================================
