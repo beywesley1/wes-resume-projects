@@ -4976,28 +4976,24 @@ export default function App() {
                   </defs>
                   
                   {/* CloudFlare DNS & CDN - Outside AWS */}
-                  <rect x="80" y="35" width="280" height="70" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
-                  <use href="#cloudflare-icon" x="95" y="48" width="40" height="40"/>
-                  <text x="220" y="60" fill="#F6821F" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
-                  <text x="220" y="78" fill="#FAAD3F" fontSize="11" textAnchor="middle" fontFamily="monospace">DNS + CDN + SSL</text>
-                  <text x="220" y="93" fill="#8b949e" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website.com</text>
+                  <rect x="80" y="55" width="280" height="70" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
+                  <use href="#cloudflare-icon" x="95" y="68" width="40" height="40"/>
+                  <text x="220" y="80" fill="#F6821F" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
+                  <text x="220" y="98" fill="#FAAD3F" fontSize="11" textAnchor="middle" fontFamily="monospace">DNS + CDN + DDoS + SSL</text>
+                  <text x="220" y="113" fill="#8b949e" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website.com</text>
                   
-                  {/* Arrow from CloudFlare to AWS Shield */}
-                  <line x1="360" y1="70" x2="445" y2="55" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadCloudflare)"/>
+                  {/* Arrow from CloudFlare to AWS WAF */}
+                  <line x1="360" y1="90" x2="465" y2="90" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadCloudflare)"/>
                   
                   {/* AWS Cloud Border */}
                   <rect x="20" y="20" width="1160" height="810" rx="12" fill="none" stroke="#FF9900" strokeWidth="2" strokeDasharray="8,4" opacity="0.5"/>
                   <text x="800" y="50" fill="#FF9900" fontSize="16" fontFamily="monospace" fontWeight="bold">AWS Cloud (us-east-1)</text>
                   
-                  {/* AWS Shield Advanced */}
-                  <rect x="450" y="35" width="320" height="40" rx="6" fill="#232f3e" stroke="#06b6d4" strokeWidth="2"/>
-                  <use href="#aws-shield-icon" x="460" y="40" width="28" height="28"/>
-                  <text x="620" y="62" fill="#06b6d4" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">AWS Shield Advanced (DDoS)</text>
-                  
                   {/* AWS WAF */}
-                  <rect x="470" y="90" width="280" height="45" rx="6" fill="#232f3e" stroke="#ef4444" strokeWidth="2"/>
-                  <use href="#aws-waf-icon" x="480" y="98" width="30" height="30"/>
-                  <text x="630" y="118" fill="#ef4444" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">AWS WAF (Firewall)</text>
+                  <rect x="470" y="55" width="300" height="70" rx="6" fill="#232f3e" stroke="#ef4444" strokeWidth="2"/>
+                  <use href="#aws-waf-icon" x="485" y="70" width="35" height="35"/>
+                  <text x="640" y="85" fill="#ef4444" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">AWS WAF</text>
+                  <text x="640" y="105" fill="#fca5a5" fontSize="11" textAnchor="middle" fontFamily="monospace">SQL Injection / XSS Protection</text>
                   
                   {/* VPC Container */}
                   <rect x="40" y="150" width="1120" height="660" rx="10" fill="url(#vpcGradient)" stroke="#8B5CF6" strokeWidth="3"/>
@@ -5015,9 +5011,8 @@ export default function App() {
                   <text x="630" y="240" fill="#8B5CF6" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Application Load Balancer</text>
                   <text x="630" y="258" fill="#a78bfa" fontSize="11" textAnchor="middle" fontFamily="monospace">sales.example.com</text>
                   
-                  {/* Connection from Shield to WAF to IGW to ALB */}
-                  <line x1="610" y1="75" x2="610" y2="90" stroke="#06b6d4" strokeWidth="2"/>
-                  <line x1="610" y1="135" x2="610" y2="160" stroke="#ef4444" strokeWidth="2"/>
+                  {/* Connection from WAF to IGW to ALB */}
+                  <line x1="610" y1="125" x2="610" y2="160" stroke="#ef4444" strokeWidth="2"/>
                   <line x1="610" y1="200" x2="610" y2="215" stroke="#FF9900" strokeWidth="2"/>
                   
                   {/* PUBLIC SUBNETS SECTION */}
