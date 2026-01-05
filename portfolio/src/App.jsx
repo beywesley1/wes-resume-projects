@@ -5069,10 +5069,10 @@ export default function App() {
                   <text x="600" y="278" fill="#a78bfa" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website-alb.amazonaws.com</text>
                   
                   {/* WAF Badge attached to ALB */}
-                  <rect x="700" y="235" width="65" height="50" rx="4" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
-                  <image href="/aws-icons/waf.svg" x="708" y="238" width="28" height="28"/>
-                  <text x="732" y="278" fill="#DD344C" fontSize="8" textAnchor="middle" fontWeight="bold" fontFamily="monospace">WAF</text>
-                  <text x="730" y="295" fill="#fca5a5" fontSize="8" textAnchor="middle" fontFamily="monospace">SQL/XSS Protection</text>
+                  <rect x="700" y="230" width="75" height="60" rx="4" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
+                  <image href="/aws-icons/waf.svg" x="715" y="236" width="28" height="28"/>
+                  <text x="737" y="278" fill="#DD344C" fontSize="8" textAnchor="middle" fontWeight="bold" fontFamily="monospace">WAF</text>
+                  <text x="737" y="295" fill="#fca5a5" fontSize="8" textAnchor="middle" fontFamily="monospace">SQL/XSS Protection</text>
                   
                   {/* PUBLIC SUBNETS SECTION */}
                   <text x="340" y="330" fill="#22c55e" fontSize="14" fontWeight="bold" fontFamily="monospace">PUBLIC SUBNETS (Web Tier)</text>
@@ -5129,7 +5129,7 @@ export default function App() {
                   
                   {/* Server 1C with EIP */}
                   <rect x="950" y="395" width="110" height="55" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="958" y="403" width="18" height="18"/>
+                  <image href="/aws-icons/ec2.svg" x="955" y="400" width="20" height="20"/>
                   <text x="1005" y="418" fill="#3b82f6" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1C</text>
                   <text x="1005" y="432" fill="#60a5fa" fontSize="8" textAnchor="middle" fontFamily="monospace">10.11.3.10</text>
                   <text x="1005" y="444" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">t3.medium</text>
@@ -5421,10 +5421,10 @@ export default function App() {
                   <text x="520" y="290" fill="#94a3b8" fontSize="7" textAnchor="middle" fontFamily="monospace">HTTP/2 + HTTP/3</text>
                   
                   {/* ACM Certificate Badge */}
-                  <rect x="575" y="100" width="80" height="55" rx="4" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
-                  <image href="/aws-icons/acm.svg" x="591" y="103" width="28" height="28"/>
-                  <text x="615" y="145" fill="#DD344C" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">ACM</text>
-                  <text x="615" y="155" fill="#fbbf24" fontSize="7" textAnchor="middle" fontFamily="monospace">TLS 1.2+</text>
+                  <rect x="575" y="95" width="90" height="65" rx="4" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
+                  <image href="/aws-icons/acm.svg" x="598" y="102" width="28" height="28"/>
+                  <text x="620" y="145" fill="#DD344C" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">ACM</text>
+                  <text x="620" y="157" fill="#fbbf24" fontSize="7" textAnchor="middle" fontFamily="monospace">TLS 1.2+</text>
                   
                   {/* Arrow CloudFront to S3 */}
                   <line x1="610" y1="220" x2="695" y2="220" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#arrowheadGreenS3)"/>

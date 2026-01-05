@@ -92,3 +92,10 @@ When creating or modifying architecture diagrams in the Solutions page:
 - Use arrows with markers for direction
 - Label connections above the line, not overlapping
 - Use service-appropriate colors for arrows
+
+### Icon Spacing Standards
+- Minimum 6-8px padding between icon and box border
+- Icons should be horizontally centered in their container
+- For small badges (ACM, WAF): box width = icon width + 40-50px
+- For small badges: box height = icon height + 30-40px
+- Text labels should be vertically spaced 12-15px apart
