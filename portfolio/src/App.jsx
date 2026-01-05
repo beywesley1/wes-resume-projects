@@ -5032,10 +5032,10 @@ export default function App() {
                   
                   {/* CloudFlare DNS & CDN - Left of Internet */}
                   <rect x="40" y="10" width="200" height="70" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
-                  <use href="#cloudflare-icon" x="50" y="23" width="40" height="40"/>
-                  <text x="140" y="35" fill="#F6821F" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
-                  <text x="140" y="52" fill="#FAAD3F" fontSize="9" textAnchor="middle" fontFamily="monospace">DNS + CDN + DDoS + SSL</text>
-                  <text x="140" y="68" fill="#6ee7b7" fontSize="9" textAnchor="middle" fontFamily="monospace">sales-website.com</text>
+                  <image href="/aws-icons/cloudflare.svg" x="50" y="18" width="36" height="36"/>
+                  <text x="150" y="35" fill="#F6821F" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
+                  <text x="150" y="52" fill="#FAAD3F" fontSize="9" textAnchor="middle" fontFamily="monospace">DNS + CDN + DDoS + SSL</text>
+                  <text x="150" y="68" fill="#6ee7b7" fontSize="9" textAnchor="middle" fontFamily="monospace">sales-website.com</text>
                   
                   {/* Arrow CloudFlare to Internet */}
                   <line x1="240" y1="45" x2="515" y2="40" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadOrange)"/>
@@ -5064,14 +5064,14 @@ export default function App() {
                   
                   {/* Application Load Balancer + WAF Combined */}
                   <rect x="430" y="235" width="340" height="70" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glow)"/>
-                  <use href="#aws-alb-icon" x="445" y="250" width="35" height="35"/>
+                  <image href="/aws-icons/elb.svg" x="442" y="247" width="36" height="36"/>
                   <text x="600" y="260" fill="#8B5CF6" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Application Load Balancer</text>
                   <text x="600" y="278" fill="#a78bfa" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website-alb.amazonaws.com</text>
                   
                   {/* WAF Badge attached to ALB */}
-                  <rect x="700" y="240" width="60" height="40" rx="4" fill="#232f3e" stroke="#ef4444" strokeWidth="2"/>
-                  <use href="#aws-waf-icon" x="708" y="245" width="20" height="20"/>
-                  <text x="730" y="273" fill="#ef4444" fontSize="8" textAnchor="middle" fontWeight="bold" fontFamily="monospace">WAF</text>
+                  <rect x="700" y="235" width="65" height="50" rx="4" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
+                  <image href="/aws-icons/waf.svg" x="708" y="238" width="28" height="28"/>
+                  <text x="732" y="278" fill="#DD344C" fontSize="8" textAnchor="middle" fontWeight="bold" fontFamily="monospace">WAF</text>
                   <text x="730" y="295" fill="#fca5a5" fontSize="8" textAnchor="middle" fontFamily="monospace">SQL/XSS Protection</text>
                   
                   {/* PUBLIC SUBNETS SECTION */}
@@ -5084,7 +5084,7 @@ export default function App() {
                   
                   {/* Server 1A with EIP */}
                   <rect x="355" y="395" width="100" height="55" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="363" y="403" width="18" height="18"/>
+                  <image href="/aws-icons/ec2.svg" x="360" y="400" width="20" height="20"/>
                   <text x="405" y="418" fill="#3b82f6" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1A</text>
                   <text x="405" y="432" fill="#60a5fa" fontSize="8" textAnchor="middle" fontFamily="monospace">10.11.1.10</text>
                   <text x="405" y="444" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">t3.medium</text>
@@ -5093,7 +5093,7 @@ export default function App() {
                   
                   {/* Server 2A with EIP (ASG) */}
                   <rect x="475" y="395" width="100" height="55" rx="6" fill="#1e293b" stroke="#f59e0b" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="483" y="403" width="18" height="18"/>
+                  <image href="/aws-icons/ec2.svg" x="480" y="400" width="20" height="20"/>
                   <text x="525" y="418" fill="#f59e0b" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 2A</text>
                   <text x="525" y="432" fill="#fbbf24" fontSize="8" textAnchor="middle" fontFamily="monospace">10.11.1.11</text>
                   <text x="525" y="444" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">ASG Scaled</text>
@@ -5111,7 +5111,7 @@ export default function App() {
                   
                   {/* Server 1B with EIP */}
                   <rect x="680" y="395" width="110" height="55" rx="6" fill="#1e293b" stroke="#3b82f6" strokeWidth="2"/>
-                  <use href="#aws-ec2-icon" x="688" y="403" width="18" height="18"/>
+                  <image href="/aws-icons/ec2.svg" x="685" y="400" width="20" height="20"/>
                   <text x="735" y="418" fill="#3b82f6" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Server 1B</text>
                   <text x="735" y="432" fill="#60a5fa" fontSize="8" textAnchor="middle" fontFamily="monospace">10.11.2.10</text>
                   <text x="735" y="444" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">t3.medium</text>
@@ -5155,7 +5155,7 @@ export default function App() {
                   
                   {/* RDS Writer */}
                   <rect x="360" y="595" width="210" height="55" rx="6" fill="#1e293b" stroke="#06b6d4" strokeWidth="2"/>
-                  <use href="#aws-rds-icon" x="370" y="603" width="20" height="20"/>
+                  <image href="/aws-icons/rds.svg" x="365" y="600" width="24" height="24"/>
                   <text x="475" y="615" fill="#06b6d4" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Writer</text>
                   <text x="465" y="630" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">10.11.101.10 | db.r5.large</text>
                   <text x="465" y="642" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Primary</text>
@@ -5167,7 +5167,7 @@ export default function App() {
                   
                   {/* RDS Reader */}
                   <rect x="630" y="595" width="210" height="55" rx="6" fill="#1e293b" stroke="#10b981" strokeWidth="2"/>
-                  <use href="#aws-rds-icon" x="640" y="603" width="20" height="20"/>
+                  <image href="/aws-icons/rds.svg" x="635" y="600" width="24" height="24"/>
                   <text x="745" y="615" fill="#10b981" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">RDS Reader</text>
                   <text x="735" y="630" fill="#34d399" fontSize="8" textAnchor="middle" fontFamily="monospace">10.11.102.10 | db.r5.large</text>
                   <text x="735" y="642" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">PostgreSQL 15 | Replica</text>
@@ -5395,10 +5395,11 @@ export default function App() {
                   
                   {/* CloudFlare */}
                   <rect x="200" y="160" width="140" height="120" rx="8" fill="#1a1a2e" stroke="#F6821F" strokeWidth="2"/>
-                  <text x="270" y="195" fill="#F6821F" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
-                  <text x="270" y="215" fill="#FAAD3F" fontSize="9" textAnchor="middle" fontFamily="monospace">DNS Management</text>
-                  <text x="270" y="235" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">example.com</text>
-                  <text x="270" y="255" fill="#6ee7b7" fontSize="8" textAnchor="middle" fontFamily="monospace">CNAME → CloudFront</text>
+                  <image href="/aws-icons/cloudflare.svg" x="238" y="168" width="32" height="32"/>
+                  <text x="270" y="215" fill="#F6821F" fontSize="13" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFlare</text>
+                  <text x="270" y="230" fill="#FAAD3F" fontSize="9" textAnchor="middle" fontFamily="monospace">DNS Management</text>
+                  <text x="270" y="248" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">example.com</text>
+                  <text x="270" y="265" fill="#6ee7b7" fontSize="8" textAnchor="middle" fontFamily="monospace">CNAME → CloudFront</text>
                   
                   {/* Arrow CloudFlare to CloudFront */}
                   <line x1="340" y1="220" x2="425" y2="220" stroke="#F6821F" strokeWidth="2" markerEnd="url(#arrowheadPurpleS3)"/>

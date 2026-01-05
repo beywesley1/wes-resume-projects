@@ -57,3 +57,38 @@ npm run build        # Production build to dist/
 - JetBrains Mono + Space Grotesk fonts
 - Terraform 1.7+
 - AWS: S3, CloudFront, Route53, ACM, DynamoDB
+
+## Solution Diagram Guidelines
+
+When creating or modifying architecture diagrams in the Solutions page:
+
+### Icon Standards
+- Use official AWS icons from `/public/aws-icons/` folder
+- Available icons: `s3.svg`, `cloudfront.svg`, `acm.svg`, `ec2.svg`, `elb.svg`, `rds.svg`, `waf.svg`, `autoscaling.svg`, `cloudflare.svg`
+- Icons should be 20-36px depending on component size
+- Use `<image href="/aws-icons/{service}.svg">` in SVG diagrams
+
+### Layout Consistency
+- Service boxes: rounded rectangles with 2px stroke
+- Icon positioned at top-left of service box
+- Service name below icon, centered
+- Use monospace font (fontFamily="monospace")
+- Text should not overlap with connection lines
+- Flow labels should have background boxes for readability
+
+### Color Scheme
+- CloudFlare: #F6821F (orange)
+- CloudFront: #8B5CF6 (purple)
+- S3: #7AA116 (green)
+- ACM: #DD344C (red)
+- EC2: #FF9900 (orange)
+- RDS: #3B48CC (blue)
+- ELB: #8B5CF6 (purple)
+- WAF: #DD344C (red)
+- VPC border: #8B5CF6 (purple)
+- AWS Cloud border: #FF9900 (orange, dashed)
+
+### Connection Lines
+- Use arrows with markers for direction
+- Label connections above the line, not overlapping
+- Use service-appropriate colors for arrows
