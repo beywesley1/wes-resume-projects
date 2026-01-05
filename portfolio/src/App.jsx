@@ -4007,12 +4007,16 @@ const styles = `
 // COMPONENTS
 // ============================================================================
 
-// GitHub Stats Hook - Optimized with caching
+// GitHub Stats Hook - Optimized with caching and token support
 function useGitHubStats(username) {
   const [stats, setStats] = useState(null);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [linesOfCode, setLinesOfCode] = useState(null); // null = not loaded yet, object = loaded
+  
+  // GitHub token from environment variable (increases rate limit from 60 to 5000 requests/hour)
+  const githubToken = import.meta.env.VITE_GITHUB_TOKEN;
+  const headers = githubToken ? { Authorization: `token ${githubToken}` } : {};
   
   useEffect(() => {
     if (!username || username === 'YOUR_GITHUB_USERNAME') {
@@ -4042,8 +4046,8 @@ function useGitHubStats(username) {
       try {
         // Fetch user data and repos in parallel
         const [userRes, allReposRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${username}`),
-          fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`)
+          fetch(`https://api.github.com/users/${username}`, { headers }),
+          fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, { headers })
         ]);
         
         if (!userRes.ok) {
@@ -4062,7 +4066,7 @@ function useGitHubStats(username) {
         const displayRepos = await Promise.all(
           top6Repos.map(async (repo) => {
             try {
-              const langRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/languages`);
+              const langRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/languages`, { headers });
               const languages = langRes.ok ? await langRes.json() : {};
               return { ...repo, languages };
             } catch {
@@ -4087,7 +4091,7 @@ function useGitHubStats(username) {
         const fetchWithRetry = async (url, retries = 5, delay = 2000) => {
           for (let i = 0; i < retries; i++) {
             try {
-              const res = await fetch(url);
+              const res = await fetch(url, { headers });
               if (res.status === 200) {
                 return await res.json();
               } else if (res.status === 202) {
