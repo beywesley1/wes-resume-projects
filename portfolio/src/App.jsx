@@ -4012,7 +4012,7 @@ function useGitHubStats(username) {
   const [stats, setStats] = useState(null);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [linesOfCode, setLinesOfCode] = useState({ added: 0, deleted: 0 });
+  const [linesOfCode, setLinesOfCode] = useState(null); // null = not loaded yet, object = loaded
   
   useEffect(() => {
     if (!username || username === 'YOUR_GITHUB_USERNAME') {
@@ -4084,16 +4084,25 @@ function useGitHubStats(username) {
         let totalAdded = 0;
         let totalDeleted = 0;
         
-        const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
+        const fetchWithRetry = async (url, retries = 5, delay = 2000) => {
           for (let i = 0; i < retries; i++) {
-            const res = await fetch(url);
-            if (res.status === 200) {
-              return await res.json();
-            } else if (res.status === 202) {
-              // GitHub is computing stats, wait and retry
+            try {
+              const res = await fetch(url);
+              if (res.status === 200) {
+                return await res.json();
+              } else if (res.status === 202) {
+                // GitHub is computing stats, wait and retry with exponential backoff
+                await new Promise(r => setTimeout(r, delay * (i + 1)));
+              } else if (res.status === 403) {
+                // Rate limited - stop retrying
+                console.warn('GitHub API rate limited');
+                return null;
+              } else {
+                return null;
+              }
+            } catch {
+              // Network error - retry
               await new Promise(r => setTimeout(r, delay));
-            } else {
-              return null;
             }
           }
           return null;
@@ -4119,7 +4128,10 @@ function useGitHubStats(username) {
         });
         
         await Promise.all(statsPromises);
-        const linesData = { added: totalAdded, deleted: totalDeleted };
+        // Only set lines of code if we actually got some data
+        const linesData = (totalAdded > 0 || totalDeleted > 0) 
+          ? { added: totalAdded, deleted: totalDeleted } 
+          : null;
         setLinesOfCode(linesData);
         
         // Cache the results
@@ -6177,7 +6189,7 @@ export default function App() {
                   <div style={{ fontSize: '32px', color: '#22c55e' }}>++</div>
                   <div>
                     <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #22c55e, #4ade80)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                      {loading ? '...' : linesOfCode.added.toLocaleString()}
+                      {loading ? '...' : (linesOfCode?.added?.toLocaleString() || '—')}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Added</div>
                   </div>
@@ -6186,7 +6198,7 @@ export default function App() {
                   <div style={{ fontSize: '32px', color: '#ef4444' }}>--</div>
                   <div>
                     <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #ef4444, #f87171)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                      {loading ? '...' : linesOfCode.deleted.toLocaleString()}
+                      {loading ? '...' : (linesOfCode?.deleted?.toLocaleString() || '—')}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Deleted</div>
                   </div>
