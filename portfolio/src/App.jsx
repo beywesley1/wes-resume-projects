@@ -5359,7 +5359,7 @@ export default function App() {
                 )}
                     
                     <div className="diagram-container" style={{ padding: '24px', overflow: 'auto' }}>
-                      <svg viewBox="0 0 1000 500" className="network-diagram" style={{ minWidth: '900px' }}>
+                      <svg viewBox="0 0 1000 510" className="network-diagram" style={{ minWidth: '900px' }}>
                   {/* Background Gradients & Definitions */}
                   <defs>
                     <linearGradient id="awsGradientS3" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -5451,9 +5451,10 @@ export default function App() {
                   <text x="520" y="368" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">PriceClass_100</text>
                   <text x="520" y="382" fill="#6b7280" fontSize="7" textAnchor="middle" fontFamily="monospace">NA, EU (Low Latency)</text>
 
-                  {/* Flow Labels */}
-                  <text x="500" y="430" fill="#9ca3af" fontSize="10" textAnchor="middle" fontFamily="monospace">User → CloudFlare DNS → CloudFront CDN → S3 Origin</text>
-                  <text x="500" y="445" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">Global edge caching • SSL/TLS encryption • ~$1-5/month</text>
+                  {/* Flow Labels - positioned below diagram with clear separation */}
+                  <rect x="200" y="460" width="600" height="35" rx="4" fill="#0d1117" stroke="#374151" strokeWidth="1"/>
+                  <text x="500" y="478" fill="#9ca3af" fontSize="10" textAnchor="middle" fontFamily="monospace">User → CloudFlare DNS → CloudFront CDN → S3 Origin</text>
+                  <text x="500" y="492" fill="#6b7280" fontSize="8" textAnchor="middle" fontFamily="monospace">Global edge caching • SSL/TLS encryption • ~$1-5/month</text>
                 </svg>
               </div>
               
