@@ -5410,17 +5410,19 @@ export default function App() {
                   
                   {/* CloudFront */}
                   <rect x="430" y="140" width="180" height="160" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glowS3)"/>
-                  <text x="520" y="175" fill="#8B5CF6" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFront</text>
-                  <text x="520" y="195" fill="#a78bfa" fontSize="9" textAnchor="middle" fontFamily="monospace">CDN Distribution</text>
-                  <text x="520" y="215" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">d1234.cloudfront.net</text>
-                  <text x="520" y="235" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Edge Caching</text>
-                  <text x="520" y="255" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">SSL Termination</text>
+                  <image href="/aws-icons/cloudfront.svg" x="488" y="148" width="32" height="32"/>
+                  <text x="520" y="195" fill="#8B5CF6" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">CloudFront</text>
+                  <text x="520" y="210" fill="#a78bfa" fontSize="9" textAnchor="middle" fontFamily="monospace">CDN Distribution</text>
+                  <text x="520" y="228" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">d1234.cloudfront.net</text>
+                  <text x="520" y="245" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Edge Caching</text>
+                  <text x="520" y="260" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">SSL Termination</text>
                   <text x="520" y="275" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Security Headers</text>
                   <text x="520" y="290" fill="#94a3b8" fontSize="7" textAnchor="middle" fontFamily="monospace">HTTP/2 + HTTP/3</text>
                   
                   {/* ACM Certificate Badge */}
-                  <rect x="580" y="115" width="70" height="45" rx="4" fill="#232f3e" stroke="#f59e0b" strokeWidth="2"/>
-                  <text x="615" y="140" fill="#f59e0b" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">ACM</text>
+                  <rect x="575" y="100" width="80" height="55" rx="4" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
+                  <image href="/aws-icons/acm.svg" x="591" y="103" width="28" height="28"/>
+                  <text x="615" y="145" fill="#DD344C" fontSize="9" textAnchor="middle" fontWeight="bold" fontFamily="monospace">ACM</text>
                   <text x="615" y="155" fill="#fbbf24" fontSize="7" textAnchor="middle" fontFamily="monospace">TLS 1.2+</text>
                   
                   {/* Arrow CloudFront to S3 */}
@@ -5428,12 +5430,13 @@ export default function App() {
                   <text x="653" y="210" fill="#8B5CF6" fontSize="8" textAnchor="middle" fontFamily="monospace">OAC</text>
                   
                   {/* S3 Bucket */}
-                  <rect x="700" y="140" width="180" height="160" rx="8" fill="#232f3e" stroke="#22c55e" strokeWidth="2"/>
-                  <text x="790" y="175" fill="#22c55e" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">S3 Bucket</text>
-                  <text x="790" y="195" fill="#4ade80" fontSize="9" textAnchor="middle" fontFamily="monospace">Static Website Origin</text>
-                  <text x="790" y="215" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">website-prod-a1b2c3d4</text>
-                  <text x="790" y="235" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Private Access Only</text>
-                  <text x="790" y="255" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Versioning Enabled</text>
+                  <rect x="700" y="140" width="180" height="160" rx="8" fill="#232f3e" stroke="#7AA116" strokeWidth="2"/>
+                  <image href="/aws-icons/s3.svg" x="758" y="148" width="32" height="32"/>
+                  <text x="790" y="195" fill="#7AA116" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">S3 Bucket</text>
+                  <text x="790" y="210" fill="#4ade80" fontSize="9" textAnchor="middle" fontFamily="monospace">Static Website Origin</text>
+                  <text x="790" y="228" fill="#94a3b8" fontSize="8" textAnchor="middle" fontFamily="monospace">website-prod-a1b2c3d4</text>
+                  <text x="790" y="245" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Private Access Only</text>
+                  <text x="790" y="260" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">Versioning Enabled</text>
                   <text x="790" y="275" fill="#22d3ee" fontSize="8" textAnchor="middle" fontFamily="monospace">AES-256 Encryption</text>
                   <text x="790" y="290" fill="#94a3b8" fontSize="7" textAnchor="middle" fontFamily="monospace">30 day version cleanup</text>
 
