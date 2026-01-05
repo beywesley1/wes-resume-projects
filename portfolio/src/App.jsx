@@ -5062,17 +5062,21 @@ export default function App() {
                   {/* Arrow IGW to ALB */}
                   <line x1="600" y1="170" x2="600" y2="230" stroke="#FF9900" strokeWidth="2" markerEnd="url(#arrowheadYellow)"/>
                   
-                  {/* Application Load Balancer + WAF Combined */}
-                  <rect x="430" y="235" width="340" height="70" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glow)"/>
-                  <image href="/aws-icons/elb.svg" x="442" y="247" width="36" height="36"/>
-                  <text x="600" y="260" fill="#8B5CF6" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Application Load Balancer</text>
-                  <text x="600" y="278" fill="#a78bfa" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website-alb.amazonaws.com</text>
+                  {/* Application Load Balancer */}
+                  <rect x="430" y="235" width="300" height="70" rx="8" fill="#232f3e" stroke="#8B5CF6" strokeWidth="2" filter="url(#glow)"/>
+                  <image href="/aws-icons/elb.svg" x="445" y="247" width="36" height="36"/>
+                  <text x="580" y="260" fill="#8B5CF6" fontSize="14" textAnchor="middle" fontWeight="bold" fontFamily="monospace">Application Load Balancer</text>
+                  <text x="580" y="278" fill="#a78bfa" fontSize="10" textAnchor="middle" fontFamily="monospace">sales-website-alb.amazonaws.com</text>
                   
-                  {/* WAF Badge attached to ALB */}
-                  <rect x="700" y="230" width="75" height="60" rx="4" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
-                  <image href="/aws-icons/waf.svg" x="715" y="236" width="28" height="28"/>
-                  <text x="737" y="278" fill="#DD344C" fontSize="8" textAnchor="middle" fontWeight="bold" fontFamily="monospace">WAF</text>
-                  <text x="737" y="295" fill="#fca5a5" fontSize="8" textAnchor="middle" fontFamily="monospace">SQL/XSS Protection</text>
+                  {/* WAF - Separate component to the right */}
+                  <rect x="800" y="225" width="90" height="75" rx="6" fill="#232f3e" stroke="#DD344C" strokeWidth="2"/>
+                  <image href="/aws-icons/waf.svg" x="820" y="232" width="32" height="32"/>
+                  <text x="845" y="278" fill="#DD344C" fontSize="10" textAnchor="middle" fontWeight="bold" fontFamily="monospace">WAF</text>
+                  <text x="845" y="292" fill="#fca5a5" fontSize="7" textAnchor="middle" fontFamily="monospace">SQL/XSS Protection</text>
+                  
+                  {/* Line connecting WAF to ALB */}
+                  <line x1="730" y1="270" x2="795" y2="262" stroke="#DD344C" strokeWidth="2" strokeDasharray="4,2"/>
+                  <text x="762" y="258" fill="#DD344C" fontSize="7" textAnchor="middle" fontFamily="monospace">protects</text>
                   
                   {/* PUBLIC SUBNETS SECTION */}
                   <text x="340" y="330" fill="#22c55e" fontSize="14" fontWeight="bold" fontFamily="monospace">PUBLIC SUBNETS (Web Tier)</text>
