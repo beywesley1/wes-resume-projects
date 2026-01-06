@@ -5697,35 +5697,51 @@ export default function App() {
           </div>
           
           <div className="architecture-container">
-            {/* CI/CD Pipeline Diagram - X Shape */}
+            {/* CI/CD Pipeline Diagram - Enhanced with AWS Services */}
             <div className="architecture-diagram">
               <h3>CI/CD Pipeline & Infrastructure</h3>
               <div className="arch-x-layout">
-                {/* Top Row: VS Code → GitHub */}
-                <div className="arch-x-row">
-                  <div className="arch-node" style={{ borderColor: '#007ACC' }}>
+                {/* Top Row: Entra ID SSO → VS Code → GitHub */}
+                <div className="arch-x-row" style={{ gap: '8px' }}>
+                  {/* Entra ID SSO */}
+                  <div className="arch-node" style={{ borderColor: '#00A4EF', minWidth: '90px' }}>
                     <span className="arch-node-icon">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="#007ACC">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="#00A4EF">
+                        <path d="M11.5 2L2 7v10l9.5 5 9.5-5V7l-9.5-5zm0 2.18l6.9 3.64v7.36l-6.9 3.64-6.9-3.64V7.82l6.9-3.64z"/>
+                        <circle cx="11.5" cy="12" r="3" fill="#00A4EF"/>
+                      </svg>
+                    </span>
+                    <div className="arch-node-info">
+                      <h4 style={{ fontSize: '11px' }}>Entra ID</h4>
+                      <span style={{ fontSize: '9px' }}>SSO</span>
+                    </div>
+                  </div>
+                  
+                  <div className="arch-arrow-h" style={{ fontSize: '14px' }}>→</div>
+                  
+                  <div className="arch-node" style={{ borderColor: '#007ACC', minWidth: '90px' }}>
+                    <span className="arch-node-icon">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="#007ACC">
                         <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
                       </svg>
                     </span>
                     <div className="arch-node-info">
-                      <h4>VS Code</h4>
-                      <span>Development</span>
+                      <h4 style={{ fontSize: '11px' }}>VS Code</h4>
+                      <span style={{ fontSize: '9px' }}>Dev</span>
                     </div>
                   </div>
                   
-                  <div className="arch-arrow-h">→</div>
+                  <div className="arch-arrow-h" style={{ fontSize: '14px' }}>→</div>
                   
-                  <div className="arch-node" style={{ borderColor: '#6e5494' }}>
+                  <div className="arch-node" style={{ borderColor: '#6e5494', minWidth: '90px' }}>
                     <span className="arch-node-icon">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                       </svg>
                     </span>
                     <div className="arch-node-info">
-                      <h4>GitHub</h4>
-                      <span>Source Control</span>
+                      <h4 style={{ fontSize: '11px' }}>GitHub</h4>
+                      <span style={{ fontSize: '9px' }}>Source</span>
                     </div>
                   </div>
                 </div>
@@ -5751,35 +5767,80 @@ export default function App() {
                   </div>
                 </div>
                 
-                {/* Arrows down to AWS and Cloudflare */}
+                {/* Arrows down to providers */}
                 <div className="arch-x-arrows-split">
                   <span>↙</span>
+                  <span>↓</span>
                   <span>↘</span>
                 </div>
                 
-                {/* Bottom Row: AWS + Cloudflare */}
-                <div className="arch-x-row">
-                  <div className="arch-node" style={{ borderColor: '#FF9900' }}>
+                {/* Bottom Row: AWS Services + Cloudflare + Azure */}
+                <div className="arch-x-row" style={{ gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {/* S3 */}
+                  <div className="arch-node" style={{ borderColor: '#569A31', minWidth: '70px' }}>
                     <span className="arch-node-icon">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="#FF9900">
-                        <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103-.295.072-.583.16-.862.272a2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 0 0-.735-.136 6.02 6.02 0 0 0-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 0 1-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 0 1 .32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 0 1 .311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 0 1-.056.2l-1.923 6.17c-.048.16-.104.263-.168.311a.51.51 0 0 1-.303.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 0 1-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 0 0 .415-.758.777.777 0 0 0-.215-.559c-.144-.151-.416-.287-.807-.414l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 0 1-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415.32-.096.655-.136 1.006-.136.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.144a.69.69 0 0 1 .24.2.43.43 0 0 1 .071.263v.375c0 .168-.064.256-.184.256a.83.83 0 0 1-.303-.096 3.652 3.652 0 0 0-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.877.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.336.511-.583.703-.248.2-.543.343-.886.447-.36.111-.734.167-1.142.167z"/>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#569A31">
+                        <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.5L18 8l-6 3.5L6 8l6-3.5zM5 9.5l6 3.5v6.5l-6-3.5V9.5zm14 0v6.5l-6 3.5v-6.5l6-3.5z"/>
                       </svg>
                     </span>
                     <div className="arch-node-info">
-                      <h4>AWS</h4>
-                      <span>S3 + CloudFront</span>
+                      <h4 style={{ fontSize: '10px' }}>S3</h4>
+                      <span style={{ fontSize: '8px' }}>Storage</span>
                     </div>
                   </div>
                   
-                  <div className="arch-node" style={{ borderColor: '#F38020' }}>
+                  {/* CloudFront */}
+                  <div className="arch-node" style={{ borderColor: '#8C4FFF', minWidth: '70px' }}>
                     <span className="arch-node-icon">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="#F38020">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#8C4FFF">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke="#8C4FFF" strokeWidth="2"/>
+                        <circle cx="12" cy="12" r="4" fill="#8C4FFF"/>
+                        <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#8C4FFF" strokeWidth="2"/>
+                      </svg>
+                    </span>
+                    <div className="arch-node-info">
+                      <h4 style={{ fontSize: '10px' }}>CloudFront</h4>
+                      <span style={{ fontSize: '8px' }}>CDN</span>
+                    </div>
+                  </div>
+                  
+                  {/* IAM */}
+                  <div className="arch-node" style={{ borderColor: '#DD344C', minWidth: '70px' }}>
+                    <span className="arch-node-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#DD344C">
+                        <path d="M12 2C9.24 2 7 4.24 7 7c0 2.76 2.24 5 5 5s5-2.24 5-5c0-2.76-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                        <path d="M12 14c-4 0-8 2-8 4v2h16v-2c0-2-4-4-8-4z"/>
+                      </svg>
+                    </span>
+                    <div className="arch-node-info">
+                      <h4 style={{ fontSize: '10px' }}>IAM</h4>
+                      <span style={{ fontSize: '8px' }}>SAML</span>
+                    </div>
+                  </div>
+                  
+                  {/* Cloudflare */}
+                  <div className="arch-node" style={{ borderColor: '#F38020', minWidth: '70px' }}>
+                    <span className="arch-node-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#F38020">
                         <path d="M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1582-.8984 2.5537-1.9336l.499-1.3086c.0215-.0576.0283-.1152.0147-.168-.5625-2.5254-2.8301-4.4062-5.5606-4.4062-2.499 0-4.6289 1.5898-5.4199 3.8086-.4844-.3594-1.0986-.5625-1.7696-.499-1.1953.1191-2.1484 1.0566-2.2891 2.2519-.0352.2871-.0205.5674.0283.8301C1.0273 12.3838 0 13.5918 0 15.0508c0 .1699.0137.3359.0352.499.0146.0918.0908.1602.1826.1602l15.7471.0059c.0283 0 .0566-.0059.0849-.0137.0566-.0205.1054-.0625.1269-.1192l.3321-.7314z"/>
                       </svg>
                     </span>
                     <div className="arch-node-info">
-                      <h4>Cloudflare</h4>
-                      <span>DNS</span>
+                      <h4 style={{ fontSize: '10px' }}>Cloudflare</h4>
+                      <span style={{ fontSize: '8px' }}>DNS</span>
+                    </div>
+                  </div>
+                  
+                  {/* Azure/Entra */}
+                  <div className="arch-node" style={{ borderColor: '#0078D4', minWidth: '70px' }}>
+                    <span className="arch-node-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4">
+                        <path d="M5.483 21.3H24L14.025 4.013l-3.038 8.347 5.836 6.938L5.483 21.3zM13.23 2.7L6.105 8.677 0 19.253h5.505v.014L13.23 2.7z"/>
+                      </svg>
+                    </span>
+                    <div className="arch-node-info">
+                      <h4 style={{ fontSize: '10px' }}>Azure</h4>
+                      <span style={{ fontSize: '8px' }}>Entra ID</span>
                     </div>
                   </div>
                 </div>
