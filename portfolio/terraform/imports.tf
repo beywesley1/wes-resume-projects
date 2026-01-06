@@ -13,7 +13,7 @@
 
 import {
   to = azuread_application.aws_sso[0]
-  id = "33c70962-082a-4027-a2b5-c5933f7cdf68"
+  id = "/applications/33c70962-082a-4027-a2b5-c5933f7cdf68"
 }
 
 # -----------------------------------------------------------------------------
@@ -24,5 +24,5 @@ import {
 
 import {
   to = azuread_service_principal.aws_sso[0]
-  id = "33c70962-082a-4027-a2b5-c5933f7cdf68"
+  id = "/servicePrincipals/33c70962-082a-4027-a2b5-c5933f7cdf68"
 }
