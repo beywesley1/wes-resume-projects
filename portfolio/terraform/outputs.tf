@@ -41,7 +41,7 @@ output "entra_tenant_id" {
 
 output "entra_app_id" {
   description = "Entra ID Application (Client) ID"
-  value       = var.enable_entra_sso ? azuread_application.aws_sso[0].client_id : null
+  value       = var.enable_entra_sso ? data.azuread_application.aws_sso[0].client_id : null
 }
 
 output "entra_sso_provider_arn" {
@@ -61,7 +61,7 @@ output "entra_claims_value" {
 
 output "entra_sso_login_url" {
   description = "URL for users to initiate SSO login to AWS"
-  value       = var.enable_entra_sso ? "https://myapps.microsoft.com/signin/${azuread_application.aws_sso[0].client_id}?tenantId=${data.azuread_client_config.current.tenant_id}" : null
+  value       = var.enable_entra_sso ? "https://myapps.microsoft.com/signin/${data.azuread_application.aws_sso[0].client_id}?tenantId=${data.azuread_client_config.current.tenant_id}" : null
 }
 
 # -----------------------------------------------------------------------------
