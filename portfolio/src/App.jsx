@@ -1030,6 +1030,33 @@ const styles = `
     color: var(--accent-blue);
   }
   
+  .nav-logo-typing {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 1.5s steps(8, end) forwards;
+  }
+  
+  .nav-logo-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--accent-cyan);
+    margin-left: 2px;
+    animation: blink-cursor 1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+  
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  
+  @keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  
   .nav-tabs {
     display: flex;
     gap: 8px;
@@ -4441,7 +4468,7 @@ export default function App() {
       <header className="nav-header">
         <div className="nav-container">
           <button onClick={() => setCurrentPage('home')} className="nav-logo">
-            <span>&lt;</span>beyops<span>/&gt;</span>
+            <span className="nav-logo-typing">&gt; beyops</span><span className="nav-logo-cursor"></span>
           </button>
           <nav className="nav-tabs">
             <button onClick={() => setCurrentPage('home')} className={`nav-tab ${currentPage === 'home' ? 'active' : ''}`}>Home</button>
@@ -4641,6 +4668,11 @@ export default function App() {
           <div className="scripts-layout">
             {/* Sidebar */}
             <aside className="scripts-sidebar">
+              <div className="sidebar-header">
+                <h2>Terraform Modules</h2>
+                <p>{TERRAFORM_MODULES.length} modules available</p>
+              </div>
+              
               <div className="sidebar-search">
                 <input 
                   type="text" 
