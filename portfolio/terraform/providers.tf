@@ -51,13 +51,3 @@ provider "cloudflare" {}
 
 provider "azuread" {}
 
-# -----------------------------------------------------------------------------
-# Azure RM Provider (Azure Static Web App)
-# -----------------------------------------------------------------------------
-# Uses ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID, ARM_SUBSCRIPTION_ID
-# environment variables or Azure CLI authentication
-
-provider "azurerm" {
-  features {}
-  skip_provider_registration = true
-}

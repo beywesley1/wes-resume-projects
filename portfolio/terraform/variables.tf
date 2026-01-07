@@ -60,18 +60,3 @@ variable "entra_sso_session_duration" {
   default     = 3600
 }
 
-# -----------------------------------------------------------------------------
-# Azure Static Web App Configuration (azure.beyops.com)
-# -----------------------------------------------------------------------------
-
-variable "enable_azure_site" {
-  description = "Enable Azure Static Web App mirror site"
-  type        = bool
-  default     = false
-}
-
-variable "azure_location" {
-  description = "Azure region for the Static Web App"
-  type        = string
-  default     = "eastus2"
-}
