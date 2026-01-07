@@ -80,3 +80,23 @@ output "deploy_command" {
 
   EOT
 }
+
+# -----------------------------------------------------------------------------
+# Azure Static Web App Outputs (azure.beyops.com)
+# -----------------------------------------------------------------------------
+
+output "azure_site_url" {
+  description = "Azure Static Web App URL"
+  value       = var.enable_azure_site ? "https://azure.${var.domain_name}" : null
+}
+
+output "azure_site_default_hostname" {
+  description = "Azure Static Web App default hostname"
+  value       = var.enable_azure_site ? azurerm_static_web_app.azure_site[0].default_host_name : null
+}
+
+output "azure_site_api_key" {
+  description = "Azure Static Web App deployment token (for GitHub Actions)"
+  value       = var.enable_azure_site ? azurerm_static_web_app.azure_site[0].api_key : null
+  sensitive   = true
+}

@@ -23,6 +23,12 @@ terraform {
       source  = "hashicorp/azuread"
       version = "~> 2.47"
     }
+
+    # Azure RM provider for Azure Static Web App
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
+    }
   }
 
   # Terraform Cloud backend
