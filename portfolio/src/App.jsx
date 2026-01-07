@@ -138,10 +138,10 @@ const CONFIG = {
       icon: "🚀",
       technologies: ["Terraform", "AWS", "Azure", "Cloudflare", "GitHub Actions", "Kubernetes", "Docker", "Python", "Lambda"],
       highlights: [
-        "Own all Terraform infrastructure as code for the organization, developing and maintaining modules for AWS, Azure, and Cloudflare",
+        "Own all Terraform infrastructure as code for the organization, developing and maintaining modules for AWS, Azure, Cloudflare, Kubernetes, and Docker",
         "Lead and mentor 1 DevOps engineer, establishing IaC standards and best practices across the team",
         "Architect cloud solutions translating business requirements into scalable, cost-effective infrastructure designs",
-        "Build and maintain CI/CD pipelines using GitHub Actions for automated infrastructure and application deployments",
+        "Build and maintain CI/CD pipelines using GitHub Actions with linting, testing, and automated infrastructure deployments",
         "Manage container orchestration with Kubernetes and Docker, supporting containerized workloads across environments",
         "Develop AWS Lambda functions using Python to automate operational workflows and integrate cloud services",
         "Manage AWS Organization structure, implementing account governance and security guardrails",
