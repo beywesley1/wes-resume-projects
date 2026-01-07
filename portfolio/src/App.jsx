@@ -5697,100 +5697,132 @@ export default function App() {
           </div>
           
           <div className="architecture-container">
-            {/* CI/CD Pipeline Diagram - Enhanced with AWS Services */}
-            <div className="architecture-diagram">
+            {/* Infrastructure Diagram */}
+            <div className="architecture-diagram" style={{ position: 'relative' }}>
               <h3>CI/CD Pipeline & Infrastructure</h3>
-              <div className="arch-x-layout">
-                {/* Top Row: Entra ID SSO → VS Code → GitHub */}
-                <div className="arch-x-row" style={{ gap: '8px' }}>
-                  {/* Entra ID SSO */}
-                  <div className="arch-node" style={{ borderColor: '#00A4EF', minWidth: '90px' }}>
+              
+              {/* Top Row: VS Code → GitHub → Terraform → Cloudflare */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+                {/* VS Code */}
+                <div className="arch-node" style={{ borderColor: '#007ACC', minWidth: '100px' }}>
+                  <span className="arch-node-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#007ACC">
+                      <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
+                    </svg>
+                  </span>
+                  <div className="arch-node-info">
+                    <h4 style={{ fontSize: '11px' }}>VS Code</h4>
+                    <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Development</span>
+                  </div>
+                </div>
+                
+                <span style={{ fontSize: '20px', color: 'var(--text-muted)' }}>→</span>
+                
+                {/* GitHub */}
+                <div className="arch-node" style={{ borderColor: '#6e5494', minWidth: '100px' }}>
+                  <span className="arch-node-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                  </span>
+                  <div className="arch-node-info">
+                    <h4 style={{ fontSize: '11px' }}>GitHub</h4>
+                    <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Change Control</span>
+                  </div>
+                </div>
+                
+                <span style={{ fontSize: '20px', color: 'var(--text-muted)' }}>→</span>
+                
+                {/* Terraform */}
+                <div className="arch-node" style={{ borderColor: '#7B42BC', minWidth: '100px' }}>
+                  <span className="arch-node-icon">
+                    <svg width="24" height="24" viewBox="0 0 128 128" fill="#7B42BC">
+                      <path d="M77.941 44.5v36.836L46.324 62.918V26.082zm0 0" />
+                      <path d="M81.41 81.336l31.633-18.418V26.082L81.41 44.5zm0 0" />
+                      <path d="M11.242 42.36L42.86 60.776V23.941L11.242 5.523zm0 0" />
+                      <path d="M77.941 85.375L46.324 66.957v36.82l31.617 18.418zm0 0" />
+                    </svg>
+                  </span>
+                  <div className="arch-node-info">
+                    <h4 style={{ fontSize: '11px' }}>Terraform</h4>
+                    <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Resource Mgmt (IaC)</span>
+                  </div>
+                </div>
+                
+                <span style={{ fontSize: '20px', color: 'var(--text-muted)' }}>→</span>
+                
+                {/* Cloudflare */}
+                <div className="arch-node" style={{ borderColor: '#F38020', minWidth: '100px' }}>
+                  <span className="arch-node-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#F38020">
+                      <path d="M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1582-.8984 2.5537-1.9336l.499-1.3086c.0215-.0576.0283-.1152.0147-.168-.5625-2.5254-2.8301-4.4062-5.5606-4.4062-2.499 0-4.6289 1.5898-5.4199 3.8086-.4844-.3594-1.0986-.5625-1.7696-.499-1.1953.1191-2.1484 1.0566-2.2891 2.2519-.0352.2871-.0205.5674.0283.8301C1.0273 12.3838 0 13.5918 0 15.0508c0 .1699.0137.3359.0352.499.0146.0918.0908.1602.1826.1602l15.7471.0059c.0283 0 .0566-.0059.0849-.0137.0566-.0205.1054-.0625.1269-.1192l.3321-.7314z"/>
+                    </svg>
+                  </span>
+                  <div className="arch-node-info">
+                    <h4 style={{ fontSize: '11px' }}>Cloudflare</h4>
+                    <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>DNS Routing</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Connection lines using SVG */}
+              <svg style={{ width: '100%', height: '60px', overflow: 'visible' }} preserveAspectRatio="xMidYMid meet">
+                {/* Terraform arrow down - grey, positioned under Terraform box */}
+                <line x1="58%" y1="0" x2="58%" y2="50" stroke="#888888" strokeWidth="2" markerEnd="url(#arrowGrey)" />
+                {/* Cloudflare diagonal line to AWS box */}
+                <line x1="82%" y1="0" x2="65%" y2="50" stroke="#F38020" strokeWidth="2" markerEnd="url(#arrowOrange)" />
+                {/* Arrow markers */}
+                <defs>
+                  <marker id="arrowGrey" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#888888" />
+                  </marker>
+                  <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#F38020" />
+                  </marker>
+                </defs>
+              </svg>
+              
+              {/* Bottom Row: Entra SSO + AWS Box */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                {/* Entra SSO */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="arch-node" style={{ borderColor: '#00A4EF', minWidth: '110px' }}>
                     <span className="arch-node-icon">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="#00A4EF">
-                        <path d="M11.5 2L2 7v10l9.5 5 9.5-5V7l-9.5-5zm0 2.18l6.9 3.64v7.36l-6.9 3.64-6.9-3.64V7.82l6.9-3.64z"/>
-                        <circle cx="11.5" cy="12" r="3" fill="#00A4EF"/>
+                        <path d="M5.483 21.3H24L14.025 4.013l-3.038 8.347 5.836 6.938L5.483 21.3zM13.23 2.7L6.105 8.677 0 19.253h5.505v.014L13.23 2.7z"/>
                       </svg>
                     </span>
                     <div className="arch-node-info">
-                      <h4 style={{ fontSize: '11px' }}>Entra ID</h4>
-                      <span style={{ fontSize: '9px' }}>SSO</span>
+                      <h4 style={{ fontSize: '11px' }}>Entra SSO</h4>
+                      <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Identity Provider</span>
                     </div>
                   </div>
-                  
-                  <div className="arch-arrow-h" style={{ fontSize: '14px' }}>→</div>
-                  
-                  <div className="arch-node" style={{ borderColor: '#007ACC', minWidth: '90px' }}>
-                    <span className="arch-node-icon">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="#007ACC">
-                        <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
-                      </svg>
-                    </span>
-                    <div className="arch-node-info">
-                      <h4 style={{ fontSize: '11px' }}>VS Code</h4>
-                      <span style={{ fontSize: '9px' }}>Dev</span>
-                    </div>
-                  </div>
-                  
-                  <div className="arch-arrow-h" style={{ fontSize: '14px' }}>→</div>
-                  
-                  <div className="arch-node" style={{ borderColor: '#6e5494', minWidth: '90px' }}>
-                    <span className="arch-node-icon">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                      </svg>
-                    </span>
-                    <div className="arch-node-info">
-                      <h4 style={{ fontSize: '11px' }}>GitHub</h4>
-                      <span style={{ fontSize: '9px' }}>Source</span>
-                    </div>
-                  </div>
+                  <span style={{ fontSize: '20px', color: 'var(--text-muted)' }}>→</span>
                 </div>
                 
-                {/* Arrow from GitHub down to Terraform */}
-                <div className="arch-x-arrow-down">↓</div>
-                
-                {/* Center: Terraform Cloud */}
-                <div className="arch-x-center">
-                  <div className="arch-node arch-node-center" style={{ borderColor: '#7B42BC' }}>
-                    <span className="arch-node-icon">
-                      <svg width="32" height="32" viewBox="0 0 128 128" fill="#7B42BC">
-                        <path d="M77.941 44.5v36.836L46.324 62.918V26.082zm0 0" />
-                        <path d="M81.41 81.336l31.633-18.418V26.082L81.41 44.5zm0 0" />
-                        <path d="M11.242 42.36L42.86 60.776V23.941L11.242 5.523zm0 0" />
-                        <path d="M77.941 85.375L46.324 66.957v36.82l31.617 18.418zm0 0" />
-                      </svg>
-                    </span>
-                    <div className="arch-node-info">
-                      <h4>Terraform Cloud</h4>
-                      <span>IaC Automation</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Arrows down to providers */}
-                <div className="arch-x-arrows-split">
-                  <span>↙</span>
-                  <span>↓</span>
-                  <span>↘</span>
-                </div>
-                
-                {/* Bottom Row: AWS Services + Cloudflare + Azure */}
-                <div className="arch-x-row" style={{ gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {/* S3 */}
-                  <div className="arch-node" style={{ borderColor: '#569A31', minWidth: '70px' }}>
-                    <span className="arch-node-icon">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#569A31">
-                        <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.5L18 8l-6 3.5L6 8l6-3.5zM5 9.5l6 3.5v6.5l-6-3.5V9.5zm14 0v6.5l-6 3.5v-6.5l6-3.5z"/>
-                      </svg>
-                    </span>
-                    <div className="arch-node-info">
-                      <h4 style={{ fontSize: '10px' }}>S3</h4>
-                      <span style={{ fontSize: '8px' }}>Storage</span>
-                    </div>
+                {/* AWS Container */}
+                <div style={{ 
+                  border: '2px solid #FF9900', 
+                  borderRadius: '8px', 
+                  padding: '12px', 
+                  background: 'rgba(255, 153, 0, 0.05)'
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px', 
+                    marginBottom: '10px',
+                    paddingBottom: '6px',
+                    borderBottom: '1px solid rgba(255, 153, 0, 0.3)'
+                  }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF9900">
+                      <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103a6.4 6.4 0 0 0-.862.272 2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586z"/>
+                    </svg>
+                    <span style={{ fontWeight: 'bold', color: '#FF9900', fontSize: '12px' }}>AWS</span>
                   </div>
                   
                   {/* CloudFront */}
-                  <div className="arch-node" style={{ borderColor: '#8C4FFF', minWidth: '70px' }}>
+                  <div className="arch-node" style={{ borderColor: '#8C4FFF', minWidth: '120px', marginBottom: '8px' }}>
                     <span className="arch-node-icon">
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="#8C4FFF">
                         <circle cx="12" cy="12" r="10" fill="none" stroke="#8C4FFF" strokeWidth="2"/>
@@ -5800,51 +5832,27 @@ export default function App() {
                     </span>
                     <div className="arch-node-info">
                       <h4 style={{ fontSize: '10px' }}>CloudFront</h4>
-                      <span style={{ fontSize: '8px' }}>CDN</span>
+                      <span style={{ fontSize: '7px', color: 'var(--text-muted)' }}>CDN, DDoS Protection</span>
                     </div>
                   </div>
                   
-                  {/* IAM */}
-                  <div className="arch-node" style={{ borderColor: '#DD344C', minWidth: '70px' }}>
-                    <span className="arch-node-icon">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#DD344C">
-                        <path d="M12 2C9.24 2 7 4.24 7 7c0 2.76 2.24 5 5 5s5-2.24 5-5c0-2.76-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
-                        <path d="M12 14c-4 0-8 2-8 4v2h16v-2c0-2-4-4-8-4z"/>
-                      </svg>
-                    </span>
-                    <div className="arch-node-info">
-                      <h4 style={{ fontSize: '10px' }}>IAM</h4>
-                      <span style={{ fontSize: '8px' }}>SAML</span>
-                    </div>
-                  </div>
+                  <div style={{ textAlign: 'center', fontSize: '16px', color: 'var(--text-muted)', margin: '4px 0' }}>↓</div>
                   
-                  {/* Cloudflare */}
-                  <div className="arch-node" style={{ borderColor: '#F38020', minWidth: '70px' }}>
+                  {/* S3 */}
+                  <div className="arch-node" style={{ borderColor: '#569A31', minWidth: '120px' }}>
                     <span className="arch-node-icon">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#F38020">
-                        <path d="M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1582-.8984 2.5537-1.9336l.499-1.3086c.0215-.0576.0283-.1152.0147-.168-.5625-2.5254-2.8301-4.4062-5.5606-4.4062-2.499 0-4.6289 1.5898-5.4199 3.8086-.4844-.3594-1.0986-.5625-1.7696-.499-1.1953.1191-2.1484 1.0566-2.2891 2.2519-.0352.2871-.0205.5674.0283.8301C1.0273 12.3838 0 13.5918 0 15.0508c0 .1699.0137.3359.0352.499.0146.0918.0908.1602.1826.1602l15.7471.0059c.0283 0 .0566-.0059.0849-.0137.0566-.0205.1054-.0625.1269-.1192l.3321-.7314z"/>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#569A31">
+                        <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.5L18 8l-6 3.5L6 8l6-3.5zM5 9.5l6 3.5v6.5l-6-3.5V9.5zm14 0v6.5l-6 3.5v-6.5l6-3.5z"/>
                       </svg>
                     </span>
                     <div className="arch-node-info">
-                      <h4 style={{ fontSize: '10px' }}>Cloudflare</h4>
-                      <span style={{ fontSize: '8px' }}>DNS</span>
-                    </div>
-                  </div>
-                  
-                  {/* Azure/Entra */}
-                  <div className="arch-node" style={{ borderColor: '#0078D4', minWidth: '70px' }}>
-                    <span className="arch-node-icon">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4">
-                        <path d="M5.483 21.3H24L14.025 4.013l-3.038 8.347 5.836 6.938L5.483 21.3zM13.23 2.7L6.105 8.677 0 19.253h5.505v.014L13.23 2.7z"/>
-                      </svg>
-                    </span>
-                    <div className="arch-node-info">
-                      <h4 style={{ fontSize: '10px' }}>Azure</h4>
-                      <span style={{ fontSize: '8px' }}>Entra ID</span>
+                      <h4 style={{ fontSize: '10px' }}>S3</h4>
+                      <span style={{ fontSize: '7px', color: 'var(--text-muted)' }}>Website Code (index.html)</span>
                     </div>
                   </div>
                 </div>
               </div>
+              
             </div>
             
             {/* Terraform Code - Full main.tf */}
