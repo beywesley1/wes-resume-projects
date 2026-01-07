@@ -3075,6 +3075,29 @@ const styles = `
     z-index: 1;
   }
   
+  @keyframes rgb-cycle {
+    0%, 100% { 
+      color: #3b82f6; 
+      text-shadow: 0 0 8px rgba(59, 130, 246, 0.8), 0 0 16px rgba(59, 130, 246, 0.4);
+      filter: brightness(1.2);
+    }
+    25% { 
+      color: #a855f7; 
+      text-shadow: 0 0 8px rgba(168, 85, 247, 0.8), 0 0 16px rgba(168, 85, 247, 0.4);
+      filter: brightness(1.2);
+    }
+    50% { 
+      color: #22d3ee; 
+      text-shadow: 0 0 8px rgba(34, 211, 238, 0.8), 0 0 16px rgba(34, 211, 238, 0.4);
+      filter: brightness(1.2);
+    }
+    75% { 
+      color: #4ade80; 
+      text-shadow: 0 0 8px rgba(74, 222, 128, 0.8), 0 0 16px rgba(74, 222, 128, 0.4);
+      filter: brightness(1.2);
+    }
+  }
+  
   @media (max-width: 600px) {
     .career-marker {
       left: -32px;
@@ -6004,7 +6027,7 @@ export default function App() {
                               transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
                               marginTop: '4px',
                               flexShrink: 0,
-                              animation: !isExpanded ? 'pulse-glow 2s ease-in-out infinite' : 'none'
+                              animation: !isExpanded ? 'rgb-cycle 8s ease-in-out infinite' : 'none'
                             }}
                           >
                             ▶
