@@ -1,0 +1,52 @@
+# =============================================================================
+# AZURE STATIC WEB APP DEPLOYMENT
+# =============================================================================
+# Deploys the Azure-themed version of the portfolio to Azure Static Web Apps
+# Triggered on push to main branch
+
+name: Deploy to Azure Static Web App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'portfolio/**'
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy to Azure
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: portfolio/package-lock.json
+
+      - name: Install dependencies
+        working-directory: portfolio
+        run: npm ci
+
+      - name: Build for Azure
+        working-directory: portfolio
+        run: npm run build
+        env:
+          VITE_CLOUD_PROVIDER: azure
+          VITE_SITE_URL: https://azure.beyops.com
+
+      - name: Deploy to Azure Static Web App
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "portfolio/dist"
+          skip_app_build: true
+          skip_api_build: true
