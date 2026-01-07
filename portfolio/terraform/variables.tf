@@ -67,7 +67,7 @@ variable "entra_sso_session_duration" {
 variable "enable_azure_site" {
   description = "Enable Azure Static Web App mirror site"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "azure_location" {
