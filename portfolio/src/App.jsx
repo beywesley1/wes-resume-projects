@@ -4131,13 +4131,14 @@ function useGitHubStats(username) {
       return;
     }
     
-    // Check for cached data (valid for 5 minutes)
+    // Check for cached data (valid for 5 minutes, but refetch if linesOfCode is missing)
     const cacheKey = `github_stats_${username}`;
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
       try {
         const { data, timestamp } = JSON.parse(cached);
-        if (Date.now() - timestamp < 5 * 60 * 1000) {
+        // Use cache if fresh AND has linesOfCode data
+        if (Date.now() - timestamp < 5 * 60 * 1000 && data.linesOfCode !== null) {
           setStats(data.stats);
           setRepos(data.repos);
           setLinesOfCode(data.linesOfCode);
@@ -4195,15 +4196,19 @@ function useGitHubStats(username) {
         let totalAdded = 0;
         let totalDeleted = 0;
         
-        const fetchWithRetry = async (url, retries = 5, delay = 2000) => {
+        const fetchWithRetry = async (url, retries = 8, delay = 1500) => {
           for (let i = 0; i < retries; i++) {
             try {
               const res = await fetch(url, { headers });
               if (res.status === 200) {
-                return await res.json();
+                const data = await res.json();
+                return data;
               } else if (res.status === 202) {
-                // GitHub is computing stats, wait and retry with exponential backoff
+                // GitHub is computing stats, wait and retry
                 await new Promise(r => setTimeout(r, delay * (i + 1)));
+              } else if (res.status === 204) {
+                // No content - empty repo
+                return [];
               } else if (res.status === 403) {
                 // Rate limited - stop retrying
                 console.warn('GitHub API rate limited');
@@ -4245,9 +4250,13 @@ function useGitHubStats(username) {
           : null;
         setLinesOfCode(linesData);
         
-        // Cache the results
+        // Cache the results (only cache linesOfCode if we got data, otherwise don't cache it)
         sessionStorage.setItem(cacheKey, JSON.stringify({
-          data: { stats: statsData, repos: displayRepos, linesOfCode: linesData },
+          data: { 
+            stats: statsData, 
+            repos: displayRepos, 
+            linesOfCode: linesData // Will be null if no data, which means we'll retry next time
+          },
           timestamp: Date.now()
         }));
         
