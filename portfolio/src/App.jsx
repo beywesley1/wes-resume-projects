@@ -68,7 +68,7 @@ const CONFIG = {
   github: "beywesley1",
   workGithub: "", // Add your work GitHub username here to show work account stats
   email: "beywesley89@gmail.com",
-  linkedin: "https://linkedin.com/in/yourprofile",
+  linkedin: "https://www.linkedin.com/in/wesley-bey/",
   yearsExperience: 16, // Started in IT in 2009 in the Navy
   resumeUrl: "/resume.pdf",
   
