@@ -5731,7 +5731,8 @@ export default function App() {
                     <li><strong>S3:</strong> ~$0.50/month</li>
                     <li><strong>CloudFront:</strong> ~$1-4/month</li>
                     <li><strong>ACM:</strong> Free</li>
-                    <li><strong>Total:</strong> ~$1-5/month</li>
+                    <li><strong>Azure Static Web App:</strong> Free tier ($0/month)</li>
+                    <li><strong>Total:</strong> ~$1-5/month (AWS) + $0/month (Azure mirror)</li>
                   </ul>
                 </div>
               </div>
@@ -6230,7 +6231,7 @@ export default function App() {
               <span className="arch-feature-icon">💰</span>
               <div>
                 <h4>Cost Effective</h4>
-                <p>~$0.50/month for S3 + CloudFront static hosting</p>
+                <p>~$1-5/month on AWS + $0/month for Azure Static Web App mirror (Free tier)</p>
               </div>
             </div>
             <div className="arch-feature">
