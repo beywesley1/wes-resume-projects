@@ -5966,19 +5966,31 @@ export default function App() {
                 </div>
               </div>
               
-              {/* Connection lines using SVG */}
+              {/* Connection lines using SVG - Fork style: vertical down then horizontal split */}
+              {/* Arrows labeled A, B, C, D from left to right */}
               <svg style={{ width: '100%', height: '60px', overflow: 'visible' }} preserveAspectRatio="xMidYMid meet">
-                {/* Terraform arrow down - grey, positioned under Terraform box */}
-                <line x1="58%" y1="0" x2="58%" y2="50" stroke="#888888" strokeWidth="2" markerEnd="url(#arrowGrey)" />
-                {/* Cloudflare diagonal line to AWS box */}
-                <line x1="82%" y1="0" x2="65%" y2="50" stroke="#F38020" strokeWidth="2" markerEnd="url(#arrowOrange)" />
+                {/* Terraform fork: vertical down, then horizontal split to AWS and Azure */}
+                <line x1="58%" y1="0" x2="58%" y2="25" stroke="#888888" strokeWidth="1" />
+                <line x1="58%" y1="25" x2="45%" y2="25" stroke="#888888" strokeWidth="1" />
+                <line x1="58%" y1="25" x2="80%" y2="25" stroke="#888888" strokeWidth="1" />
+                {/* Arrow A */}
+                <line x1="45%" y1="25" x2="45%" y2="50" stroke="#888888" strokeWidth="1" markerEnd="url(#arrowGrey)" />
+                {/* Arrow B */}
+                <line x1="80%" y1="25" x2="80%" y2="50" stroke="#888888" strokeWidth="1" markerEnd="url(#arrowGrey)" />
+                
+                {/* Cloudflare fork: vertical down, then horizontal split to AWS and Azure */}
+                <line x1="92%" y1="0" x2="92%" y2="25" stroke="#888888" strokeWidth="1" />
+                <line x1="92%" y1="25" x2="62%" y2="25" stroke="#888888" strokeWidth="1" />
+                <line x1="92%" y1="25" x2="95%" y2="25" stroke="#888888" strokeWidth="1" />
+                {/* Arrow C */}
+                <line x1="62%" y1="25" x2="62%" y2="50" stroke="#888888" strokeWidth="1" markerEnd="url(#arrowGrey)" />
+                {/* Arrow D */}
+                <line x1="95%" y1="25" x2="95%" y2="50" stroke="#888888" strokeWidth="1" markerEnd="url(#arrowGrey)" />
+                
                 {/* Arrow markers */}
                 <defs>
-                  <marker id="arrowGrey" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                    <path d="M0,0 L0,6 L9,3 z" fill="#888888" />
-                  </marker>
-                  <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                    <path d="M0,0 L0,6 L9,3 z" fill="#F38020" />
+                  <marker id="arrowGrey" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#888888" />
                   </marker>
                 </defs>
               </svg>
@@ -6049,6 +6061,42 @@ export default function App() {
                     <div className="arch-node-info">
                       <h4 style={{ fontSize: '10px' }}>S3</h4>
                       <span style={{ fontSize: '7px', color: 'var(--text-muted)' }}>Website Code (index.html)</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Azure Container */}
+                <div style={{ 
+                  border: '2px solid #0078D4', 
+                  borderRadius: '8px', 
+                  padding: '12px', 
+                  background: 'rgba(0, 120, 212, 0.05)'
+                }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px', 
+                    marginBottom: '10px',
+                    paddingBottom: '6px',
+                    borderBottom: '1px solid rgba(0, 120, 212, 0.3)'
+                  }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078D4">
+                      <path d="M13.05 4.24L6.56 18.05a.5.5 0 0 1-.47.31H2.85a.5.5 0 0 1-.44-.75l6.37-11.3a.5.5 0 0 0 0-.5L6.23 2.69a.5.5 0 0 1 .44-.75h4.19a.5.5 0 0 1 .44.26l1.75 3.04zM13.5 5.5l7.25 12.75a.5.5 0 0 1-.44.75H8.85a.5.5 0 0 1-.44-.75L13.5 5.5z"/>
+                    </svg>
+                    <span style={{ fontWeight: 'bold', color: '#0078D4', fontSize: '12px' }}>Azure</span>
+                  </div>
+                  
+                  {/* Static Web App */}
+                  <div className="arch-node" style={{ borderColor: '#0078D4', minWidth: '120px' }}>
+                    <span className="arch-node-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#0078D4">
+                        <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="#0078D4" strokeWidth="2"/>
+                        <path d="M7 8h10M7 12h10M7 16h6" stroke="#0078D4" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                    </span>
+                    <div className="arch-node-info">
+                      <h4 style={{ fontSize: '10px' }}>Static Web App</h4>
+                      <span style={{ fontSize: '7px', color: 'var(--text-muted)' }}>azure.beyops.com</span>
                     </div>
                   </div>
                 </div>
