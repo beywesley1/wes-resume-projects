@@ -6114,7 +6114,7 @@ export default function App() {
                   </svg>
                   main.tf
                 </h3>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Terraform • 332 lines</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Terraform • Multi-Cloud</span>
               </div>
               <div className="architecture-code-content" style={{ maxHeight: '500px', overflowY: 'auto' }}>
                 <pre className="code-highlighted">
@@ -6175,6 +6175,35 @@ export default function App() {
                   {'  '}<span className="code-attr">content</span> = <span className="code-ref">aws_cloudfront_distribution.website.domain_name</span>{'\n'}
                   {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
                   {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># ============================================</span>{'\n'}
+                  <span className="code-comment"># AZURE STATIC WEB APP (Multi-Cloud Mirror)</span>{'\n'}
+                  <span className="code-comment"># ============================================</span>{'\n\n'}
+                  <span className="code-comment"># Resource group for Azure resources</span>{'\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"azurerm_resource_group"</span> <span className="code-string">"website"</span> {'{\n'}
+                  {'  '}<span className="code-attr">name</span>     = <span className="code-string">"rg-beyops-com"</span>{'\n'}
+                  {'  '}<span className="code-attr">location</span> = <span className="code-string">"eastus2"</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># Azure Static Web App - serverless hosting</span>{'\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"azurerm_static_web_app"</span> <span className="code-string">"azure_site"</span> {'{\n'}
+                  {'  '}<span className="code-attr">name</span>                = <span className="code-string">"stapp-beyops-com"</span>{'\n'}
+                  {'  '}<span className="code-attr">resource_group_name</span> = <span className="code-ref">azurerm_resource_group.website.name</span>{'\n'}
+                  {'  '}<span className="code-attr">location</span>            = <span className="code-ref">azurerm_resource_group.website.location</span>{'\n'}
+                  {'  '}<span className="code-attr">sku_tier</span>            = <span className="code-string">"Free"</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># DNS record for Azure subdomain</span>{'\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"cloudflare_record"</span> <span className="code-string">"azure_site"</span> {'{\n'}
+                  {'  '}<span className="code-attr">zone_id</span> = <span className="code-ref">var.cloudflare_zone_id</span>{'\n'}
+                  {'  '}<span className="code-attr">name</span>    = <span className="code-string">"azure"</span>{'\n'}
+                  {'  '}<span className="code-attr">content</span> = <span className="code-ref">azurerm_static_web_app.azure_site.default_host_name</span>{'\n'}
+                  {'  '}<span className="code-attr">type</span>    = <span className="code-string">"CNAME"</span>{'\n'}
+                  {'  '}<span className="code-attr">proxied</span> = <span className="code-bool">false</span>{'\n'}
+                  {'}\n\n'}
+                  <span className="code-comment"># Custom domain for Azure Static Web App</span>{'\n'}
+                  <span className="code-keyword">resource</span> <span className="code-string">"azurerm_static_web_app_custom_domain"</span> <span className="code-string">"azure_site"</span> {'{\n'}
+                  {'  '}<span className="code-attr">static_web_app_id</span> = <span className="code-ref">azurerm_static_web_app.azure_site.id</span>{'\n'}
+                  {'  '}<span className="code-attr">domain_name</span>       = <span className="code-string">"azure.beyops.com"</span>{'\n'}
+                  {'  '}<span className="code-attr">validation_type</span>   = <span className="code-string">"cname-delegation"</span>{'\n'}
                   {'}'}
                 </pre>
               </div>
