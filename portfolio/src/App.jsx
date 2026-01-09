@@ -4181,21 +4181,50 @@ function useGitHubStats(username) {
   const [loading, setLoading] = useState(true);
   const [linesLoading, setLinesLoading] = useState(false);
   const [linesOfCode, setLinesOfCode] = useState(null); // null = not loaded yet, object = loaded
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
   
   // GitHub token from environment variable (increases rate limit from 60 to 5000 requests/hour)
   const githubToken = import.meta.env.VITE_GITHUB_TOKEN;
-  const headers = githubToken ? { Authorization: `token ${githubToken}` } : {};
+  const headers = githubToken ? { Authorization: `Bearer ${githubToken}` } : {};
   
   useEffect(() => {
     if (!username || username === 'YOUR_GITHUB_USERNAME') {
       setLoading(false);
       return;
     }
+
+    const safeSessionGet = (key) => {
+      try {
+        return sessionStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    };
+
+    const safeSessionSet = (key, value) => {
+      try {
+        sessionStorage.setItem(key, value);
+      } catch {
+        // ignore
+      }
+    };
+
+    const safeSessionRemove = (key) => {
+      try {
+        sessionStorage.removeItem(key);
+      } catch {
+        // ignore
+      }
+    };
+
+    setError(null);
     
     const cacheKey = `github_stats_${username}`;
     const cacheKeyLoc = `github_loc_${username}`;
-    const cached = sessionStorage.getItem(cacheKey);
-    const cachedLoc = sessionStorage.getItem(cacheKeyLoc);
+    const forceRefresh = retryCount > 0;
+    const cached = forceRefresh ? null : safeSessionGet(cacheKey);
+    const cachedLoc = forceRefresh ? null : safeSessionGet(cacheKeyLoc);
 
     if (cached) {
       try {
@@ -4206,7 +4235,7 @@ function useGitHubStats(username) {
           setLoading(false);
         }
       } catch {
-        sessionStorage.removeItem(cacheKey);
+        safeSessionRemove(cacheKey);
       }
     }
 
@@ -4217,12 +4246,13 @@ function useGitHubStats(username) {
           setLinesOfCode(data);
         }
       } catch {
-        sessionStorage.removeItem(cacheKeyLoc);
+        safeSessionRemove(cacheKeyLoc);
       }
     }
 
     async function fetchData() {
       try {
+        setLoading(true);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
 
@@ -4235,7 +4265,11 @@ function useGitHubStats(username) {
         clearTimeout(timeoutId);
         
         if (!userRes.ok || !allReposRes.ok) {
-          console.warn('GitHub API rate limited or user not found');
+          let msg = 'GitHub API request failed';
+          if (userRes.status === 403 || allReposRes.status === 403) msg = 'GitHub API rate limited';
+          if (userRes.status === 404) msg = 'GitHub user not found';
+          console.warn(msg);
+          setError(msg);
           setLoading(false);
           return;
         }
@@ -4264,7 +4298,7 @@ function useGitHubStats(username) {
         setRepos(baseRepos);
         setLoading(false);
 
-        sessionStorage.setItem(cacheKey, JSON.stringify({
+        safeSessionSet(cacheKey, JSON.stringify({
           data: {
             stats: statsData,
             repos: baseRepos,
@@ -4293,7 +4327,7 @@ function useGitHubStats(username) {
           );
 
           setRepos(displayRepos);
-          sessionStorage.setItem(cacheKey, JSON.stringify({
+          safeSessionSet(cacheKey, JSON.stringify({
             data: {
               stats: statsData,
               repos: displayRepos,
@@ -4372,20 +4406,22 @@ function useGitHubStats(username) {
           : null;
         setLinesOfCode(linesData);
 
-        sessionStorage.setItem(cacheKeyLoc, JSON.stringify({
+        safeSessionSet(cacheKeyLoc, JSON.stringify({
           data: linesData,
           timestamp: Date.now(),
         }));
         
       } catch (error) {
-        console.error('Error fetching GitHub data:', error);
+        const msg = error?.name === 'AbortError' ? 'GitHub API request timed out' : 'Error fetching GitHub data';
+        console.error(msg, error);
+        setError(msg);
       } finally {
         setLoading(false);
         setLinesLoading(false);
       }
     }
     
-    if (!cached) {
+    if (!cached || forceRefresh) {
       fetchData();
     } else {
       setLoading(false);
@@ -4393,9 +4429,10 @@ function useGitHubStats(username) {
         fetchData();
       }
     }
-  }, [username]);
+  }, [username, retryCount]);
   
-  return { stats, repos, loading, linesLoading, linesOfCode };
+  const retry = () => setRetryCount((c) => c + 1);
+  return { stats, repos, loading, linesLoading, linesOfCode, error, retry };
 }
 
 // Copy to clipboard hook
@@ -4500,7 +4537,7 @@ export default function App() {
   const [s3CardExpanded, setS3CardExpanded] = useState(false);
   const [s3CodeExpanded, setS3CodeExpanded] = useState(false);
   const [s3SelectedFile, setS3SelectedFile] = useState(0);
-  const { stats, repos, loading, linesLoading, linesOfCode } = useGitHubStats(CONFIG.github);
+  const { stats, repos, loading, linesLoading, linesOfCode, error, retry } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
   
   // Set cloud mode body class for banner spacing
@@ -6499,6 +6536,26 @@ export default function App() {
                   <div className="skeleton" style={{ height: 16, width: '40%' }} />
                 </div>
               ))
+            ) : error ? (
+              <div className="repo-card" style={{ gridColumn: '1 / -1' }}>
+                <h3 className="repo-name" style={{ marginBottom: 8 }}>GitHub data unavailable</h3>
+                <p className="repo-description" style={{ marginBottom: 16 }}>{error}</p>
+                <button
+                  onClick={retry}
+                  style={{
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-primary)',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '12px',
+                  }}
+                >
+                  Retry
+                </button>
+              </div>
             ) : repos.length > 0 ? (
               repos.map((repo) => (
                 <a
