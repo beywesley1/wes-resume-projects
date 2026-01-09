@@ -3598,6 +3598,13 @@ const styles = `
       max-height: 350px;
     }
   }
+
+  @media (max-width: 768px) {
+    .architecture-code-content {
+      max-height: none !important;
+      overflow-y: visible !important;
+    }
+  }
   
   .architecture-code-content pre {
     margin: 0;
@@ -3983,9 +3990,12 @@ const styles = `
     display: flex;
     justify-content: center;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y pinch-zoom;
   }
   
   .network-diagram {
+    display: block;
     width: 100%;
     max-width: 900px;
     height: auto;
@@ -4034,10 +4044,15 @@ const styles = `
   @media (max-width: 768px) {
     .diagram-container {
       padding: 12px;
+      overflow-x: hidden;
     }
     
     .diagram-details {
       grid-template-columns: 1fr;
+    }
+
+    .network-diagram {
+      max-width: 100%;
     }
   }
   
@@ -4164,6 +4179,7 @@ function useGitHubStats(username) {
   const [stats, setStats] = useState(null);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [linesLoading, setLinesLoading] = useState(false);
   const [linesOfCode, setLinesOfCode] = useState(null); // null = not loaded yet, object = loaded
   
   // GitHub token from environment variable (increases rate limit from 60 to 5000 requests/hour)
@@ -4176,34 +4192,49 @@ function useGitHubStats(username) {
       return;
     }
     
-    // Check for cached data (valid for 5 minutes, but refetch if linesOfCode is missing)
     const cacheKey = `github_stats_${username}`;
+    const cacheKeyLoc = `github_loc_${username}`;
     const cached = sessionStorage.getItem(cacheKey);
+    const cachedLoc = sessionStorage.getItem(cacheKeyLoc);
+
     if (cached) {
       try {
         const { data, timestamp } = JSON.parse(cached);
-        // Use cache if fresh AND has linesOfCode data
-        if (Date.now() - timestamp < 5 * 60 * 1000 && data.linesOfCode !== null) {
+        if (Date.now() - timestamp < 15 * 60 * 1000) {
           setStats(data.stats);
           setRepos(data.repos);
-          setLinesOfCode(data.linesOfCode);
           setLoading(false);
-          return;
         }
       } catch {
         sessionStorage.removeItem(cacheKey);
       }
     }
-    
+
+    if (cachedLoc) {
+      try {
+        const { data, timestamp } = JSON.parse(cachedLoc);
+        if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+          setLinesOfCode(data);
+        }
+      } catch {
+        sessionStorage.removeItem(cacheKeyLoc);
+      }
+    }
+
     async function fetchData() {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
         // Fetch user data and repos in parallel
         const [userRes, allReposRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${username}`, { headers }),
-          fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, { headers })
+          fetch(`https://api.github.com/users/${username}`, { headers, signal: controller.signal }),
+          fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, { headers, signal: controller.signal })
         ]);
+
+        clearTimeout(timeoutId);
         
-        if (!userRes.ok) {
+        if (!userRes.ok || !allReposRes.ok) {
           console.warn('GitHub API rate limited or user not found');
           setLoading(false);
           return;
@@ -4213,20 +4244,16 @@ function useGitHubStats(username) {
           userRes.json(),
           allReposRes.json()
         ]);
+
+        const saveData = typeof navigator !== 'undefined' && navigator.connection?.saveData;
+        const effectiveType = typeof navigator !== 'undefined' ? navigator.connection?.effectiveType : undefined;
+        const slowConn = effectiveType === 'slow-2g' || effectiveType === '2g';
+        const isSmallScreen = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 768px)')?.matches;
+        const skipHeavyGitHub = saveData || slowConn || isSmallScreen;
         
-        // Get top 6 repos for display and fetch their languages
+        // Get top 6 repos for display
         const top6Repos = allReposData.slice(0, 6);
-        const displayRepos = await Promise.all(
-          top6Repos.map(async (repo) => {
-            try {
-              const langRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/languages`, { headers });
-              const languages = langRes.ok ? await langRes.json() : {};
-              return { ...repo, languages };
-            } catch {
-              return { ...repo, languages: {} };
-            }
-          })
-        );
+        const baseRepos = top6Repos.map((repo) => ({ ...repo, languages: {} }));
         
         const statsData = {
           publicRepos: userData.public_repos,
@@ -4234,17 +4261,67 @@ function useGitHubStats(username) {
         };
         
         setStats(statsData);
-        setRepos(displayRepos);
+        setRepos(baseRepos);
+        setLoading(false);
+
+        sessionStorage.setItem(cacheKey, JSON.stringify({
+          data: {
+            stats: statsData,
+            repos: baseRepos,
+          },
+          timestamp: Date.now(),
+        }));
+
+        if (!skipHeavyGitHub) {
+          const displayRepos = await Promise.all(
+            top6Repos.map(async (repo) => {
+              try {
+                const langController = new AbortController();
+                const langTimeout = setTimeout(() => langController.abort(), 4000);
+                const langRes = await fetch(`https://api.github.com/repos/${username}/${repo.name}/languages`, {
+                  headers,
+                  signal: langController.signal,
+                });
+                clearTimeout(langTimeout);
+
+                const languages = langRes.ok ? await langRes.json() : {};
+                return { ...repo, languages };
+              } catch {
+                return { ...repo, languages: {} };
+              }
+            })
+          );
+
+          setRepos(displayRepos);
+          sessionStorage.setItem(cacheKey, JSON.stringify({
+            data: {
+              stats: statsData,
+              repos: displayRepos,
+            },
+            timestamp: Date.now(),
+          }));
+        }
         
-        // Fetch lines of code from contributor stats with retry logic
-        // GitHub's stats API returns 202 on first request while computing, need to retry
+        if (linesOfCode !== null) {
+          return;
+        }
+
+        if (skipHeavyGitHub) {
+          return;
+        }
+
+        setLinesLoading(true);
+
         let totalAdded = 0;
         let totalDeleted = 0;
         
-        const fetchWithRetry = async (url, retries = 8, delay = 1500) => {
+        const fetchWithRetry = async (url, retries = 4, delay = 800) => {
           for (let i = 0; i < retries; i++) {
             try {
-              const res = await fetch(url, { headers });
+              const statsController = new AbortController();
+              const statsTimeout = setTimeout(() => statsController.abort(), 6000);
+              const res = await fetch(url, { headers, signal: statsController.signal });
+              clearTimeout(statsTimeout);
               if (res.status === 200) {
                 const data = await res.json();
                 return data;
@@ -4270,7 +4347,7 @@ function useGitHubStats(username) {
         };
         
         // Fetch contributor stats for each repo to get lines added/deleted
-        const statsPromises = allReposData.slice(0, 10).map(async (repo) => {
+        const statsPromises = allReposData.slice(0, 3).map(async (repo) => {
           try {
             const statsData = await fetchWithRetry(`https://api.github.com/repos/${username}/${repo.name}/stats/contributors`);
             if (Array.isArray(statsData)) {
@@ -4294,28 +4371,31 @@ function useGitHubStats(username) {
           ? { added: totalAdded, deleted: totalDeleted } 
           : null;
         setLinesOfCode(linesData);
-        
-        // Cache the results (only cache linesOfCode if we got data, otherwise don't cache it)
-        sessionStorage.setItem(cacheKey, JSON.stringify({
-          data: { 
-            stats: statsData, 
-            repos: displayRepos, 
-            linesOfCode: linesData // Will be null if no data, which means we'll retry next time
-          },
-          timestamp: Date.now()
+
+        sessionStorage.setItem(cacheKeyLoc, JSON.stringify({
+          data: linesData,
+          timestamp: Date.now(),
         }));
         
       } catch (error) {
         console.error('Error fetching GitHub data:', error);
       } finally {
         setLoading(false);
+        setLinesLoading(false);
       }
     }
     
-    fetchData();
+    if (!cached) {
+      fetchData();
+    } else {
+      setLoading(false);
+      if (linesOfCode === null) {
+        fetchData();
+      }
+    }
   }, [username]);
   
-  return { stats, repos, loading, linesOfCode };
+  return { stats, repos, loading, linesLoading, linesOfCode };
 }
 
 // Copy to clipboard hook
@@ -4420,7 +4500,7 @@ export default function App() {
   const [s3CardExpanded, setS3CardExpanded] = useState(false);
   const [s3CodeExpanded, setS3CodeExpanded] = useState(false);
   const [s3SelectedFile, setS3SelectedFile] = useState(0);
-  const { stats, repos, loading, linesOfCode } = useGitHubStats(CONFIG.github);
+  const { stats, repos, loading, linesLoading, linesOfCode } = useGitHubStats(CONFIG.github);
   const { copiedId, copy } = useCopyToClipboard();
   
   // Set cloud mode body class for banner spacing
@@ -5159,8 +5239,8 @@ export default function App() {
                   </div>
                 )}
                     
-                    <div className="diagram-container" style={{ padding: '24px', overflow: 'auto' }}>
-                      <svg viewBox="0 0 1200 750" className="network-diagram" style={{ minWidth: '1100px' }}>
+                    <div className="diagram-container" style={{ padding: '24px' }}>
+                      <svg viewBox="0 0 1200 750" className="network-diagram" style={{ maxWidth: '100%' }}>
                   {/* Background Gradients & Definitions */}
                   <defs>
                     <linearGradient id="vpcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -5579,8 +5659,8 @@ export default function App() {
                   </div>
                 )}
                     
-                    <div className="diagram-container" style={{ padding: '24px', overflow: 'auto' }}>
-                      <svg viewBox="0 0 1000 510" className="network-diagram" style={{ minWidth: '900px' }}>
+                    <div className="diagram-container" style={{ padding: '24px' }}>
+                      <svg viewBox="0 0 1000 510" className="network-diagram" style={{ maxWidth: '100%' }}>
                   {/* Background Gradients & Definitions */}
                   <defs>
                     <linearGradient id="awsGradientS3" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -6117,7 +6197,7 @@ export default function App() {
                 </h3>
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Terraform • Multi-Cloud</span>
               </div>
-              <div className="architecture-code-content" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+              <div className="architecture-code-content">
                 <pre className="code-highlighted">
                   <span className="code-comment"># S3 bucket stores the React build files</span>{'\n'}
                   <span className="code-keyword">resource</span> <span className="code-string">"aws_s3_bucket"</span> <span className="code-string">"website"</span> {'{\n'}
@@ -6541,7 +6621,7 @@ export default function App() {
                   <div style={{ fontSize: '32px', color: '#22c55e' }}>++</div>
                   <div>
                     <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #22c55e, #4ade80)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                      {loading ? '...' : (linesOfCode?.added?.toLocaleString() || '—')}
+                      {linesLoading ? '...' : (linesOfCode?.added?.toLocaleString() || '—')}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Added</div>
                   </div>
@@ -6550,7 +6630,7 @@ export default function App() {
                   <div style={{ fontSize: '32px', color: '#ef4444' }}>--</div>
                   <div>
                     <div style={{ fontSize: '28px', fontWeight: '700', fontFamily: 'var(--font-mono)', background: 'linear-gradient(135deg, #ef4444, #f87171)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                      {loading ? '...' : (linesOfCode?.deleted?.toLocaleString() || '—')}
+                      {linesLoading ? '...' : (linesOfCode?.deleted?.toLocaleString() || '—')}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Lines Deleted</div>
                   </div>

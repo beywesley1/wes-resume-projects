@@ -10,6 +10,13 @@ on:
     paths:
       - 'portfolio/**'
       - '.github/workflows/deploy.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'portfolio/**'
+      - '.github/workflows/deploy.yml'
+    types: [opened, synchronize, reopened, closed]
   workflow_dispatch:  # Allow manual trigger
 
 env:
@@ -17,8 +24,9 @@ env:
   S3_BUCKET: beyops.com
 
 jobs:
-  deploy:
-    name: Build and Deploy
+  deploy_prod:
+    name: Build and Deploy (Production)
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     
     steps:
@@ -72,3 +80,51 @@ jobs:
           action: "upload"
           app_location: "portfolio/dist"
           skip_app_build: true
+
+  deploy_preview:
+    name: Build and Deploy (Preview)
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: portfolio/package-lock.json
+
+      - name: Install dependencies
+        working-directory: portfolio
+        run: npm ci
+
+      - name: Build website (Azure version)
+        working-directory: portfolio
+        env:
+          VITE_CLOUD_PROVIDER: azure
+        run: npm run build
+
+      - name: Deploy to Azure Static Web App (Preview)
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "portfolio/dist"
+          skip_app_build: true
+
+  close_preview:
+    name: Close Preview Environment
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Close Azure Static Web App Preview
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "close"
