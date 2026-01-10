@@ -151,7 +151,9 @@ function GitHubReposSection({ CONFIG, repos, loading, stats, linesOfCode, langua
                         WebkitTextFillColor: 'transparent',
                       }}
                     >
-                      {loading ? '...' : repos.reduce((acc, repo) => acc + repo.stargazers_count, 0)}
+                      {loading
+                        ? '...'
+                        : (stats?.totalStars ?? repos.reduce((acc, repo) => acc + repo.stargazers_count, 0))}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Stars</div>
                   </div>
@@ -169,7 +171,9 @@ function GitHubReposSection({ CONFIG, repos, loading, stats, linesOfCode, langua
                         WebkitTextFillColor: 'transparent',
                       }}
                     >
-                      {loading ? '...' : repos.reduce((acc, repo) => acc + repo.forks_count, 0)}
+                      {loading
+                        ? '...'
+                        : (stats?.totalForks ?? repos.reduce((acc, repo) => acc + repo.forks_count, 0))}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Forks</div>
                   </div>

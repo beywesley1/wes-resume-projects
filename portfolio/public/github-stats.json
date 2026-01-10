@@ -1,0 +1,34 @@
+{
+  "username": "beywesley1",
+  "updatedAt": "2026-01-10T03:27:57.839Z",
+  "stats": {
+    "publicRepos": 1,
+    "followers": 0,
+    "totalStars": 0,
+    "totalForks": 0
+  },
+  "repos": [
+    {
+      "name": "wes-resume-projects",
+      "description": "The repo where I build projects for my resume, including my website - beyops.com",
+      "html_url": "https://github.com/beywesley1/wes-resume-projects",
+      "stargazers_count": 0,
+      "forks_count": 0,
+      "language": "JavaScript",
+      "languages": {
+        "JavaScript": 262979,
+        "HCL": 96149,
+        "CSS": 65345,
+        "HTML": 32556,
+        "Python": 15424,
+        "PowerShell": 7026
+      },
+      "pushed_at": "2026-01-10T03:02:16Z",
+      "updated_at": "2026-01-10T03:02:20Z"
+    }
+  ],
+  "linesOfCode": {
+    "added": 26128,
+    "deleted": 8719
+  }
+}
