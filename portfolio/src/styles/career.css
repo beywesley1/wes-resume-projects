@@ -233,7 +233,19 @@
 
 .arch-node-icon {
   font-size: 28px;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 22px;
 }
+
+ .arch-node-icon svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+ }
 
  .architecture-bottom-row {
   flex-wrap: nowrap;

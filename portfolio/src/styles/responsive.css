@@ -296,6 +296,9 @@
 
   .arch-node-icon {
     font-size: 22px;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
   }
 
   .arch-node-info h4 {
