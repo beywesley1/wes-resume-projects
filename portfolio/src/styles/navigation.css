@@ -1,0 +1,230 @@
+/* ============================================================================
+   NAVIGATION & HEADER
+   Cloud banners, navigation header, tabs, and theme toggle
+   ============================================================================ */
+
+/* Azure Cloud Banner */
+.azure-banner {
+  background: linear-gradient(90deg, #0078D4 0%, #00BCF2 50%, #50E6FF 100%);
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.azure-banner svg {
+  width: 20px;
+  height: 20px;
+}
+
+.azure-banner a {
+  color: white;
+  text-decoration: underline;
+  margin-left: 8px;
+}
+
+.azure-banner a:hover {
+  opacity: 0.8;
+}
+
+/* AWS Cloud Banner (Multi-Cloud link) */
+.aws-banner {
+  background: linear-gradient(90deg, #FF9900 0%, #FFB84D 50%, #FF9900 100%);
+  color: #232F3E;
+  text-align: center;
+  padding: 10px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.aws-banner svg {
+  width: 20px;
+  height: 20px;
+}
+
+.aws-banner a {
+  color: #232F3E;
+  text-decoration: underline;
+  margin-left: 8px;
+  font-weight: 700;
+}
+
+.aws-banner a:hover {
+  opacity: 0.8;
+}
+
+/* Adjust header when any cloud banner is present */
+body.aws-mode .nav-header {
+  top: 40px;
+}
+
+body.aws-mode .app-content {
+  padding-top: 40px;
+}
+
+/* Adjust header when Azure banner is present */
+body.azure-mode .nav-header {
+  top: 40px;
+}
+
+body.azure-mode .app-content {
+  padding-top: 40px;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1002;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent-blue);
+  transform: scale(1.05);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(15deg);
+}
+
+/* Navigation Header */
+.nav-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(var(--bg-primary-rgb), 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-logo span {
+  color: var(--accent-blue);
+}
+
+.nav-logo-typing {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 1.5s steps(8, end) forwards;
+}
+
+.nav-logo-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--accent-cyan);
+  margin-left: 2px;
+  animation: blink-cursor 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-tab {
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  cursor: pointer;
+}
+
+.nav-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border-color: var(--border-hover);
+}
+
+.nav-tab.active {
+  color: #fff;
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+.nav-tab.coming-soon {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-tab.coming-soon:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+/* Add padding to body for fixed header */
+.app-content {
+  padding-top: 60px;
+}

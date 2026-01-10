@@ -1,0 +1,337 @@
+/* ============================================================================
+   CAREER TIMELINE
+   Career history, timeline markers, and experience cards
+   ============================================================================ */
+
+/* Career Timeline */
+.career-timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.career-timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+}
+
+.career-item {
+  position: relative;
+  margin-bottom: 48px;
+}
+
+.career-item:last-child {
+  margin-bottom: 0;
+}
+
+.career-marker {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  background: var(--bg-primary);
+  border: 2px solid var(--accent-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 1;
+}
+
+.career-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.3s ease;
+}
+
+.career-card:hover {
+  border-color: var(--accent-blue);
+  transform: translateX(4px);
+}
+
+.career-header {
+  margin-bottom: 20px;
+}
+
+.career-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.career-company {
+  font-size: 16px;
+  color: var(--accent-cyan);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.career-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.career-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.career-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.career-highlights li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.career-highlights li:last-child {
+  margin-bottom: 0;
+}
+
+.career-highlights li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent-blue);
+  font-size: 12px;
+}
+
+.career-technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.career-tech-tag {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  padding: 4px 10px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+  color: var(--accent-cyan);
+}
+
+/* Architecture Section (part of career/solutions) */
+.architecture-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.architecture-diagram {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+}
+
+.architecture-diagram h3 {
+  font-size: 18px;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.arch-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* X-shaped Architecture Layout */
+.arch-x-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.arch-x-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.arch-x-center {
+  display: flex;
+  justify-content: center;
+}
+
+.arch-node-center {
+  background: rgba(123, 66, 188, 0.1) !important;
+}
+
+.arch-x-arrow-down {
+  color: var(--accent-blue);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.arch-x-arrows-split {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  color: var(--accent-blue);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.arch-arrow-h {
+  color: var(--accent-blue);
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.arch-node {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  min-width: 200px;
+  transition: all 0.3s ease;
+}
+
+.arch-node:hover {
+  border-color: var(--accent-blue);
+  transform: scale(1.02);
+}
+
+.arch-node.highlight {
+  border-color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.1);
+}
+
+.arch-node-icon {
+  font-size: 28px;
+}
+
+ .architecture-bottom-row {
+  flex-wrap: nowrap;
+ }
+
+.arch-node-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.arch-node-info span {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.arch-arrow {
+  color: var(--accent-blue);
+  font-size: 20px;
+}
+
+.architecture-code {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.architecture-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+}
+
+.architecture-code-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.architecture-code-content {
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.architecture-code-content pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.code-highlighted {
+  line-height: 1.6;
+}
+
+.arch-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.arch-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.arch-feature-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.arch-feature h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.arch-feature p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}

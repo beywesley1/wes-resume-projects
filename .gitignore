@@ -22,3 +22,14 @@ reports/
 
 # Lambda build artifacts
 **/build/
+
+# Node
+node_modules/
+**/node_modules/
+
+# Vite / React build
+**/dist/
+**/.vite/
+
+# IDE / AI tooling
+.claude/

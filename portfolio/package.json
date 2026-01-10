@@ -1,6 +1,9 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
+  "description": "Cloud Engineer & DevOps portfolio showcasing multi-cloud infrastructure expertise",
+  "author": "Wesley Bey",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {

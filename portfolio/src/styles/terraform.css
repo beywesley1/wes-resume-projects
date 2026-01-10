@@ -1,0 +1,171 @@
+/* ============================================================================
+   TERRAFORM & SYNTAX HIGHLIGHTING
+   Terraform code sections, tabs, and unified syntax highlighting
+   ============================================================================ */
+
+/* Terraform Code Section */
+.terraform-code-section {
+  background: #0d1117;
+  border-radius: 0 0 12px 12px;
+}
+
+.terraform-code-tabs {
+  display: flex;
+  gap: 0;
+  padding: 12px 24px 0;
+  border-bottom: 1px solid #30363d;
+}
+
+.terraform-tab {
+  padding: 10px 20px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: #58a6ff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.terraform-tab.active {
+  background: #0d1117;
+  border-bottom: 1px solid #0d1117;
+  margin-bottom: -1px;
+}
+
+.terraform-code-content {
+  padding: 0;
+  max-height: 600px;
+  overflow: auto;
+}
+
+.terraform-code {
+  margin: 0;
+  padding: 20px 24px;
+  background: transparent;
+  color: #c9d1d9;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.terraform-code-highlighted {
+  margin: 0;
+  padding: 20px 24px;
+  background: transparent;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.terraform-code-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.terraform-code-content::-webkit-scrollbar-track {
+  background: #161b22;
+}
+
+.terraform-code-content::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+
+.terraform-code-content::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}
+
+/* Unified syntax highlighting for all code blocks - VS Code Dark+ inspired */
+.hl-comment { color: #6A9955; font-style: italic; }
+.hl-keyword { color: #C586C0; font-weight: 500; }
+.hl-string { color: #CE9178; }
+.hl-variable { color: #9CDCFE; }
+.hl-boolean { color: #569CD6; font-weight: 500; }
+.hl-number { color: #B5CEA8; }
+.hl-command { color: #DCDCAA; }
+.hl-type { color: #4EC9B0; }
+.hl-attribute { color: #9CDCFE; }
+.hl-operator { color: #D4D4D4; }
+.hl-bracket { color: #FFD700; }
+.hl-function { color: #DCDCAA; }
+.hl-resource-type { color: #4EC9B0; }
+.hl-resource-name { color: #CE9178; }
+
+[data-theme="light"] .hl-comment { color: #008000; }
+[data-theme="light"] .hl-keyword { color: #AF00DB; }
+[data-theme="light"] .hl-string { color: #A31515; }
+[data-theme="light"] .hl-variable { color: #001080; }
+[data-theme="light"] .hl-boolean { color: #0000FF; }
+[data-theme="light"] .hl-number { color: #098658; }
+[data-theme="light"] .hl-command { color: #795E26; }
+[data-theme="light"] .hl-type { color: #267F99; }
+[data-theme="light"] .hl-attribute { color: #001080; }
+[data-theme="light"] .hl-resource-type { color: #267F99; }
+[data-theme="light"] .hl-resource-name { color: #A31515; }
+
+/* Code highlighting classes used in architecture section */
+.code-comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.code-keyword {
+  color: #c586c0;
+  font-weight: 600;
+}
+
+.code-string {
+  color: #ce9178;
+}
+
+.code-attr {
+  color: #9cdcfe;
+}
+
+.code-bool {
+  color: #569cd6;
+  font-weight: 600;
+}
+
+.code-ref {
+  color: #4ec9b0;
+}
+
+.code-number {
+  color: #b5cea8;
+}
+
+[data-theme="light"] .code-number {
+  color: #098658;
+}
+
+[data-theme="light"] .code-comment {
+  color: #008000;
+}
+
+[data-theme="light"] .code-keyword {
+  color: #af00db;
+}
+
+[data-theme="light"] .code-string {
+  color: #a31515;
+}
+
+[data-theme="light"] .code-attr {
+  color: #001080;
+}
+
+[data-theme="light"] .code-bool {
+  color: #0000ff;
+}
+
+[data-theme="light"] .code-ref {
+  color: #267f99;
+}
