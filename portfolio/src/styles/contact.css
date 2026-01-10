@@ -189,16 +189,46 @@
   align-items: center;
 }
 
- .footer-item svg {
-   width: 16px;
-   height: 16px;
+ .footer-icon {
+   margin-left: 6px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
    flex: 0 0 auto;
-   display: inline-block;
+   line-height: 0;
  }
 
- .footer-item svg[viewBox="0 0 128 128"] {
-   width: 18px;
-   height: 18px;
+ .footer-icon svg {
+   width: 16px !important;
+   height: 16px !important;
+   display: block;
+ }
+
+ .footer-icon-terraform svg {
+   width: 18px !important;
+   height: 18px !important;
+ }
+
+ .footer-icon-react svg,
+ .footer-icon-aws svg {
+   width: 18px !important;
+   height: 18px !important;
+ }
+
+ .footer-icon-react {
+   color: #61dafb;
+ }
+
+ .footer-icon-terraform {
+   color: #7b42bc;
+ }
+
+ .footer-icon-aws {
+   color: #ff9900;
+ }
+
+ .footer-icon-azure {
+   color: #0078d4;
  }
 
 .footer-separator {
